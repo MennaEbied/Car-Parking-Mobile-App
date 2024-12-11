@@ -1,10 +1,20 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StatusBar } from "expo-status-bar";
+import { StyleSheet, Text, View } from "react-native";
+import { CustomButton } from "../components/CustomButton";
+import { useRouter } from "expo-router";
+import { CustomImage } from "../components/CustomImage";
 
-export default function App() {
+export default function SplashScreen() {
+  const router = useRouter();
+  const handlePress = () => {
+    router.push("/onboarding/FirstOnboarding");
+  };
   return (
     <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
+      <Text style={styles.heading}>Welcome</Text>
+      <Text style={styles.tagline}>Find Parking Spots Easily</Text>
+      <CustomImage source={require("../assets/Welcome.jpg")} />
+      <CustomButton onPress={handlePress} title="Let's Go" />
       <StatusBar style="auto" />
     </View>
   );
@@ -13,8 +23,17 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  heading: {
+    fontSize: 48,
+    color: "#171616",
+    fontWeight: "medium",
+  },
+  tagline: {
+    fontSize: 24,
+    color: "#171616",
   },
 });
