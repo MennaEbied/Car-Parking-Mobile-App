@@ -34,7 +34,7 @@ export default function SignIn() {
       </View>
       <CustomButton
         title="Sign In"
-        onPress={() => console.log("sign in")}
+        onPress={() => router.push("app-pages/home")}
         style={{
           backgroundColor: "#91B3F9",
           width: 300,

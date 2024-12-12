@@ -19,7 +19,7 @@ export default function FirstOnboarding() {
       <View style={styles.buttons}>
         <CustomButton
           title="Skip"
-          onPress={() => console.log("Navigating to next screen...")}
+          onPress={() => router.push("onboarding/notification")} 
           style={{
             backgroundColor: "#C9DCFD",
             flex: 1,
@@ -34,7 +34,7 @@ export default function FirstOnboarding() {
         />
         <CustomButton
           title="Next"
-          onPress={() => router.push("authentication/SignIn")}
+          onPress={() => router.push("onboarding/SecondOnboarding")}
           style={{
             backgroundColor: "#8EA5F0",
             flex: 1,
