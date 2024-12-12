@@ -15,7 +15,7 @@ export default function Layout() {
         name="onboarding/SecondOnboarding"
         options={{ headerShown: false, animation: "fade" }}
       />
-       <Stack.Screen
+      <Stack.Screen
         name="authentication/SignIn"
         options={{ headerShown: false, animation: "fade" }}
       />
@@ -23,7 +23,10 @@ export default function Layout() {
         name="authentication/SignUp"
         options={{ headerShown: false, animation: "fade" }}
       />
-     
+      <Stack.Screen
+        name="onboarding/notification"
+        options={{ headerShown: false, animation: "fade" }}
+      />
     </Stack>
   );
 }

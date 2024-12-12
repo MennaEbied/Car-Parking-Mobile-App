@@ -13,7 +13,10 @@ export default function SplashScreen() {
     <View style={styles.container}>
       <Text style={styles.heading}>Welcome</Text>
       <Text style={styles.tagline}>Find Parking Spots Easily</Text>
-      <CustomImage source={require("../assets/Welcome.jpg")} />
+      <CustomImage
+        source={require("../assets/Welcome.jpg")}
+        style={{ height: 400 }}
+      />
       <CustomButton onPress={handlePress} title="Let's Go" />
       <StatusBar style="auto" />
     </View>
@@ -28,12 +31,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   heading: {
-    fontSize: 48,
+    fontSize: 40,
     color: "#171616",
     fontWeight: "medium",
   },
   tagline: {
-    fontSize: 24,
+    fontSize: 22,
     color: "#171616",
   },
 });
