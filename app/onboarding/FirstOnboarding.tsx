@@ -57,14 +57,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   heading: {
-    fontWeight: "500",
+    fontWeight: "bold",
     fontSize: 20,
     textAlign: "center",
-    marginTop: 10,
     flexWrap: "wrap",
+    marginBottom:35
   },
   tagline: {
-    fontSize: 20,
+    fontSize: 17,
     textAlign: "center",
     marginTop: 5,
     flexWrap: "wrap",
@@ -72,12 +72,12 @@ const styles = StyleSheet.create({
   buttons: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 15,
+    marginBottom: 30,
     gap: 50,
   },
   imageContainer: {
     flex: 1,
     alignItems: "center",
-    paddingHorizontal: 20,
+    paddingHorizontal: 15,
   },
 });

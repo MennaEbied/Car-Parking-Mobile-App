@@ -1,41 +1,20 @@
 import { StyleSheet, View, Text, Image, Pressable } from "react-native";
 import { router } from "expo-router";
-import { CustomImage } from "../../components/CustomImage";
-import { CustomButton } from "../../components/CustomButton";
 
 const SecondOnboarding = () => {
   return (
     <View style={styles.container}>
-      <View style={styles.imageContainer}>
-        <CustomImage
-          source={require("../../assets/onboarding1.jpeg")}
-          style={{ height: 300, marginTop: 35 }}
-        />
+      
+          <Image source={require("../../assets/onboarding1.jpeg")}
+          style={styles.img}
+          />
+      <Text style={styles.text}>
+         Reserve your parking space in advance to ensure you don’t miss out</Text>
 
-        <Text style={styles.text}>
-          Reserve your parking space in advance to ensure you don’t miss out !
-        </Text>
-      </View>
-      <CustomButton
-        title="Next"
-        onPress={() => router.push("onboarding/notification")}
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          backgroundColor: "#7793ed",
-          marginBottom: 30,
-        }}
-        textStyle={{ color: "#000", fontSize: 18 }}
-        pressedStyle={{
-          backgroundColor: "#DAE2FA",
-        }}
-      />
-
-      {/* <Pressable onPress={()=> router.push("onboarding/notification")} 
+       <Pressable onPress={()=> router.push("onboarding/notification")} 
            style ={styles.button}>
             <Text style={styles.next}>  Next  </Text>
-    </Pressable>*/}
+    </Pressable>
     </View>
   );
 };
@@ -45,41 +24,37 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffff",
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: 20,
-    paddingHorizontal: 20,
+    
   },
-  /* img:{
-        width:370,
+  img:{
+        width:330,
         height:290,
-        marginTop:130,
-        marginBottom:50
-    },*/
+        marginBottom:30
+    },
   text: {
-    flexWrap: "wrap",
     fontWeight: "500",
     fontSize: 18,
     textAlign: "center",
     color: "#00052d",
-    marginTop: 30,
+    marginTop: 10,
+    paddingLeft:40,
+    paddingRight:40
   },
-  imageContainer: {
-    flex: 1,
-    alignItems: "center",
-    paddingHorizontal: 20,
-    marginTop: 25,
-  },
-  /*button:{
-        marginLeft:62,
-        marginRight:60,
-        paddingLeft:82,
+  
+  button:{
+        marginLeft:60,
+        marginRight:50,
+        paddingLeft:85,
         paddingTop:12,
         paddingBottom:12,
         backgroundColor:"#7793ed",
         borderRadius:35,
+        marginTop:70
     },
     next:{
        fontSize:20,
+      marginRight:80
        
-    }*/
+    }
 });
 export default SecondOnboarding;

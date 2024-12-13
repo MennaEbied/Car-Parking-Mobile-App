@@ -13,31 +13,9 @@ const Notification = () => {
       <Text style={styles.text2}>
         Enable notifications to receive real-time updates
       </Text>
-      <CustomButton
-        title="Allow Notification"
-        onPress={() => router.push("authentication/SignUp")}
-        style={{
-          backgroundColor: "#6081ea",
-          width: 300,
-          height: 50,
-        }}
-        textStyle={{ color: "#f5f5f5", fontSize: 18 }}
-        pressedStyle={{
-          backgroundColor: "#DAE2FA",
-        }}
-      />
-      <CustomButton
-        title=" Maybe Later"
-        onPress={() => router.push("authentication/SignUp")}
-        style={{
-          backgroundColor: "whitesmoke",
-          width: 300,
-          height: 50,
-        }}
-        textStyle={{ color: "#a9a9a9", fontSize: 18 }}
-      />
+      
 
-      {/*<Pressable style={styles.button}
+    <Pressable style={styles.button}
               onPress={()=> router.push("authentication/SignUp")}
             >
                  <Text style={styles.text3}> Allow Notification</Text>
@@ -46,7 +24,7 @@ const Notification = () => {
             <Pressable 
             onPress={()=> router.push("authentication/SignUp")}>
                  <Text style={styles.text4}> Maybe Later </Text>
-    </Pressable>*/}
+    </Pressable>
     </View>
   );
 };
@@ -62,27 +40,25 @@ const styles = StyleSheet.create({
   img: {
     width: 130,
     height: 120,
-    marginBottom: 50,
-    /* marginLeft:118,
-         marginTop:80,
-         marginBottom:50*/
+    marginTop:30,
+    marginBottom:50
   },
   text1: {
-    /*marginLeft:30,*/
+    marginLeft:10,
     marginBottom: 15,
     fontSize: 20,
     fontWeight: "bold",
     textAlign: "center",
   },
   text2: {
-    /*marginLeft:60,
-             marginRight:60,
-             marginBottom:50,*/
+    marginLeft:60,
+    marginRight:60,
+    marginBottom:50,
     fontSize: 14,
     textAlign: "center",
     color: "#6a6a6a",
   },
-  /* button:{
+  button:{
         backgroundColor:"#6081ea",
         marginLeft:40,
         marginRight:40,
@@ -90,18 +66,19 @@ const styles = StyleSheet.create({
         paddingTop:12,
         paddingBottom:12,
         borderRadius:25,
+        paddingRight:55
      },
       text3:{
-            paddingLeft:60,
+            paddingLeft:55,
             fontSize:16,
             color:"#f5f5f5"
       },
       text4:{
-        paddingLeft:125,
+        paddingLeft:10,
         fontSize:15,
          color:"#a9a9a9"
             
-      },*/
+      },
 });
 
 export default Notification;
