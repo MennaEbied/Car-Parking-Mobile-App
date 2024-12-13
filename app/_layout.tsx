@@ -27,6 +27,10 @@ export default function Layout() {
         name="onboarding/notification"
         options={{ headerShown: false, animation: "fade" }}
       />
+       <Stack.Screen
+        name="app-pages"
+        options={{ headerShown: false, animation: "fade" }}
+      />
     </Stack>
   );
 }
