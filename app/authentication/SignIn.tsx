@@ -37,6 +37,8 @@ export default function SignIn() {
           style={styles.textInput}
           returnKeyType="done"
           keyboardType="email-address"
+          value={email}
+          onChangeText={setEmail}
         />
       </View>
       <View style={styles.inputContainer}>
@@ -46,6 +48,8 @@ export default function SignIn() {
           style={styles.textInput}
           secureTextEntry
           returnKeyType="done"
+          value={password}
+          onChangeText={setPassword}
         />
       </View>
       <CustomButton
@@ -73,7 +77,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   textInput: {
-    fontSize: 18,
+    fontSize: 16,
     flex: 1,
   },
   inputContainer: {

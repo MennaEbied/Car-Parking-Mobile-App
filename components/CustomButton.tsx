@@ -33,12 +33,12 @@ export const CustomButton: React.FC<CustomButtonProps> = ({
 const styles = StyleSheet.create({
   text: {
     color: "#171616",
-    fontSize: 30,
+    fontSize: 25,
     textAlign: "center",
   },
   button: {
-    width: 250,
-    height: 60,
+    width: 245,
+    height: 55,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 35,
