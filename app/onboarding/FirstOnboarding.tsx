@@ -53,12 +53,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "space-between",
     alignItems: "center",
-    paddingVertical: 20,
+    paddingVertical: 30,
     paddingHorizontal: 20,
   },
   heading: {
     fontWeight: "bold",
-    fontSize: 20,
+    fontSize: 21,
     textAlign: "center",
     flexWrap: "wrap",
     marginBottom:35
@@ -66,7 +66,6 @@ const styles = StyleSheet.create({
   tagline: {
     fontSize: 17,
     textAlign: "center",
-    marginTop: 5,
     flexWrap: "wrap",
   },
   buttons: {

@@ -31,53 +31,40 @@ const Notification = () => {
 
 const styles = StyleSheet.create({
   container: {
-    /*paddingBottom:500,*/
     backgroundColor: "#ffff",
     flex: 1,
-    justifyContent: "center",
+    justifyContent: "space-between",
     alignItems: "center",
+    paddingVertical:170,
+    paddingHorizontal:20
   },
   img: {
     width: 130,
     height: 120,
-    marginTop:30,
-    marginBottom:50
   },
   text1: {
-    marginLeft:10,
-    marginBottom: 15,
-    fontSize: 20,
+    fontSize:22,
     fontWeight: "bold",
     textAlign: "center",
   },
   text2: {
-    marginLeft:60,
-    marginRight:60,
-    marginBottom:50,
-    fontSize: 14,
+    fontSize: 15,
     textAlign: "center",
     color: "#6a6a6a",
   },
   button:{
         backgroundColor:"#6081ea",
-        marginLeft:40,
-        marginRight:40,
-        marginBottom:20,
-        paddingTop:12,
-        paddingBottom:12,
-        borderRadius:25,
-        paddingRight:55
+        borderRadius:30,
+        paddingVertical:12,
+        paddingHorizontal:60,
      },
       text3:{
-            paddingLeft:55,
-            fontSize:16,
+            fontSize:15,
             color:"#f5f5f5"
       },
       text4:{
-        paddingLeft:10,
         fontSize:15,
-         color:"#a9a9a9"
-            
+         color:"#a9a9a9" 
       },
 });
 
