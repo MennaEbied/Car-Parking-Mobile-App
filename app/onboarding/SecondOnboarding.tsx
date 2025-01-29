@@ -20,41 +20,32 @@ const SecondOnboarding = () => {
 };
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: "#ffff",
-    alignItems: "center",
-    justifyContent: "center",
-    
-  },
-  img:{
-        width:330,
-        height:290,
-        marginBottom:30
+      flex: 1,
+      backgroundColor: "#ffff",
+      alignItems: "center",
+      justifyContent: "space-between",
+      paddingVertical: 110,
+      paddingHorizontal:40,
     },
-  text: {
-    fontWeight: "500",
-    fontSize: 18,
-    textAlign: "center",
-    color: "#00052d",
-    marginTop: 10,
-    paddingLeft:40,
-    paddingRight:40
-  },
+    img:{
+      width:350,
+      height:300,
+    },
+    text:{
+     fontSize:18,
+     textAlign: "center",
+    },
+    button:{
+      alignItems: "center",
+      justifyContent: "center",
+      paddingVertical:12,
+      paddingHorizontal:95,
+      backgroundColor:"#7793ed",
+      borderRadius:35,
+      },
+      next:{
+         fontSize:20,
+      }
+  });
+  export default SecondOnboarding;
   
-  button:{
-        marginLeft:60,
-        marginRight:50,
-        paddingLeft:85,
-        paddingTop:12,
-        paddingBottom:12,
-        backgroundColor:"#7793ed",
-        borderRadius:35,
-        marginTop:70
-    },
-    next:{
-       fontSize:20,
-      marginRight:80
-       
-    }
-});
-export default SecondOnboarding;

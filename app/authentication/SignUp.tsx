@@ -71,18 +71,17 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "#ffff",
     flex: 1,
+    alignItems:"center",
+    justifyContent: "space-between",
+    paddingVertical:110,
+    paddingHorizontal:25
   },
   img: {
     width: 200,
     height: 150,
-    marginTop: 100,
-    marginBottom: 10,
-    alignItems: "center",
-    marginLeft:80
   },
   text1: {
-    marginBottom: 30,
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: "bold",
     textAlign:"center"
   },
@@ -90,35 +89,23 @@ const styles = StyleSheet.create({
     backgroundColor: "#e9e9e9",
     width: 300,
     height: 50,
-    borderRadius: 30,
-    marginBottom: 25,
-    marginRight: 42,
-    paddingTop: 10,
-    paddingBottom: 10,
-    paddingLeft: 20, 
-    marginLeft:30,
-    alignItems: "center",
+    borderRadius:30,
+    fontSize:15,
+    paddingLeft:20
   },
   button: {
     backgroundColor: "#6081ea",
     borderRadius: 30,
-    marginBottom: 15,
-    marginLeft: 30,
-    marginRight: 30,
-    paddingTop: 10,
-    paddingBottom: 10,
-    paddingLeft: 100, 
-    paddingRight:115,
     alignItems: "center",
+    paddingHorizontal:115,
+    paddingVertical:10
   },
    text4: {
     fontSize: 15,
   }, 
   text2: {
-    fontSize: 12,
-    marginTop: 4, 
-    marginBottom:40,
-    paddingLeft:45
+    fontSize: 13,
+    paddingRight:80
   },
   text3: {
     fontSize: 16,
@@ -128,7 +115,7 @@ const styles = StyleSheet.create({
   button1: {
     position: "absolute", 
     marginTop:600,
-   marginLeft:230
+    paddingLeft:180
   },
 });
 

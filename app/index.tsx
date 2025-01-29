@@ -36,6 +36,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     paddingBottom:10,
     paddingRight:20
+   
   },
   tagline: {
     fontSize: 19,
