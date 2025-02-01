@@ -20,7 +20,7 @@ const ParkingSlots = () => {
       <Text style={styles.title}>Parking Slots!</Text>
       <View style={styles.slotsContainer}>
         {slots.map((slot,index) => (
-          <View key={slot.id} style={styles.slotContainer}>
+          <View key={slot.id} style={styles.slotsContainer}>
           <View
             style={[
               styles.slot,
