@@ -59,13 +59,13 @@ const SignUp = () => {
         <Text style={styles.text4}> Sign Up</Text>
       </Pressable>
 
-      <View style={styles.text}>
+     <View style={styles.text}>
         <Text style={styles.text2}> Already have an account ?</Text>
-        <Text style={styles.text3}> Sign In</Text>
         <Pressable
-          style={styles.button1}
           onPress={() => router.push("authentication/SignIn")}
-        ></Pressable>
+        >
+           <Text style={styles.text3}> Sign In</Text>
+        </Pressable>
       </View>
     </View>
   );
@@ -121,11 +121,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     textDecorationLine: "underline",
-  },
-  button1: {
-    position: "absolute",
-    marginTop: 600,
-    paddingLeft: 180,
   },
   text: {
     display: "flex",
