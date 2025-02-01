@@ -1,4 +1,11 @@
-import {StyleSheet,View,Text,Image,TextInput,Pressable,} from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  Image,
+  TextInput,
+  Pressable,
+} from "react-native";
 import { router } from "expo-router";
 import { useState } from "react";
 
@@ -19,8 +26,7 @@ const SignUp = () => {
   };
   return (
     <View style={styles.container}>
-      <Image style={styles.img} 
-      source={require("../../assets/signup1.jpg")} />
+      <Image style={styles.img} source={require("../../assets/signup1.jpg")} />
 
       <Text style={styles.text1}> Create Account </Text>
 
@@ -51,19 +57,17 @@ const SignUp = () => {
 
       <Pressable style={styles.button} onPress={handleSignUp}>
         <Text style={styles.text4}> Sign Up</Text>
-      </Pressable> 
+      </Pressable>
 
-      
+      <View style={styles.text}>
         <Text style={styles.text2}> Already have an account ?</Text>
-
+        <Text style={styles.text3}> Sign In</Text>
         <Pressable
           style={styles.button1}
           onPress={() => router.push("authentication/SignIn")}
-        >
-          <Text style={styles.text3}> Sign In</Text>
-        </Pressable>
+        ></Pressable>
       </View>
-    
+    </View>
   );
 };
 
@@ -71,10 +75,10 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "#ffff",
     flex: 1,
-    alignItems:"center",
+    alignItems: "center",
     justifyContent: "space-between",
-    paddingVertical:110,
-    paddingHorizontal:25
+    paddingVertical: 110,
+    paddingHorizontal: 25,
   },
   img: {
     width: 200,
@@ -83,30 +87,35 @@ const styles = StyleSheet.create({
   text1: {
     fontSize: 22,
     fontWeight: "bold",
-    textAlign:"center"
+    textAlign: "center",
   },
   input: {
     backgroundColor: "#e9e9e9",
     width: 300,
     height: 50,
-    borderRadius:30,
-    fontSize:15,
-    paddingLeft:20,
-    marginBottom:15
+    borderRadius: 30,
+    fontSize: 15,
+    paddingLeft: 20,
+
+
   },
   button: {
     backgroundColor: "#6081ea",
     borderRadius: 30,
     alignItems: "center",
-    paddingHorizontal:115,
-    paddingVertical:10,
+    paddingHorizontal: 115,
+    paddingVertical: 10,
+    height: 50,
+    justifyContent: "center",
   },
-   text4: {
-    fontSize: 15,
-  }, 
+  text4: {
+    fontSize: 16,
+    textAlign: "center",
+
+  },
   text2: {
-    fontSize: 13,
-    paddingRight:80
+    fontSize: 15,
+    textAlign: "center",
   },
   text3: {
     fontSize: 16,
@@ -114,9 +123,13 @@ const styles = StyleSheet.create({
     textDecorationLine: "underline",
   },
   button1: {
-    position: "absolute", 
-    marginTop:600,
-    paddingLeft:180
+    position: "absolute",
+    marginTop: 600,
+    paddingLeft: 180,
+  },
+  text: {
+    display: "flex",
+    flexDirection: "row",
   },
 });
 
