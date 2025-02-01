@@ -91,14 +91,15 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius:30,
     fontSize:15,
-    paddingLeft:20
+    paddingLeft:20,
+    marginBottom:15
   },
   button: {
     backgroundColor: "#6081ea",
     borderRadius: 30,
     alignItems: "center",
     paddingHorizontal:115,
-    paddingVertical:10
+    paddingVertical:10,
   },
    text4: {
     fontSize: 15,
