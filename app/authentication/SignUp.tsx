@@ -96,6 +96,8 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     fontSize: 15,
     paddingLeft: 20,
+
+
   },
   button: {
     backgroundColor: "#6081ea",
@@ -109,6 +111,7 @@ const styles = StyleSheet.create({
   text4: {
     fontSize: 16,
     textAlign: "center",
+
   },
   text2: {
     fontSize: 15,
