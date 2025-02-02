@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     color: 'black',
     fontSize: 25,
     fontWeight:"bold",
-    marginVertical: 35
+    marginVertical: "auto"
   },
   slotsContainer: {
     flexDirection: 'row',
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
   button:{
   backgroundColor: '#3786e8',
   width: '100%',
-  paddingVertical: 8,
+  paddingVertical: 10,
   borderRadius: 25,
   alignItems: 'center',
   justifyContent: 'center',
