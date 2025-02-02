@@ -43,19 +43,19 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     alignItems: 'center',
     justifyContent: "space-between",
-    padding:15,
+    padding:20,
   },
   title: {
     color: 'black',
     fontSize: 25,
     fontWeight:"bold",
-    paddingBottom:50,
-    paddingTop:50
+    marginVertical: 35
   },
   slotsContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: "space-between",
+    gap:5
   },
   slot:{
   height:80,
@@ -65,7 +65,8 @@ const styles = StyleSheet.create({
   slotLabel: {
     color: '#989898',
     fontWeight: 'bold',
-    marginLeft:50
+    marginLeft:50,
+    
   },
   image: {
     width: 120, 
@@ -78,17 +79,19 @@ const styles = StyleSheet.create({
     backgroundColor: 'black', 
   },
   button:{
-    backgroundColor:"#3786e8",
-    width:335,
-    height:40,
-    alignItems: 'center',
-    borderRadius:30,
-    paddingTop:8,
-    marginTop:50
+  backgroundColor: '#3786e8',
+  width: '100%',
+  paddingVertical: 8,
+  borderRadius: 25,
+  alignItems: 'center',
+  justifyContent: 'center',
+  marginTop: 50,
+    
   },
  continue:{
   fontSize:17,
-  fontWeight:"medium"
+  fontWeight:"medium",
+  
   }
 });
 export default ParkingSlots;
