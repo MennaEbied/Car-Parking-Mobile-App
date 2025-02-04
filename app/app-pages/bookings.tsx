@@ -1,97 +1,86 @@
-import React from 'react';
-import { View, Text, StyleSheet,Pressable,Image } from 'react-native';
-import { router } from "expo-router";
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, Text, View, SafeAreaView, ImageBackground, Alert } from 'react-native';
 
-const ParkingSlots = () => {
-  const slots = [
-    { id: 'A1' ,image: { uri: 'https://i.pinimg.com/474x/09/93/ef/0993ef778f6b7bb80621fbd96d2c837a.jpg' } },
-    { id: 'A6' ,image: { uri: 'https://i.pinimg.com/474x/64/ba/04/64ba04d7c3b531ee14a4ffb35a4a619e.jpg' }},
-    { id: 'A2' },
-    { id: 'A7'},
-    { id: 'A3',image:{uri:'https://i.pinimg.com/474x/d4/93/e4/d493e4198352e55cc829ab1460191df9.jpg'} },
-    { id: 'A8' },
-    { id: 'A4' },
-    { id: 'A9',image:{uri:'https://i.pinimg.com/474x/d6/ac/d1/d6acd1ad0e61c8e6f51ca455b84c48a8.jpg'}  },
-    { id: 'A5',image:{uri:'https://i.pinimg.com/474x/28/f3/10/28f310fec909f709058408b2edc2543e.jpg'}  },
-    { id: 'A10'},
-  ];
+const ParkingSlots: React.FC = () => {
+  const [time, setTime] = useState<number>(0);
+  const [isTimerRunning, setIsTimerRunning] = useState<boolean>(true);
+  const timerDuration = 60; // Set the timer duration in seconds (e.g., 180 seconds = 3 minutes)
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+
+    if (isTimerRunning) {
+      interval = setInterval(() => {
+        setTime((prevTime) => {
+          if (prevTime + 1 >= timerDuration) {
+            setIsTimerRunning(false);
+            clearInterval(interval);
+            Alert.alert('Time is over', 'Your parking time has ended.');
+            return timerDuration;
+          }
+          return prevTime + 1;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+}, [isTimerRunning]);
+const formatTime = (time: number): string => {
+    const hours = Math.floor(time / 3600);
+    const minutes = Math.floor((time % 3600) / 60);
+    const seconds = time % 60;
+
+    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+  };
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Parking Slots!</Text>
-      <View style={styles.slotsContainer}>
-        {slots.map((slot,index) => (
-          <View key={slot.id} style={styles.slot}>
-          <Image source={slot.image} style={styles.image} />
-          <Text style={styles.slotLabel}>{slot.id}</Text>
-          {index < slots.length  && <View style={styles.line} />}
+    <SafeAreaView style={styles.container}>
+      <ImageBackground source={require('../../assets/home.jpg')} style={styles.background}>
+        <View style={styles.content}>
+          <Text style={styles.welcomeText}>Welcome!</Text>
+          <Text style={styles.findText}>Find best parking space</Text>
+          <Text style={styles.parkingTimeText}>Parking time</Text>
+          <Text style={styles.timerText}>{formatTime(time)}</Text>
         </View>
-        ))}
-        <Pressable
-            style={styles.button}
-            onPress={() => router.push("app-pages/home")}
-                   >
-                  <Text style={styles.continue}> Continue </Text>
-                  </Pressable>
-      </View>     
-    </View>
+      </ImageBackground>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+  },
+  background: {
+    flex: 1,
+    resizeMode: 'cover',
+    justifyContent: 'center',
+  },
+  content: {
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
-    justifyContent: "space-between",
-    padding:20,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
-  title: {
-    color: 'black',
-    fontSize: 25,
-    fontWeight:"bold",
-    marginVertical: "auto"
-  },
-  slotsContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: "space-between",
-    gap:5
-  },
-  slot:{
-  height:80,
-  justifyContent: "center",
-  
-  },
-  slotLabel: {
-    color: '#989898',
+  welcomeText: {
+    fontSize: 32,
+    color: 'white',
     fontWeight: 'bold',
-    marginLeft:50,
-    
   },
-  image: {
-    width: 120, 
-    height: 55,  
-    marginTop:15
+  findText: {
+    fontSize: 24,
+    color: 'white',
+    marginTop: 10,
   },
-  line: {
-    height: 2,
-    width:130, 
-    backgroundColor: 'black', 
+  parkingTimeText: {
+    fontSize: 20,
+    color: 'white',
+    marginTop: 20,
   },
-  button:{
-  backgroundColor: '#3786e8',
-  width: '100%',
-  paddingVertical: 10,
-  borderRadius: 25,
-  alignItems: 'center',
-  justifyContent: 'center',
-  marginTop: 50,
-    
+  timerText: {
+    fontSize: 48,
+    color: 'white',
+    marginTop: 10,
+    fontWeight: 'bold',
   },
- continue:{
-  fontSize:17,
-  fontWeight:"medium",
-  
-  }
 });
+
 export default ParkingSlots;
