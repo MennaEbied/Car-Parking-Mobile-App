@@ -31,6 +31,10 @@ export default function Layout() {
         name="app-pages"
         options={{ headerShown: false, animation: "fade" }}
       />
+      <Stack.Screen
+        name="pages/slots"
+        options={{ headerShown: false, animation: "fade" }}
+      />
     </Stack>
   );
 }
