@@ -82,13 +82,13 @@ const styles = StyleSheet.create({
     marginRight: 2, 
   },
   available: {
-    backgroundColor: "#449d48",
+    backgroundColor: "#8a8a8a",
   },
   occupied: {
-    backgroundColor: "#f32c1e",
+    backgroundColor: "#0e4bff",
   },
   reserved: {
-    backgroundColor: "#ffe608",
+    backgroundColor: "#ffd814",
   },
   legendText: {
     fontSize: 15,
