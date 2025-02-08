@@ -1,86 +1,193 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, SafeAreaView, ImageBackground, Alert } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, View, TextInput, Alert, Text, TouchableOpacity, Platform, ImageBackground } from 'react-native';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { StatusBar } from 'expo-status-bar';
 
-const ParkingSlots: React.FC = () => {
-  const [time, setTime] = useState<number>(0);
-  const [isTimerRunning, setIsTimerRunning] = useState<boolean>(true);
-  const timerDuration = 60; // Set the timer duration in seconds (e.g., 180 seconds = 3 minutes)
+export default function App() {
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [SlotID, setSlotID] = useState('');
+  const [startTime, setStartTime] = useState(new Date());
+  const [endTime, setEndTime] = useState(new Date());
+  const [date, setDate] = useState(new Date());
+  const [showStartTimePicker, setShowStartTimePicker] = useState(false);
+  const [showEndTimePicker, setShowEndTimePicker] = useState(false);
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-
-    if (isTimerRunning) {
-      interval = setInterval(() => {
-        setTime((prevTime) => {
-          if (prevTime + 1 >= timerDuration) {
-            setIsTimerRunning(false);
-            clearInterval(interval);
-            Alert.alert('Time is over', 'Your parking time has ended.');
-            return timerDuration;
-          }
-          return prevTime + 1;
-        });
-      }, 1000);
+  const handleBookNow = () => {
+    if (!phoneNumber) {
+      Alert.alert('Error', 'Please fill in all fields');
+      return;
     }
-    return () => clearInterval(interval);
-}, [isTimerRunning]);
-const formatTime = (time: number): string => {
-    const hours = Math.floor(time / 3600);
-    const minutes = Math.floor((time % 3600) / 60);
-    const seconds = time % 60;
-
-    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    // Here you would typically send the data to a backend service
+    Alert.alert('Success', 'Booking successful!');
   };
+
+  const onChangeStartTime = (event: any, selectedDate?: Date) => {
+    const currentDate = selectedDate || startTime;
+    setShowStartTimePicker(Platform.OS === 'ios'); // Keep the picker open on iOS
+    setStartTime(currentDate);
+  };
+
+  const onChangeEndTime = (event: any, selectedDate?: Date) => {
+    const currentDate = selectedDate || endTime;
+    setShowEndTimePicker(Platform.OS === 'ios'); // Keep the picker open on iOS
+    setEndTime(currentDate);
+  };
+
+  const onChangeDate = (event: any, selectedDate?: Date) => {
+    const currentDate = selectedDate || date;
+    setShowDatePicker(Platform.OS === 'ios'); // Keep the picker open on iOS
+    setDate(currentDate);
+  };
+
   return (
-    <SafeAreaView style={styles.container}>
-      <ImageBackground source={require('../../assets/home.jpg')} style={styles.background}>
-        <View style={styles.content}>
-          <Text style={styles.welcomeText}>Welcome!</Text>
-          <Text style={styles.findText}>Find best parking space</Text>
-          <Text style={styles.parkingTimeText}>Parking time</Text>
-          <Text style={styles.timerText}>{formatTime(time)}</Text>
+    <ImageBackground
+      source={require('../../assets/parking.jpg')} 
+      style={styles.backgroundImage}
+      resizeMode="cover"
+    >
+      <View style={styles.overlay}>
+        <Text style={styles.header}>Parking Form</Text>
+
+        <TextInput
+          style={styles.input}
+          placeholder="Phone Number"
+          placeholderTextColor="#999"
+          value={phoneNumber}
+          onChangeText={setPhoneNumber}
+          keyboardType="phone-pad"
+          returnKeyType='done'
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Slot ID"
+          placeholderTextColor="#999"
+          value={SlotID}
+          onChangeText={setSlotID}
+         keyboardType="default"
+          returnKeyType='done'
+        />
+
+        <View style={styles.pickerContainer}>
+          <TouchableOpacity onPress={() => setShowStartTimePicker(true)} style={styles.pickerButton}>
+            <Text style={styles.pickerButtonText}>Start Time: {startTime.toLocaleTimeString()}</Text>
+          </TouchableOpacity>
+          {showStartTimePicker && (
+            <DateTimePicker
+              value={startTime}
+              mode="time"
+              is24Hour={true}
+              display="default"
+              onChange={onChangeStartTime}
+            />
+          )}
+
+          <TouchableOpacity onPress={() => setShowEndTimePicker(true)} style={styles.pickerButton}>
+            <Text style={styles.pickerButtonText}>End Time: {endTime.toLocaleTimeString()}</Text>
+          </TouchableOpacity>
+          {showEndTimePicker && (
+            <DateTimePicker
+              value={endTime}
+              mode="time"
+              is24Hour={true}
+              display="default"
+              onChange={onChangeEndTime}
+            />
+          )}
+
+          <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.pickerButton}>
+            <Text style={styles.pickerButtonText}>Date: {date.toLocaleDateString()}</Text>
+          </TouchableOpacity>
+          {showDatePicker && (
+            <DateTimePicker
+              value={date}
+              mode="date"
+              display="default"
+              onChange={onChangeDate}
+            />
+          )}
         </View>
-      </ImageBackground>
-    </SafeAreaView>
+
+        <TouchableOpacity onPress={handleBookNow} style={styles.bookNowButton}>
+          <Text style={styles.bookNowButtonText}>Book Now</Text>
+        </TouchableOpacity>
+        <StatusBar style='light'/>
+      </View>
+    </ImageBackground>
   );
-};
+}
 
 const styles = StyleSheet.create({
-  container: {
+  backgroundImage: {
     flex: 1,
-  },
-  background: {
-    flex: 1,
-    resizeMode: 'cover',
     justifyContent: 'center',
   },
-  content: {
-    flex: 1,
+  overlay: {
+    backgroundColor: 'rgba(255, 255, 255, 0.8)', // Semi-transparent white overlay
+    padding: 20,
+    borderRadius: 10,
+    margin: 20,
+  },
+  header: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 30,
+    color: '#333',
+  },
+  input: {
+    height: 50,
+    borderColor: '#ddd',
+    borderWidth: 1,
+    borderRadius: 20,
+    marginBottom: 20,
+    paddingHorizontal: 15,
+    fontSize: 16,
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  pickerContainer: {
+    marginBottom: 20,
+  },
+  pickerButton: {
+    height: 50,
+    justifyContent: 'center',
+    borderColor: '#ddd',
+    borderWidth: 1,
+    borderRadius: 20,
+    marginBottom: 15,
+    paddingHorizontal: 15,
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  pickerButtonText: {
+    fontSize: 16,
+    color: '#333',
+  },
+  bookNowButton: {
+    height: 50,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  welcomeText: {
-    fontSize: 32,
-    color: 'white',
-    fontWeight: 'bold',
-  },
-  findText: {
-    fontSize: 24,
-    color: 'white',
+    borderRadius: 20,
+    backgroundColor: '#007bff',
     marginTop: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
   },
-  parkingTimeText: {
-    fontSize: 20,
-    color: 'white',
-    marginTop: 20,
-  },
-  timerText: {
-    fontSize: 48,
-    color: 'white',
-    marginTop: 10,
+  bookNowButtonText: {
+    fontSize: 18,
     fontWeight: 'bold',
+    color: '#fff',
   },
 });
-
-export default ParkingSlots;
