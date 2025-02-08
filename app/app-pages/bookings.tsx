@@ -3,7 +3,7 @@ import { StyleSheet, View, TextInput, Alert, Text, TouchableOpacity, Platform, I
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { StatusBar } from 'expo-status-bar';
 
-export default function App() {
+export default function Bookings() {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [SlotID, setSlotID] = useState('');
   const [startTime, setStartTime] = useState(new Date());
