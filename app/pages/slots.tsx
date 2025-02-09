@@ -43,14 +43,17 @@ const ParkingSlots: React.FC = () => {
           <Text style={styles.plateText}>{slot.plate}</Text>
         </View>
         ))}
-        
-      <Pressable onPress={()=> router.push("app-pages/home")} >
-                          <Text style={styles.buttonText1}>Back</Text>
-                  </Pressable>
-                  <Pressable onPress={()=> router.push("app-pages/bookings")} >
-                          <Text style={styles.buttonText2}>Continue</Text>
-                  </Pressable>
-                  <View/>
+        <View style={styles.buttons}>
+      <Pressable 
+       onPress={()=> router.push("app-pages/home")} >
+       <Text style={styles.buttonText1}>Back</Text>
+      </Pressable>
+      <Pressable 
+        onPress={()=> router.push("app-pages/bookings")} >
+        <Text style={styles.buttonText2}>Continue</Text>
+      </Pressable>
+        </View>
+         <View/>
       </ScrollView>
     </View>
   );
@@ -119,15 +122,20 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#fff',
   },
+  buttons:{
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent:"center",
+    marginTop:20,
+   
+  },
   buttonText1:{
     fontSize:18,
-    marginLeft:30,
-    marginTop:20
+    marginLeft:30
   },
   buttonText2:{
     fontSize:18,
-    marginLeft:100,
-    marginTop:20
+    marginLeft:160
   },
 });
 

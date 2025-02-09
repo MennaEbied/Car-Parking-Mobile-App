@@ -1,62 +1,76 @@
-import React from 'react';
+import React,{useState} from 'react';
 import { View, Text, TextInput, Pressable, StyleSheet, ImageBackground} from 'react-native';
 import { router } from "expo-router";
 
 const HomePage: React.FC = () => {
+  const [, setSearchQuery] = useState('');
   return (
     <ImageBackground
-    source={require("../../assets/home-img.jpg")}
+    source={require("../../assets/home.jpeg")}
       style={styles.background}
       resizeMode="cover"
     >
-      <View style={styles.container}>
-        <View>
+      <View style={styles.header}>
+        <Text style={styles.greeting}>Hello, User!</Text>
+        <Text style={styles.subtitle}>Find your perfect parking spot</Text>
+        <View style={styles.searchContainer}>
           <TextInput
             style={styles.searchInput}
-            placeholder="Search"
-            placeholderTextColor="#888"
+            placeholder="Search parking slot"
+            onChangeText={setSearchQuery}
           />
         </View>
-        <Text style={styles.text}>Hello, ....</Text>
-         <Pressable onPress={()=> router.push("pages/slots")} >
-                    <Text style={styles.buttonText}>Plan parking now</Text>
-            </Pressable>
-            <View/>
+      </View>
+      <View >
+        <Pressable 
+        onPress={()=> router.push("pages/slots")}
+        style ={styles.button}> 
+        <Text style ={styles.buttontext}> Book now</Text>
+        </Pressable>
       </View>
     </ImageBackground>
   );
 };
 const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   container: {
     flex: 1,
     justifyContent: "space-between",
     alignItems: 'center',
   },
-  searchInput: {
-    height: 40,
-    width:300,
-    marginTop:50,
-    borderRadius: 20,
-    borderColor: "black",
-    borderWidth: 1,
-    paddingLeft:15,
-    backgroundColor:"white",
+  header: {
+    padding: 35,
+    marginBottom:400
   },
-  text: {
-    fontSize: 25,
-    marginBottom:400,
-    marginRight:120
+  greeting: {
+    fontSize: 22,
+    fontWeight: '600',
+    marginBottom: 4,
   },
-  buttonText: {
-    color: '#fff',
+  subtitle: {
     fontSize: 17,
-    marginLeft:120,
-    marginTop:60
+    marginBottom: 30,
+  },
+  searchContainer: {
+    width:300,
+    backgroundColor: '#F0F0F0',
+    borderRadius: 20,
+    paddingHorizontal: 10,
+  },
+  searchInput: {
+    fontSize: 16,
+    color: '#2D3436',
+  },
+  background: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  button:{
+  marginLeft:160,
+  },
+  buttontext:{
+    color:"white",
+    fontSize:19,
   },
 });
 export default HomePage;

@@ -35,6 +35,7 @@ export default function Layout() {
         name="pages/slots"
         options={{ headerShown: false, animation: "fade" }}
       />
+      <Stack.Screen name="bookings" />
     </Stack>
   );
 }
