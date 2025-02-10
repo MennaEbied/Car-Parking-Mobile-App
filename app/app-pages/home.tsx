@@ -25,7 +25,7 @@ const HomePage: React.FC = () => {
         <Pressable 
         onPress={()=> router.push("pages/slots")}
         style ={styles.button}> 
-        <Text style ={styles.buttontext}> Book now</Text>
+        <Text style ={styles.buttontext}> Book now !</Text>
         </Pressable>
       </View>
     </ImageBackground>
@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   subtitle: {
-    fontSize: 17,
+    fontSize: 18,
     marginBottom: 30,
   },
   searchContainer: {
@@ -58,6 +58,7 @@ const styles = StyleSheet.create({
   },
   searchInput: {
     fontSize: 16,
+    height:30,
     color: '#2D3436',
   },
   background: {
@@ -70,7 +71,7 @@ const styles = StyleSheet.create({
   },
   buttontext:{
     color:"white",
-    fontSize:19,
+    fontSize:20,
   },
 });
 export default HomePage;

@@ -1,4 +1,7 @@
-import { Stack } from "expo-router";
+import { Stack, Link } from "expo-router";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import { Pressable } from "react-native";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 export default function Layout() {
   return (
@@ -27,15 +30,31 @@ export default function Layout() {
         name="onboarding/notification"
         options={{ headerShown: false, animation: "fade" }}
       />
-       <Stack.Screen
+      <Stack.Screen
         name="app-pages"
         options={{ headerShown: false, animation: "fade" }}
       />
       <Stack.Screen
         name="pages/slots"
-        options={{ headerShown: false, animation: "fade" }}
+        options={{
+          animation: "fade",
+          headerShown: false,
+        }}
       />
-      <Stack.Screen name="bookings" />
+      <Stack.Screen
+        name="pages/bookings"
+        options={{
+          animation: "fade",
+          title: "",
+          headerLeft: () => (
+            <Link href="pages/slots" asChild>
+              <Pressable hitSlop={20} style={{ marginRight: 10 }}>
+                <MaterialIcons name="arrow-back" size={24} color="black" />
+              </Pressable>
+            </Link>
+          ),
+        }}
+      />
     </Stack>
   );
 }
