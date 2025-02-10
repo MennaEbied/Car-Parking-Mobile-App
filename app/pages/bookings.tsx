@@ -8,6 +8,7 @@ import {
   ImageBackground,
   Alert,
 } from "react-native";
+import { router } from "expo-router";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 const ParkingForm = () => {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -25,7 +26,7 @@ const ParkingForm = () => {
       return;
     }
     // Here you would typically send the data to a backend service
-    Alert.alert("Success", "Booking successful!");
+    router.push("pages/payment")
   };
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -107,7 +108,7 @@ const ParkingForm = () => {
         <TouchableOpacity style={styles.pickerButton} onPress={showDatePicker}>
           <Text style={styles.pickerButtonText}>{formatDate(date)}</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.bookButton} onPress={handleBookNow}>
+        <TouchableOpacity style={styles.bookButton} onPress={handleBookNow }>
           <Text style={styles.bookButtonText}>Book Now</Text>
         </TouchableOpacity>
         <DateTimePickerModal

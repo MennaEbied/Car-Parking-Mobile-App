@@ -55,6 +55,20 @@ export default function Layout() {
           ),
         }}
       />
+      <Stack.Screen
+      name="pages/payment"
+      options={{
+        animation: "fade",
+        headerShown: false,
+      }}
+      />
+      <Stack.Screen
+      name="pages/done"
+      options={{
+        animation: "fade",
+        headerShown: false,
+      }}
+      />
     </Stack>
   );
 }
