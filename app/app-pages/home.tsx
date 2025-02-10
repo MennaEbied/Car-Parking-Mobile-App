@@ -48,17 +48,17 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 18,
-    marginBottom: 30,
+    marginBottom:30,
   },
   searchContainer: {
     width:300,
     backgroundColor: '#F0F0F0',
     borderRadius: 20,
-    paddingHorizontal: 10,
+    paddingHorizontal: 15,
   },
   searchInput: {
     fontSize: 16,
-    height:30,
+    height:40,
     color: '#2D3436',
   },
   background: {

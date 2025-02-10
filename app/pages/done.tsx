@@ -5,25 +5,17 @@ const Notification = () => {
   return (
     <View style={styles.container}>
       <Image
-        source={require("../../assets/notification.jpg")}
+        source={require("../../assets/done.jpg")}
         style={styles.img}
       />
-      <Text style={styles.text1}> Enable Notification Access </Text>
+      <Text style={styles.text1}> Yay....! Booked it </Text>
       <Text style={styles.text2}>
-        Enable notifications to receive real-time updates
+      congratulations you have successfully booked parking slot
       </Text>
-      
-
     <Pressable style={styles.button}
-              onPress={()=> router.push("authentication/SignUp")}
-            >
-                 <Text style={styles.text3}> Allow Notification</Text>
+              onPress={()=> router.push("app-pages/home")}>
+                 <Text style={styles.text3}> Back to home </Text>
             </Pressable>
-                
-            <Pressable 
-            onPress={()=> router.push("authentication/SignUp")}>
-                 <Text style={styles.text4}> Maybe Later </Text>
-    </Pressable>
     </View>
   );
 };
@@ -34,15 +26,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "space-between",
     alignItems: "center",
-    paddingVertical:170,
-    paddingHorizontal:20
+    paddingVertical:190,
   },
   img: {
-    width: 130,
-    height: 120,
+    width: 150,
+    height: 150,
   },
   text1: {
-    fontSize:22,
+    fontSize:23,
     fontWeight: "bold",
     textAlign: "center",
   },
@@ -50,20 +41,18 @@ const styles = StyleSheet.create({
     fontSize: 15,
     textAlign: "center",
     color: "#6a6a6a",
+    paddingLeft:30,
+    paddingRight:30
   },
   button:{
-        backgroundColor:"#6081ea",
-        borderRadius:30,
+        backgroundColor:"#007bff",
+        borderRadius:20,
         paddingVertical:12,
-        paddingHorizontal:60,
+        paddingHorizontal:80,
      },
       text3:{
-            fontSize:15,
+            fontSize:16,
             color:"#f5f5f5"
-      },
-      text4:{
-        fontSize:15,
-         color:"#a9a9a9" 
       },
 });
 
