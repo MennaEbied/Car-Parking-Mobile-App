@@ -13,14 +13,6 @@ export default function Layout() {
           ),
         }}
       />
-      <Tabs.Screen
-        name="bookings"
-        options={{
-          tabBarIcon: ({ color }) => (
-            <AntDesign name="profile" size={22} color={color} />
-          ),
-        }}
-      />
       <Tabs.Screen name="profile" 
       options={{
         tabBarIcon: ({ color }) => (

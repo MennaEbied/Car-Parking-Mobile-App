@@ -49,7 +49,7 @@ const ParkingSlots: React.FC = () => {
        <Text style={styles.buttonText1}>Back</Text>
       </Pressable>
       <Pressable 
-        onPress={()=> router.push("app-pages/bookings")} >
+        onPress={()=> router.push("pages/bookings")} >
         <Text style={styles.buttonText2}>Continue</Text>
       </Pressable>
         </View>
