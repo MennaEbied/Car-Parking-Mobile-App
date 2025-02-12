@@ -1,5 +1,6 @@
 import React from 'react';
-import {View,Text,StyleSheet,ScrollView,Pressable} from 'react-native';
+import {View,Text,StyleSheet,ScrollView,Pressable,TouchableOpacity} from 'react-native';
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { router } from "expo-router";
 
 const slots = [
@@ -18,7 +19,6 @@ const slots = [
 const ParkingSlots: React.FC = () => {
   return (
     <View style={styles.container}>
-      
       <Text style={styles.title}> Find best parking slot </Text>
       <View style={styles.legendContainer}>
       <View style={[styles.legendItem, styles.available]} />
@@ -44,15 +44,33 @@ const ParkingSlots: React.FC = () => {
         </View>
         ))}
         <View style={styles.buttons}>
-      <Pressable 
-       onPress={()=> router.push("app-pages/home")} >
-       <Text style={styles.buttonText1}>Back</Text>
-      </Pressable>
-      <Pressable 
+    <TouchableOpacity
+        style={{ marginLeft:15}}
+        onPress={()=> router.push("app-pages/home")} >
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <FontAwesome6
+          name="angles-left"
+          size={18}
+          color="black"
+          style={styles.icon}
+        />
+        <Text style={styles.buttontext}>Back</Text>
+    </View>
+  </TouchableOpacity>
+  </View>
+    <TouchableOpacity
+        style={{ marginLeft:120}}
         onPress={()=> router.push("pages/bookings")} >
-        <Text style={styles.buttonText2}>Continue</Text>
-      </Pressable>
-        </View>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <Text style={styles.buttontext}>Continue</Text>
+        <FontAwesome6
+          name="angles-right"
+          size={18}
+          color="black"
+          style={styles.icon}
+        />
+    </View>
+  </TouchableOpacity>
          <View/>
       </ScrollView>
     </View>
@@ -111,7 +129,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 15,
     marginHorizontal:7,
-    
   },
   slotText: {
     fontSize: 18,
@@ -126,16 +143,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent:"center",
-    marginTop:20,
-   
+    marginTop:30,
   },
-  buttonText1:{
-    fontSize:18,
-    marginLeft:30
-  },
-  buttonText2:{
-    fontSize:18,
-    marginLeft:160
+    buttontext:{
+      color:"black",
+      fontSize:18,
+      marginRight: 5,
+    },
+  icon: {
+    marginRight: 10,
   },
 });
 
