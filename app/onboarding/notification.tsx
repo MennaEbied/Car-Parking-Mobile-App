@@ -12,14 +12,11 @@ const Notification = () => {
       <Text style={styles.text2}>
         Enable notifications to receive real-time updates
       </Text>
-      
-
     <Pressable style={styles.button}
               onPress={()=> router.push("authentication/SignUp")}
             >
                  <Text style={styles.text3}> Allow Notification</Text>
-            </Pressable>
-                
+            </Pressable>   
             <Pressable 
             onPress={()=> router.push("authentication/SignUp")}>
                  <Text style={styles.text4}> Maybe Later </Text>
@@ -52,19 +49,19 @@ const styles = StyleSheet.create({
     color: "#6a6a6a",
   },
   button:{
-        backgroundColor:"#6081ea",
-        borderRadius:30,
-        paddingVertical:12,
-        paddingHorizontal:60,
-     },
-      text3:{
-            fontSize:15,
-            color:"#f5f5f5"
-      },
-      text4:{
-        fontSize:15,
-         color:"#a9a9a9" 
-      },
+   backgroundColor:"#6081ea",
+   borderRadius:30,
+   paddingVertical:12,
+   paddingHorizontal:60,
+  },
+  text3:{
+    fontSize:15,
+    color:"#f5f5f5"
+ },
+ text4:{
+  fontSize:15,
+  color:"#a9a9a9" 
+  },
 });
 
 export default Notification;

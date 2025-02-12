@@ -45,15 +45,15 @@ const styles = StyleSheet.create({
     paddingRight:30
   },
   button:{
-        backgroundColor:"#007bff",
-        borderRadius:20,
-        paddingVertical:12,
-        paddingHorizontal:80,
-     },
-      text3:{
-            fontSize:16,
-            color:"#f5f5f5"
-      },
+     backgroundColor:"#007bff",
+     borderRadius:20,
+     paddingVertical:12,
+     paddingHorizontal:80,
+  },
+  text3:{
+   fontSize:16,
+   color:"#f5f5f5"
+  },
 });
 
 export default Notification;

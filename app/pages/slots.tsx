@@ -4,16 +4,16 @@ import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { router } from "expo-router";
 
 const slots = [
-  { id: 1, status: 'available', plate: 'ABC-123' },
-  { id: 2, status: 'available', plate: 'ABC-124' },
-  { id: 3, status: 'occupied', plate: 'ABC-125' },
-  { id: 4, status: 'available', plate: 'ABC-126' },
-  { id: 5, status: 'reserved', plate: 'ABC-127' },
-  { id: 6, status: 'occupied', plate: 'ABC-128' },
-  { id: 7, status: 'available', plate: 'ABC-129' },
-  { id: 8, status: 'available', plate: 'ABC-130' },
-  { id: 9, status: 'occupied', plate: 'ABC-131' },
-  { id: 10, status: 'reserved', plate: 'ABC-132' },
+  { id: 1, status: 'available' },
+  { id: 2, status: 'available' },
+  { id: 3, status: 'occupied' },
+  { id: 4, status: 'available'},
+  { id: 5, status: 'reserved'},
+  { id: 6, status: 'occupied'},
+  { id: 7, status: 'available'},
+  { id: 8, status: 'available'},
+  { id: 9, status: 'occupied' },
+  { id: 10, status: 'reserved'},
 ];
 
 const ParkingSlots: React.FC = () => {
@@ -40,7 +40,6 @@ const ParkingSlots: React.FC = () => {
           ]}
         >
           <Text style={styles.slotText}>SLOT-{slot.id}</Text>
-          <Text style={styles.plateText}>{slot.plate}</Text>
         </View>
         ))}
         <View style={styles.buttons}>
@@ -133,10 +132,6 @@ const styles = StyleSheet.create({
   slotText: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#fff',
-  },
-  plateText: {
-    fontSize: 12,
     color: '#fff',
   },
   buttons:{
