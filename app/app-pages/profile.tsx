@@ -1,14 +1,5 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  Image,
-  Alert,
-  TextInput,
-} from "react-native";
+import {View,Text,ScrollView,StyleSheet,TouchableOpacity,Image,Alert,TextInput,} from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import * as ImagePicker from "expo-image-picker";
 import { StatusBar } from "expo-status-bar";
@@ -66,12 +57,11 @@ const ProfileScreen = () => {
       Alert.alert("Error", "New password and confirm password do not match.");
       return;
     }
-    // Add your password change logic here (e.g., API call)
     Alert.alert("Success", "Password changed successfully!");
     setCurrentPassword("");
     setNewPassword("");
     setConfirmPassword("");
-    setShowChangePassword(false); // Hide the change password section after success
+    setShowChangePassword(false); 
   };
 
   return (
@@ -96,7 +86,6 @@ const ProfileScreen = () => {
         ))}
       </View>
       <View style={styles.section}>
-        {/* Change Password Button */}
         <TouchableOpacity
           style={styles.button}
           onPress={() => setShowChangePassword(!showChangePassword)}
@@ -110,7 +99,6 @@ const ProfileScreen = () => {
             style={styles.arrow}
           />
         </TouchableOpacity>
-        {/* Change Password Form */}
         {showChangePassword && (
           <View style={styles.changePasswordSection}>
             <TextInput
@@ -144,7 +132,6 @@ const ProfileScreen = () => {
             </TouchableOpacity>
           </View>
         )}
-        {/* Other Action Buttons */}
         {actionButtons.map((item, index) => (
           <TouchableOpacity
             key={index}
@@ -262,5 +249,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
-
 export default ProfileScreen;

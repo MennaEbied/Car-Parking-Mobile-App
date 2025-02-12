@@ -21,13 +21,11 @@ const PrivacyPolicy: React.FC = () => {
       <Text style={styles.text}>
         We collect information through forms, cookies, and third-party services.
       </Text>
-
       <Text style={styles.sectionTitle}>Use of Information</Text>
       <Text style={styles.text}>Your information is used to:</Text>
       <Text style={styles.bulletPoint}>- Provide and improve our services</Text>
       <Text style={styles.bulletPoint}>- Send you notifications</Text>
       <Text style={styles.bulletPoint}>- Respond to your inquiries</Text>
-
       <Text style={styles.sectionTitle}>Information Sharing</Text>
       <Text style={styles.text}>
         We may share your information with third parties, including service
@@ -35,14 +33,12 @@ const PrivacyPolicy: React.FC = () => {
       </Text>
       <Text style={styles.bulletPoint}>- To comply with legal obligations</Text>
       <Text style={styles.bulletPoint}>- For business operations</Text>
-
       <Text style={styles.sectionTitle}>Data Security</Text>
       <Text style={styles.text}>
         We implement security measures to protect your data, including
         encryption and access controls. You are responsible for keeping your
         information secure.
       </Text>
-
       <Text style={styles.sectionTitle}>Contact Information</Text>
       <Text style={styles.text}>
         If you have any questions about this Privacy Policy, please contact us

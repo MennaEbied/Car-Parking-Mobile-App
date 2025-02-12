@@ -1,6 +1,5 @@
 import { Tabs } from "expo-router";
 import Entypo from "@expo/vector-icons/Entypo";
-import AntDesign from '@expo/vector-icons/AntDesign';
 import Feather from '@expo/vector-icons/Feather';
 export default function Layout() {
   return (

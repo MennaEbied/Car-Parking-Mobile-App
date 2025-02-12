@@ -2,7 +2,6 @@ import React  from 'react';
 import { View, Text, StyleSheet, ImageBackground,TouchableOpacity,Pressable} from 'react-native';
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { router } from "expo-router";
-import { color } from 'react-native-elements/dist/helpers';
 import { StatusBar } from 'expo-status-bar';
 
 const HomePage: React.FC = () => {
@@ -62,7 +61,6 @@ const styles = StyleSheet.create({
   header: {
     padding: 30,
     marginBottom:380,
-   
   },
   greeting: {
     fontSize: 22,

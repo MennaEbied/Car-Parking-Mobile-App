@@ -4,13 +4,11 @@ import { router } from "expo-router";
 const SecondOnboarding = () => {
   return (
     <View style={styles.container}>
-      
           <Image source={require("../../assets/onboarding1.jpeg")}
           style={styles.img}
           />
       <Text style={styles.text}>
          Reserve your parking space in advance to ensure you don’t miss out</Text>
-
        <Pressable onPress={()=> router.push("onboarding/notification")} 
            style ={styles.button}>
             <Text style={styles.next}>  Next  </Text>
@@ -26,26 +24,26 @@ const styles = StyleSheet.create({
       justifyContent: "space-between",
       paddingVertical: 110,
       paddingHorizontal:40,
-    },
-    img:{
+  },
+  img:{
       width:350,
       height:300,
-    },
-    text:{
+  },
+  text:{
      fontSize:18,
      textAlign: "center",
-    },
-    button:{
+  },
+  button:{
       alignItems: "center",
       justifyContent: "center",
       paddingVertical:12,
       paddingHorizontal:95,
       backgroundColor:"#7793ed",
       borderRadius:35,
-      },
-      next:{
-         fontSize:20,
-      }
+  },
+  next:{
+     fontSize:20,
+  }
   });
   export default SecondOnboarding;
   

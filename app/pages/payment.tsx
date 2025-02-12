@@ -1,11 +1,5 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  ImageBackground,
-  ScrollView,
-} from "react-native";
+import {View,Text,StyleSheet,ImageBackground,} from "react-native";
 import { Button, Input } from "react-native-elements";
 import { router } from "expo-router";
 
@@ -44,7 +38,6 @@ const PaymentScreen = () => {
           containerStyle={styles.input}
           returnKeyType="done"
         />
-
         <Input
           placeholder="Card Number"
           leftIcon={{ type: "font-awesome", name: "credit-card" }}
@@ -55,7 +48,6 @@ const PaymentScreen = () => {
           maxLength={16}
           returnKeyType="done"
         />
-
         <View style={styles.row}>
           <Input
             placeholder="MM/YY"
@@ -66,7 +58,6 @@ const PaymentScreen = () => {
             maxLength={5}
             returnKeyType="done"
           />
-
           <Input
             placeholder="CVC"
             leftIcon={{ type: "font-awesome", name: "lock" }}
@@ -78,7 +69,6 @@ const PaymentScreen = () => {
             returnKeyType="done"
           />
         </View>
-
         <Button
           title={`Pay`}
           buttonStyle={styles.payButton}
@@ -101,7 +91,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   overlay: {
-    backgroundColor: "rgba(255, 255, 255, 0.8)", // Semi-transparent white overlay
+    backgroundColor: "rgba(255, 255, 255, 0.8)", 
     padding: 20,
     borderRadius: 10,
     margin: 20,

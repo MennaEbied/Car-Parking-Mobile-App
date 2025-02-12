@@ -1,11 +1,5 @@
 import {
-  StyleSheet,
-  View,
-  Text,
-  Image,
-  TextInput,
-  Pressable,
-} from "react-native";
+  StyleSheet,View,Text,Image,TextInput,Pressable,} from "react-native";
 import { router } from "expo-router";
 import { useState } from "react";
 
@@ -27,16 +21,13 @@ const SignUp = () => {
   return (
     <View style={styles.container}>
       <Image style={styles.img} source={require("../../assets/signup1.jpg")} />
-
       <Text style={styles.text1}> Create Account </Text>
-
       <TextInput
         placeholder="Name"
         style={styles.input}
         value={name}
         onChangeText={setName}
-      ></TextInput>
-
+        />
       <TextInput
         placeholder="E-mail"
         style={styles.input}
@@ -45,7 +36,6 @@ const SignUp = () => {
         keyboardType="email-address"
         returnKeyType="done"
       />
-
       <TextInput
         placeholder="Password"
         style={styles.input}
@@ -54,11 +44,9 @@ const SignUp = () => {
         onChangeText={setPassword}
         returnKeyType="done"
       />
-
       <Pressable style={styles.button} onPress={handleSignUp}>
         <Text style={styles.text4}> Sign Up</Text>
       </Pressable>
-
      <View style={styles.text}>
         <Text style={styles.text2}> Already have an account ?</Text>
         <Pressable
@@ -96,8 +84,6 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     fontSize: 15,
     paddingLeft: 20,
-
-
   },
   button: {
     backgroundColor: "#6081ea",
@@ -111,7 +97,6 @@ const styles = StyleSheet.create({
   text4: {
     fontSize: 16,
     textAlign: "center",
-
   },
   text2: {
     fontSize: 15,

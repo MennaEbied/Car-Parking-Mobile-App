@@ -1,15 +1,8 @@
 import { useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  ImageBackground,
-  Alert,
-} from "react-native";
+import {View,Text,TextInput,TouchableOpacity,StyleSheet,ImageBackground,Alert,} from "react-native";
 import { router } from "expo-router";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+
 const ParkingForm = () => {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [isStartTimePickerVisible, setStartTimePickerVisibility] =
@@ -25,7 +18,6 @@ const ParkingForm = () => {
       Alert.alert("Error", "Please fill in all fields");
       return;
     }
-    // Here you would typically send the data to a backend service
     router.push("pages/payment");
   };
   const showDatePicker = () => {
@@ -139,7 +131,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   overlay: {
-    backgroundColor: "rgba(255, 255, 255, 0.8)", // Semi-transparent white overlay
+    backgroundColor: "rgba(255, 255, 255, 0.8)", 
     padding: 20,
     borderRadius: 10,
     margin: 20,
