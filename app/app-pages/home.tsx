@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ImageBackground,TouchableOpacity,Pressable} fro
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { router } from "expo-router";
 import { color } from 'react-native-elements/dist/helpers';
+import { StatusBar } from 'expo-status-bar';
 
 const HomePage: React.FC = () => {
   return (
@@ -46,6 +47,7 @@ const HomePage: React.FC = () => {
           color="white"
           style={{ marginRight: 10}}
         />
+        <StatusBar style='light'/>
     </View>
   </TouchableOpacity>
 </ImageBackground>

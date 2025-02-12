@@ -4,7 +4,7 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import Feather from '@expo/vector-icons/Feather';
 export default function Layout() {
   return (
-    <Tabs screenOptions={{ tabBarActiveTintColor: "#2072AF" ,headerShown:false}}>
+    <Tabs screenOptions={{ tabBarActiveTintColor: "#1B1B1B" ,headerShown:false}}>
       <Tabs.Screen
         name="home"
         options={{
