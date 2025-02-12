@@ -56,18 +56,32 @@ export default function Layout() {
         }}
       />
       <Stack.Screen
-      name="pages/payment"
-      options={{
-        animation: "fade",
-        headerShown: false,
-      }}
+        name="pages/payment"
+        options={{
+          animation: "fade",
+          headerShown: false,
+        }}
       />
       <Stack.Screen
-      name="pages/done"
-      options={{
-        animation: "fade",
-        headerShown: false,
-      }}
+        name="pages/done"
+        options={{
+          animation: "fade",
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="pages/privacyPolicy"
+        options={{
+          animation: "fade",
+          title: "",
+          headerLeft: () => (
+            <Link href="app-pages/profile" asChild>
+              <Pressable hitSlop={20} style={{ marginRight: 10 }}>
+                <MaterialIcons name="arrow-back" size={24} color="black" />
+              </Pressable>
+            </Link>
+          ),
+        }}
       />
     </Stack>
   );

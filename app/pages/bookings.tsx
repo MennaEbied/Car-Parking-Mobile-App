@@ -18,15 +18,15 @@ const ParkingForm = () => {
   const [date, setDate] = useState(new Date());
   const [startTime, setStartTime] = useState(new Date());
   const [endTime, setEndTime] = useState(new Date());
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [slotId,setSlotId] = useState("")
+  const [plateNumber, setPlateNumber] = useState("");
+  const [slotId, setSlotId] = useState("");
   const handleBookNow = () => {
-    if (!phoneNumber) {
+    if (!plateNumber) {
       Alert.alert("Error", "Please fill in all fields");
       return;
     }
     // Here you would typically send the data to a backend service
-    router.push("pages/payment")
+    router.push("pages/payment");
   };
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -72,13 +72,13 @@ const ParkingForm = () => {
     >
       <View style={styles.overlay}>
         <Text style={styles.header}>Parking Form</Text>
-        <Text style={styles.label}>Phone Number</Text>
+        <Text style={styles.label}>Plate number</Text>
         <TextInput
           style={styles.input}
-          onChangeText={setPhoneNumber}
-          value={phoneNumber}
-          placeholder="Enter your phone number"
-          keyboardType="phone-pad"
+          onChangeText={setPlateNumber}
+          value={plateNumber}
+          placeholder="Enter your plate number"
+          keyboardType="default"
           returnKeyType="done"
         />
         <Text style={styles.label}>Slot Id</Text>
@@ -108,7 +108,7 @@ const ParkingForm = () => {
         <TouchableOpacity style={styles.pickerButton} onPress={showDatePicker}>
           <Text style={styles.pickerButtonText}>{formatDate(date)}</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.bookButton} onPress={handleBookNow }>
+        <TouchableOpacity style={styles.bookButton} onPress={handleBookNow}>
           <Text style={styles.bookButtonText}>Book Now</Text>
         </TouchableOpacity>
         <DateTimePickerModal
