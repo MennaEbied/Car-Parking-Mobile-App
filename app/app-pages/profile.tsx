@@ -1,29 +1,62 @@
-import React, { useState } from "react";
-import {View,Text,ScrollView,StyleSheet,TouchableOpacity,Image,Alert,TextInput,} from "react-native";
+/* eslint-disable prettier/prettier */
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  Alert,
+  TextInput,
+} from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import * as ImagePicker from "expo-image-picker";
 import { StatusBar } from "expo-status-bar";
 import { router } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage"; // Import AsyncStorage
+import { auth } from "../../firebaseConfig"; // Import Firebase auth
 
 const ProfileScreen = () => {
-  // Dummy user data
-  const user = {
-    name: "MME",
-    email: "mme@gmail.com",
-    phone: "+20 123 456 7890",
-    password: "********",
-  };
   const [imageUri, setImageUri] = useState<string>();
   const [currentPassword, setCurrentPassword] = useState<string>("");
   const [newPassword, setNewPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [showChangePassword, setShowChangePassword] = useState<boolean>(false);
+  const [userData, setUserData] = useState({
+    name: "",
+    email: "",
+    password: "********", // Password is masked by default
+  });
+
+  // Fetch user data from AsyncStorage and Firebase on component mount
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        // Fetch name from AsyncStorage
+        const name = await AsyncStorage.getItem("userName");
+        // Fetch email from Firebase auth
+        const email = auth.currentUser?.email || "";
+
+        setUserData({
+          name: name || "User", // Default to "User" if name is not found
+          email: email,
+          password: "********", // Password is masked
+        });
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
   const profileSections = [
-    { title: "Name", value: user.name, icon: "person" },
-    { title: "Email", value: user.email, icon: "email" },
-    { title: "Phone Number", value: user.phone, icon: "phone" },
-    { title: "Password", value: user.password, icon: "lock" },
+    { title: "Name", value: userData.name, icon: "person" },
+    { title: "Email", value: userData.email, icon: "email" },
+    { title: "Password", value: userData.password, icon: "lock" }, // Removed phone number
   ];
+
   const actionButtons = [
     {
       title: "Privacy Policy",
@@ -41,9 +74,10 @@ const ProfileScreen = () => {
       },
     },
   ];
+
   const handleChooseImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ["images"],
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [1, 1],
       quality: 1,
@@ -52,6 +86,7 @@ const ProfileScreen = () => {
       setImageUri(result.assets[0].uri);
     }
   };
+
   const handleChangePassword = () => {
     if (newPassword !== confirmPassword) {
       Alert.alert("Error", "New password and confirm password do not match.");
@@ -61,7 +96,7 @@ const ProfileScreen = () => {
     setCurrentPassword("");
     setNewPassword("");
     setConfirmPassword("");
-    setShowChangePassword(false); 
+    setShowChangePassword(false);
   };
 
   return (
@@ -249,4 +284,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
+
 export default ProfileScreen;
