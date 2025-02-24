@@ -5,19 +5,23 @@ import { CustomImage } from "../../components/CustomImage";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import Feather from "@expo/vector-icons/Feather";
 import { useState } from "react";
+import {createUserWithEmailAndPassword} from "firebase/auth";
+import {auth} from "../../firebaseConfig";
+import { storeUser } from "../../store/authPersistance";
 
 export default function SignIn() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const handleSignIn = () => {
-    if (email && password) {
+  const handleSignIn = async() => {
+    try{
+      const userCredential=await createUserWithEmailAndPassword(auth,email,password);
+      storeUser(userCredential.user)
       router.push("app-pages/home");
-      setEmail("");
-      setPassword("");
-    } else {
-      alert("Please fill in all fields");
-    }
+  }catch(error){
+      console.error(error);
+  }
+  
   };
   return (
     <View style={styles.container}>
