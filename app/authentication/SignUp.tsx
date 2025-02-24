@@ -14,6 +14,7 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../firebaseConfig";
 import { storeUser } from "../../store/authPersistance";
 import Feather from "@expo/vector-icons/Feather";
+import AsyncStorage from "@react-native-async-storage/async-storage"; // Import AsyncStorage
 
 const SignUp = () => {
   const [name, setName] = useState("");
@@ -64,8 +65,17 @@ const SignUp = () => {
       );
       const user = userCredential.user;
       console.log("User created:", user.email);
+
+      // Store user's name locally
+      await AsyncStorage.setItem("userName", name);
+
+      // Store user data if needed
       storeUser(user);
+
+      // Navigate to the home page after successful sign-up
       router.push("app-pages/home");
+
+      // Clear form fields
       setName("");
       setEmail("");
       setPassword("");
