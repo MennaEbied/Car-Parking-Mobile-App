@@ -10,15 +10,37 @@ import {
 } from "react-native";
 import { router } from "expo-router";
 import { useState } from "react";
-import { createUserWithEmailAndPassword } from "firebase/auth"; // Import Firebase auth function
-import { auth } from "../../firebaseConfig"; // Import Firebase auth instance
-import { storeUser } from "../../store/authPersistance"; // Import storeUser if needed
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../firebaseConfig";
+import { storeUser } from "../../store/authPersistance";
+import Feather from "@expo/vector-icons/Feather";
 
 const SignUp = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(""); // For error handling
+  const [showPassword, setShowPassword] = useState(false);
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setEmailError("Please enter a valid email address.");
+      return false;
+    }
+    setEmailError("");
+    return true;
+  };
+
+  const validatePassword = (password: string) => {
+    if (password.length < 6) {
+      setPasswordError("Password must be at least 6 characters long.");
+      return false;
+    }
+    setPasswordError("");
+    return true;
+  };
 
   const handleSignUp = async () => {
     if (!name || !email || !password) {
@@ -26,31 +48,30 @@ const SignUp = () => {
       return;
     }
 
+    // Validate email and password
+    const isEmailValid = validateEmail(email);
+    const isPasswordValid = validatePassword(password);
+
+    if (!isEmailValid || !isPasswordValid) {
+      return; // Stop if validation fails
+    }
+
     try {
-      // Create a new user with Firebase
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
         password,
       );
       const user = userCredential.user;
-
-      // Optionally store user data (e.g., name) in Firebase or your backend
       console.log("User created:", user.email);
-
-      // Store user data locally if needed
       storeUser(user);
-
-      // Navigate to the home page after successful sign-up
       router.push("app-pages/home");
-
-      // Clear form fields
       setName("");
       setEmail("");
       setPassword("");
     } catch (error) {
       console.error("Sign-up error:", error);
-      setError("Failed to create an account. Please try again."); // Display error message
+      setPasswordError("Failed to create an account. Please try again.");
       Alert.alert("Error", "Failed to create an account. Please try again.");
     }
   };
@@ -69,19 +90,38 @@ const SignUp = () => {
         placeholder="E-mail"
         style={styles.input}
         value={email}
-        onChangeText={setEmail}
+        onChangeText={(text) => {
+          setEmail(text);
+          validateEmail(text); // Validate email on change
+        }}
         keyboardType="email-address"
         returnKeyType="done"
       />
-      <TextInput
-        placeholder="Password"
-        style={styles.input}
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
-        returnKeyType="done"
-      />
-      {error ? <Text style={styles.errorText}>{error}</Text> : null}
+      {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
+      <View style={styles.passwordContainer}>
+        <TextInput
+          placeholder="Password"
+          style={styles.passwordInput}
+          secureTextEntry={!showPassword}
+          value={password}
+          onChangeText={(text) => {
+            setPassword(text);
+            validatePassword(text); // Validate password on change
+          }}
+          returnKeyType="done"
+        />
+        <Pressable onPress={() => setShowPassword(!showPassword)}>
+          <Feather
+            name={showPassword ? "eye-off" : "eye"}
+            size={20}
+            color="grey"
+            style={styles.eyeIcon}
+          />
+        </Pressable>
+      </View>
+      {passwordError ? (
+        <Text style={styles.errorText}>{passwordError}</Text>
+      ) : null}
       <Pressable style={styles.button} onPress={handleSignUp}>
         <Text style={styles.text4}>Sign Up</Text>
       </Pressable>
@@ -120,7 +160,24 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     fontSize: 15,
     paddingLeft: 20,
-    marginBottom: 15, // Added margin for better spacing
+    marginBottom: 15,
+  },
+  passwordContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#e9e9e9",
+    borderRadius: 30,
+    width: 300,
+    height: 50,
+    marginBottom: 15,
+    paddingLeft: 20,
+  },
+  passwordInput: {
+    flex: 1,
+    fontSize: 15,
+  },
+  eyeIcon: {
+    marginRight: 10,
   },
   button: {
     backgroundColor: "#6081ea",
@@ -130,12 +187,12 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     height: 50,
     justifyContent: "center",
-    marginBottom: 15, // Added margin for better spacing
+    marginBottom: 15,
   },
   text4: {
     fontSize: 16,
     textAlign: "center",
-    color: "#fff", // Changed text color for better visibility
+    color: "#fff",
   },
   text2: {
     fontSize: 15,
@@ -145,7 +202,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     textDecorationLine: "underline",
-    marginLeft: 5, // Added margin for better spacing
+    marginLeft: 5,
   },
   text: {
     display: "flex",
@@ -154,7 +211,7 @@ const styles = StyleSheet.create({
   errorText: {
     color: "red",
     marginBottom: 10,
-    textAlign: "center",
+    fontSize: 14,
   },
 });
 

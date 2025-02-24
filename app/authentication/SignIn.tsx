@@ -1,12 +1,12 @@
 /* eslint-disable prettier/prettier */
-import { View, Text, TextInput, StyleSheet } from "react-native";
+import { View, Text, TextInput, StyleSheet, Pressable } from "react-native";
 import { useRouter } from "expo-router";
 import { CustomButton } from "../../components/CustomButton";
 import { CustomImage } from "../../components/CustomImage";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import Feather from "@expo/vector-icons/Feather";
 import { useState } from "react";
-import { signInWithEmailAndPassword } from "firebase/auth"; // Updated import
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../firebaseConfig";
 import { storeUser } from "../../store/authPersistance";
 
@@ -14,21 +14,49 @@ export default function SignIn() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(""); // Added for error handling
+  const [showPassword, setShowPassword] = useState(false);
+  const [emailError, setEmailError] = useState(""); // For email validation errors
+  const [passwordError, setPasswordError] = useState(""); // For password validation errors
+
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setEmailError("Please enter a valid email address.");
+      return false;
+    }
+    setEmailError("");
+    return true;
+  };
+
+  const validatePassword = (password: string) => {
+    if (password.length < 6) {
+      setPasswordError("Password must be at least 6 characters long.");
+      return false;
+    }
+    setPasswordError("");
+    return true;
+  };
 
   const handleSignIn = async () => {
+    // Validate email and password
+    const isEmailValid = validateEmail(email);
+    const isPasswordValid = validatePassword(password);
+
+    if (!isEmailValid || !isPasswordValid) {
+      return; // Stop if validation fails
+    }
+
     try {
-      // Use signInWithEmailAndPassword for login
       const userCredential = await signInWithEmailAndPassword(
         auth,
         email,
         password,
       );
-      storeUser(userCredential.user); // Store user data if needed
-      router.push("app-pages/home"); // Navigate to home page after successful login
+      storeUser(userCredential.user);
+      router.push("app-pages/home");
     } catch (error) {
       console.error(error);
-      setError("Invalid email or password. Please try again."); // Display error message
+      setPasswordError("Invalid email or password. Please try again.");
     }
   };
 
@@ -51,22 +79,38 @@ export default function SignIn() {
           returnKeyType="done"
           keyboardType="email-address"
           value={email}
-          onChangeText={setEmail}
+          onChangeText={(text) => {
+            setEmail(text);
+            validateEmail(text); // Validate email on change
+          }}
         />
       </View>
+      {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
       <View style={styles.inputContainer}>
         <Feather name="lock" size={20} color="grey" style={styles.icon} />
         <TextInput
           placeholder="Enter your password"
           style={styles.textInput}
-          secureTextEntry
+          secureTextEntry={!showPassword}
           returnKeyType="done"
           value={password}
-          onChangeText={setPassword}
+          onChangeText={(text) => {
+            setPassword(text);
+            validatePassword(text); // Validate password on change
+          }}
         />
+        <Pressable onPress={() => setShowPassword(!showPassword)}>
+          <Feather
+            name={showPassword ? "eye-off" : "eye"}
+            size={20}
+            color="grey"
+            style={styles.icon}
+          />
+        </Pressable>
       </View>
-      {error ? <Text style={styles.errorText}>{error}</Text> : null}{" "}
-      {/* Display error message */}
+      {passwordError ? (
+        <Text style={styles.errorText}>{passwordError}</Text>
+      ) : null}
       <CustomButton
         title="Sign In"
         onPress={handleSignIn}
@@ -112,5 +156,6 @@ const styles = StyleSheet.create({
   errorText: {
     color: "red",
     marginBottom: 10,
+    fontSize: 14,
   },
 });
