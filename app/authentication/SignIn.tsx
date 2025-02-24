@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { View, Text, TextInput, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import { CustomButton } from "../../components/CustomButton";
@@ -5,24 +6,32 @@ import { CustomImage } from "../../components/CustomImage";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import Feather from "@expo/vector-icons/Feather";
 import { useState } from "react";
-import {createUserWithEmailAndPassword} from "firebase/auth";
-import {auth} from "../../firebaseConfig";
+import { signInWithEmailAndPassword } from "firebase/auth"; // Updated import
+import { auth } from "../../firebaseConfig";
 import { storeUser } from "../../store/authPersistance";
 
 export default function SignIn() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const handleSignIn = async() => {
-    try{
-      const userCredential=await createUserWithEmailAndPassword(auth,email,password);
-      storeUser(userCredential.user)
-      router.push("app-pages/home");
-  }catch(error){
+  const [error, setError] = useState(""); // Added for error handling
+
+  const handleSignIn = async () => {
+    try {
+      // Use signInWithEmailAndPassword for login
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password,
+      );
+      storeUser(userCredential.user); // Store user data if needed
+      router.push("app-pages/home"); // Navigate to home page after successful login
+    } catch (error) {
       console.error(error);
-  }
-  
+      setError("Invalid email or password. Please try again."); // Display error message
+    }
   };
+
   return (
     <View style={styles.container}>
       <CustomImage
@@ -56,6 +65,8 @@ export default function SignIn() {
           onChangeText={setPassword}
         />
       </View>
+      {error ? <Text style={styles.errorText}>{error}</Text> : null}{" "}
+      {/* Display error message */}
       <CustomButton
         title="Sign In"
         onPress={handleSignIn}
@@ -72,6 +83,7 @@ export default function SignIn() {
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -96,5 +108,9 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginRight: 10,
+  },
+  errorText: {
+    color: "red",
+    marginBottom: 10,
   },
 });
