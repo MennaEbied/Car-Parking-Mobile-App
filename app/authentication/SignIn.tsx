@@ -135,6 +135,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#ffff",
     paddingHorizontal: 20,
+    // marginTop:-30
   },
   textInput: {
     fontSize: 16,

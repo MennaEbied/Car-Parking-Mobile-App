@@ -12,15 +12,15 @@ const Notification = () => {
       <Text style={styles.text2}>
         Enable notifications to receive real-time updates
       </Text>
-    <Pressable style={styles.button}
-              onPress={()=> router.push("authentication/SignUp")}
-            >
-                 <Text style={styles.text3}> Allow Notification</Text>
-            </Pressable>   
-            <Pressable 
-            onPress={()=> router.push("authentication/SignUp")}>
-                 <Text style={styles.text4}> Maybe Later </Text>
-    </Pressable>
+      <Pressable
+        style={styles.button}
+        onPress={() => router.push("authentication/SignUp")}
+      >
+        <Text style={styles.text3}> Allow Notification</Text>
+      </Pressable>
+      <Pressable onPress={() => router.push("authentication/SignUp")}>
+        <Text style={styles.text4}> Maybe Later </Text>
+      </Pressable>
     </View>
   );
 };
@@ -31,15 +31,16 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "space-between",
     alignItems: "center",
-    paddingVertical:170,
-    paddingHorizontal:20
+    paddingVertical: 170,
+    paddingHorizontal: 20,
+    //justifyContent:"space-evenly"
   },
   img: {
     width: 130,
     height: 120,
   },
   text1: {
-    fontSize:22,
+    fontSize: 22,
     fontWeight: "bold",
     textAlign: "center",
   },
@@ -47,20 +48,23 @@ const styles = StyleSheet.create({
     fontSize: 15,
     textAlign: "center",
     color: "#6a6a6a",
+    //marginTop: -25,
+    //fontSize:17
   },
-  button:{
-   backgroundColor:"#6081ea",
-   borderRadius:30,
-   paddingVertical:12,
-   paddingHorizontal:60,
+  button: {
+    backgroundColor: "#6081ea",
+    borderRadius: 30,
+    paddingVertical: 12,
+    paddingHorizontal: 60,
   },
-  text3:{
-    fontSize:15,
-    color:"#f5f5f5"
- },
- text4:{
-  fontSize:15,
-  color:"#a9a9a9" 
+  text3: {
+    fontSize: 15,
+    color: "#f5f5f5",
+  },
+  text4: {
+    fontSize: 15,
+    color: "#a9a9a9",
+    marginTop: -25,
   },
 });
 

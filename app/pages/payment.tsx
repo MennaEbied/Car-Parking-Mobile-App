@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import {View,Text,StyleSheet,ImageBackground,} from "react-native";
+import { View, Text, StyleSheet, ImageBackground } from "react-native";
 import { Button, Input } from "react-native-elements";
 import { router } from "expo-router";
 
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   overlay: {
-    backgroundColor: "rgba(255, 255, 255, 0.8)", 
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
     padding: 20,
     borderRadius: 10,
     margin: 20,

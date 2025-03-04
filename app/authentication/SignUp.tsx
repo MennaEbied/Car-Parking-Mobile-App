@@ -171,6 +171,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     paddingLeft: 20,
     marginBottom: 15,
+    //marginBottom:-25,
   },
   passwordContainer: {
     flexDirection: "row",

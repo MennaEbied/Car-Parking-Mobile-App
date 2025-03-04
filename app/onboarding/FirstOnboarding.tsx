@@ -61,12 +61,14 @@ const styles = StyleSheet.create({
     fontSize: 21,
     textAlign: "center",
     flexWrap: "wrap",
-    marginBottom:35
+    marginBottom: 35,
   },
   tagline: {
     fontSize: 17,
     textAlign: "center",
     flexWrap: "wrap",
+    //marginHorizontal:10,
+    //fontSize:20,
   },
   buttons: {
     flexDirection: "row",

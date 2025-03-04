@@ -4,18 +4,17 @@ import { router } from "expo-router";
 const Notification = () => {
   return (
     <View style={styles.container}>
-      <Image
-        source={require("../../assets/done.jpg")}
-        style={styles.img}
-      />
+      <Image source={require("../../assets/done.jpg")} style={styles.img} />
       <Text style={styles.text1}> Yay....! Booked it </Text>
       <Text style={styles.text2}>
-      congratulations you have successfully booked parking slot
+        congratulations you have successfully booked parking slot
       </Text>
-    <Pressable style={styles.button}
-              onPress={()=> router.push("app-pages/home")}>
-                 <Text style={styles.text3}> Back to home </Text>
-            </Pressable>
+      <Pressable
+        style={styles.button}
+        onPress={() => router.push("app-pages/home")}
+      >
+        <Text style={styles.text3}> Back to home </Text>
+      </Pressable>
     </View>
   );
 };
@@ -26,14 +25,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "space-between",
     alignItems: "center",
-    paddingVertical:190,
+    paddingVertical: 190,
   },
   img: {
     width: 150,
     height: 150,
   },
   text1: {
-    fontSize:23,
+    fontSize: 23,
     fontWeight: "bold",
     textAlign: "center",
   },
@@ -41,18 +40,18 @@ const styles = StyleSheet.create({
     fontSize: 15,
     textAlign: "center",
     color: "#6a6a6a",
-    paddingLeft:30,
-    paddingRight:30
+    paddingLeft: 30,
+    paddingRight: 30,
   },
-  button:{
-     backgroundColor:"#007bff",
-     borderRadius:20,
-     paddingVertical:12,
-     paddingHorizontal:80,
+  button: {
+    backgroundColor: "#007bff",
+    borderRadius: 20,
+    paddingVertical: 12,
+    paddingHorizontal: 80,
   },
-  text3:{
-   fontSize:16,
-   color:"#f5f5f5"
+  text3: {
+    fontSize: 16,
+    color: "#f5f5f5",
   },
 });
 

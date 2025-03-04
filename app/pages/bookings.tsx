@@ -1,5 +1,13 @@
 import { useState } from "react";
-import {View,Text,TextInput,TouchableOpacity,StyleSheet,ImageBackground,Alert,} from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  ImageBackground,
+  Alert,
+} from "react-native";
 import { router } from "expo-router";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
@@ -18,7 +26,22 @@ const ParkingForm = () => {
       Alert.alert("Error", "Please fill in all fields");
       return;
     }
-    router.push("pages/payment");
+    Alert.alert(
+      "Confirmation",
+      "Are you sure you want to confirm?",
+      [
+        {
+          text: "No",
+          onPress: () => console.log("Cancelled"),
+          style: "cancel",
+        },
+        {
+          text: "Yes",
+          onPress: () => router.push("pages/payment"),
+        },
+      ],
+      { cancelable: false },
+    );
   };
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -131,7 +154,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   overlay: {
-    backgroundColor: "rgba(255, 255, 255, 0.8)", 
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
     padding: 20,
     borderRadius: 10,
     margin: 20,
