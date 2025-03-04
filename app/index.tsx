@@ -34,9 +34,8 @@ const styles = StyleSheet.create({
     fontSize: 35,
     color: "#171616",
     fontWeight: "bold",
-    paddingBottom:10,
-    paddingRight:20
-   
+    paddingBottom: 10,
+    paddingRight: 20,
   },
   tagline: {
     fontSize: 19,

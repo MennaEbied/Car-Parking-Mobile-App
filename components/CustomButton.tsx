@@ -1,5 +1,12 @@
-import React from 'react';
-import { Pressable, Text, StyleSheet, StyleProp, ViewStyle, TextStyle } from 'react-native';
+import React from "react";
+import {
+  Pressable,
+  Text,
+  StyleSheet,
+  StyleProp,
+  ViewStyle,
+  TextStyle,
+} from "react-native";
 
 interface CustomButtonProps {
   title: string;
