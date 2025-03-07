@@ -16,6 +16,7 @@ import { storeUser } from "../../store/authPersistance";
 import Feather from "@expo/vector-icons/Feather";
 import AsyncStorage from "@react-native-async-storage/async-storage"; // Import AsyncStorage
 
+
 const SignUp = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -23,6 +24,8 @@ const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [phoneNumberError, setPhoneNumberError] = useState("");
 
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -42,9 +45,18 @@ const SignUp = () => {
     setPasswordError("");
     return true;
   };
+  const validatePhoneNumber = (phoneNumber: string) => {
+    const phoneRegex = /^\d{11}$/; // Simple regex for 10-digit phone number
+    if (!phoneRegex.test(phoneNumber)) {
+      setPhoneNumberError("Please enter a valid 10-digit phone number.");
+      return false;
+    }
+    setPhoneNumberError("");
+    return true;
+  };
 
   const handleSignUp = async () => {
-    if (!name || !email || !password) {
+    if (!name || !email || !password|| !phoneNumber) {
       Alert.alert("Error", "Please fill in all fields");
       return;
     }
@@ -52,8 +64,9 @@ const SignUp = () => {
     // Validate email and password
     const isEmailValid = validateEmail(email);
     const isPasswordValid = validatePassword(password);
+    const isPhoneNumberValid = validatePhoneNumber(phoneNumber);
 
-    if (!isEmailValid || !isPasswordValid) {
+    if (!isEmailValid || !isPasswordValid|| !isPhoneNumberValid) {
       return; // Stop if validation fails
     }
 
@@ -68,6 +81,7 @@ const SignUp = () => {
 
       // Store user's name locally
       await AsyncStorage.setItem("userName", name);
+      await AsyncStorage.setItem("userPhoneNumber", phoneNumber);
 
       // Store user data if needed
       storeUser(user);
@@ -79,6 +93,7 @@ const SignUp = () => {
       setName("");
       setEmail("");
       setPassword("");
+      setPhoneNumber("");
     } catch (error) {
       console.error("Sign-up error:", error);
       setPasswordError("Failed to create an account. Please try again.");
@@ -108,6 +123,20 @@ const SignUp = () => {
         returnKeyType="done"
       />
       {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
+      <TextInput
+        placeholder="Phone Number"
+        style={styles.input}
+        value={phoneNumber}
+        onChangeText={(text) => {
+          setPhoneNumber(text);
+          validatePhoneNumber(text); // Validate phone number on change
+        }}
+        keyboardType="phone-pad"
+        returnKeyType="done"
+      />
+      {phoneNumberError ? (
+        <Text style={styles.errorText}>{phoneNumberError}</Text>
+      ) : null}
       <View style={styles.passwordContainer}>
         <TextInput
           placeholder="Password"
