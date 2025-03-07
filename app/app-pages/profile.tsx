@@ -26,6 +26,7 @@ const ProfileScreen = () => {
   const [userData, setUserData] = useState({
     name: "",
     email: "",
+    phoneNumber: "",
     password: "********", // Password is masked by default
   });
 
@@ -35,12 +36,14 @@ const ProfileScreen = () => {
       try {
         // Fetch name from AsyncStorage
         const name = await AsyncStorage.getItem("userName");
+        const phoneNumber = await AsyncStorage.getItem("userPhoneNumber");
         // Fetch email from Firebase auth
         const email = auth.currentUser?.email || "";
 
         setUserData({
           name: name || "User", // Default to "User" if name is not found
           email: email,
+          phoneNumber: phoneNumber || "Not provided",
           password: "********", // Password is masked
         });
       } catch (error) {
@@ -54,6 +57,7 @@ const ProfileScreen = () => {
   const profileSections = [
     { title: "Name", value: userData.name, icon: "person" },
     { title: "Email", value: userData.email, icon: "email" },
+    { title: "Phone Number", value: userData.phoneNumber, icon: "phone" },
     { title: "Password", value: userData.password, icon: "lock" }, // Removed phone number
   ];
 
