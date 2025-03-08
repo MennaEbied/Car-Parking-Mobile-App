@@ -7,12 +7,11 @@ import {
   StyleSheet,
   ImageBackground,
   TouchableOpacity,
-  Pressable,
 } from "react-native";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import AsyncStorage from "@react-native-async-storage/async-storage"; // Import AsyncStorage
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const HomePage: React.FC = () => {
   const [userName, setUserName] = useState("User"); // State to store the user's name
@@ -20,9 +19,13 @@ const HomePage: React.FC = () => {
   // Fetch the user's name from AsyncStorage when the component mounts
   useEffect(() => {
     const fetchUserName = async () => {
-      const name = await AsyncStorage.getItem("userName");
-      if (name) {
-        setUserName(name); // Set the user's name if it exists
+      try {
+        const name = await AsyncStorage.getItem("userName");
+        if (name) {
+          setUserName(name); // Set the user's name if it exists
+        }
+      } catch (error) {
+        console.error("Failed to fetch user name:", error);
       }
     };
     fetchUserName();
@@ -54,11 +57,10 @@ const HomePage: React.FC = () => {
             />
           </TouchableOpacity>
         </View>
-        <Text style={styles.greeting}>Hello, {userName}!</Text>{" "}
-        {/* Display the user's name */}
+        <Text style={styles.greeting}>Hello, {userName}!</Text>
         <Text style={styles.subtitle}>Find your perfect parking spot</Text>
         <Text style={{ fontWeight: "500", fontSize: 16, color: "white" }}>
-          Today's price : 15.99$
+          Today's price: 15.99$
         </Text>
       </View>
       <TouchableOpacity
@@ -73,9 +75,9 @@ const HomePage: React.FC = () => {
             color="white"
             style={{ marginRight: 10 }}
           />
-          <StatusBar style="light" />
         </View>
       </TouchableOpacity>
+      <StatusBar style="light" />
     </ImageBackground>
   );
 };
