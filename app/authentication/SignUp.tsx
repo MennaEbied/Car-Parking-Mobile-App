@@ -16,7 +16,6 @@ import { storeUser } from "../../store/authPersistance";
 import Feather from "@expo/vector-icons/Feather";
 import AsyncStorage from "@react-native-async-storage/async-storage"; // Import AsyncStorage
 
-
 const SignUp = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -56,7 +55,7 @@ const SignUp = () => {
   };
 
   const handleSignUp = async () => {
-    if (!name || !email || !password|| !phoneNumber) {
+    if (!name || !email || !password || !phoneNumber) {
       Alert.alert("Error", "Please fill in all fields");
       return;
     }
@@ -66,7 +65,7 @@ const SignUp = () => {
     const isPasswordValid = validatePassword(password);
     const isPhoneNumberValid = validatePhoneNumber(phoneNumber);
 
-    if (!isEmailValid || !isPasswordValid|| !isPhoneNumberValid) {
+    if (!isEmailValid || !isPasswordValid || !isPhoneNumberValid) {
       return; // Stop if validation fails
     }
 
@@ -94,10 +93,18 @@ const SignUp = () => {
       setEmail("");
       setPassword("");
       setPhoneNumber("");
-    } catch (error) {
+    } catch (error: any) {
       console.error("Sign-up error:", error);
-      setPasswordError("Failed to create an account. Please try again.");
-      Alert.alert("Error", "Failed to create an account. Please try again.");
+
+      // Handle "email already in use" error
+      if (error.code === "auth/email-already-in-use") {
+        Alert.alert(
+          "Error",
+          "The email address is already in use. Please use a different email.",
+        );
+      } else {
+        Alert.alert("Error", "Failed to create an account. Please try again.");
+      }
     }
   };
 
