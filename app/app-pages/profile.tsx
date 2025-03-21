@@ -16,6 +16,7 @@ import { StatusBar } from "expo-status-bar";
 import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage"; // Import AsyncStorage
 import { auth } from "../../firebaseConfig"; // Import Firebase auth
+import { reauthenticateWithCredential, EmailAuthProvider, updatePassword } from "firebase/auth";
 
 const ProfileScreen = () => {
   const [imageUri, setImageUri] = useState<string>();
@@ -91,16 +92,35 @@ const ProfileScreen = () => {
     }
   };
 
-  const handleChangePassword = () => {
+  const handleChangePassword = async() => {
     if (newPassword !== confirmPassword) {
       Alert.alert("Error", "New password and confirm password do not match.");
       return;
     }
-    Alert.alert("Success", "Password changed successfully!");
-    setCurrentPassword("");
-    setNewPassword("");
-    setConfirmPassword("");
-    setShowChangePassword(false);
+    const user = auth.currentUser;
+    if (!user || !user.email) {
+      Alert.alert("Error", "No user is currently signed in.");
+      return;
+    }
+
+    if (!user || !user.email) {
+      Alert.alert("Error", "No user is currently signed in.");
+      return;
+    }
+    try {
+      const credential = EmailAuthProvider.credential(user.email, currentPassword);
+      await reauthenticateWithCredential(user, credential);
+      await updatePassword(user, newPassword);
+
+      Alert.alert("Success", "Password changed successfully!");
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+      setShowChangePassword(false);
+    } catch (error) {
+      console.error("Error changing password:", error);
+      Alert.alert("Error", "Failed to change password. Please check your current password and try again.");
+    }
   };
 
   return (
