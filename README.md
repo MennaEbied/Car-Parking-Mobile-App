@@ -34,15 +34,16 @@ Firebase Account (for authentication and Firestore)
 
 1. Clone the Repository
 git clone https://github.com/MennaEbied/car-parking-app.git
+2.Navigate into the project directory:
 cd car-parking-app
-2. Install Dependencies
+3. Install Dependencies
 npm install
-3. Set Up Firebase
+4. Set Up Firebase
 Go to the Firebase Console.
 Create a new project.
 Enable Authentication (Email/Password).
 Enable Firestore Database.
 Add a web app to your Firebase project and copy the Firebase configuration.
-4. Run the App
+5. Run the App
 Start the development server:
 npx expo start
