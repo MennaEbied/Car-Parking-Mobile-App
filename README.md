@@ -32,8 +32,11 @@ Before running the project, ensure you have the following installed:
 
 ## Setup Instructions 🚀
 ```git clone https://github.com/MennaEbied/car-parking-app.git```
+
 ```cd car-parking-app```
+
 ```npm i```
+
 Go to the Firebase Console.
 
 Create a new project.
