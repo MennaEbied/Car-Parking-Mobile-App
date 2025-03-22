@@ -26,9 +26,20 @@ React Native Stylesheet or Styled Components
 
 ## Prerequisites 📋
 Before running the project, ensure you have the following installed:
-Node.js (v16 or higher)
-Expo 
-Firebase Account (for authentication and Firestore)
+#### Node.js (v16 or higher)
+#### Expo 
+#### Firebase Account (for authentication and Firestore)
 
 ## Setup Instructions 🚀
+```git clone https://github.com/MennaEbied/car-parking-app.git```
+```cd car-parking-app```
+```npm i```
+Go to the Firebase Console.
 
+Create a new project.
+
+Enable Authentication (Email/Password Sign-In).
+
+Add a web app to your Firebase project and copy the Firebase configuration.
+
+```npx expo start```
