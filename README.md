@@ -13,7 +13,7 @@ Reserve a parking slot.
 Real-Time Updates:
 Firebase for real-time updates on parking slot availability.
 
-### Technologies Used 🛠️
+## Technologies Used 🛠️
 Frontend:
 React Native
 Expo
@@ -24,7 +24,7 @@ Firebase Authentication
 Styling:
 React Native Stylesheet or Styled Components
 
-#### Prerequisites 📋
+## Prerequisites 📋
 Before running the project, ensure you have the following installed:
 Node.js (v16 or higher)
 Expo 
