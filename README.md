@@ -30,3 +30,19 @@ Node.js (v16 or higher)
 Expo 
 Firebase Account (for authentication and Firestore)
 
+## Setup Instructions 🚀
+
+1. Clone the Repository
+git clone https://github.com/MennaEbied/car-parking-app.git
+cd car-parking-app
+2. Install Dependencies
+npm install
+3. Set Up Firebase
+Go to the Firebase Console.
+Create a new project.
+Enable Authentication (Email/Password).
+Enable Firestore Database.
+Add a web app to your Firebase project and copy the Firebase configuration.
+4. Run the App
+Start the development server:
+npx expo start
