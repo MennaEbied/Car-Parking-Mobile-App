@@ -1,4 +1,6 @@
 import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
+
 import {
   getAuth,
   onAuthStateChanged,
@@ -24,7 +26,10 @@ const firebaseConfig = {
 //export const auth = getAuth(firebaseApp);
 //export default firebaseApp;
 export const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 export const auth = getAuth(app);
+
+export { db };
 
 //set persisttance
 setPersistence(auth, browserLocalPersistence);

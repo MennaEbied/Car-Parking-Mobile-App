@@ -10,6 +10,9 @@ import {
 } from "react-native";
 import { router } from "expo-router";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { db } from "../../firebaseConfig"; // Adjust if necessary
+import { collection, addDoc, updateDoc, doc, getDoc } from "firebase/firestore";
+import { getAuth } from "firebase/auth"; // To get the user ID
 
 const ParkingForm = () => {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -21,64 +24,95 @@ const ParkingForm = () => {
   const [endTime, setEndTime] = useState(new Date());
   const [plateNumber, setPlateNumber] = useState("");
   const [slotId, setSlotId] = useState("");
-  const handleBookNow = () => {
-    if (!plateNumber) {
+
+  // Function to handle booking and saving to Firestore
+  const handleBookNow = async () => {
+    if (!plateNumber || !slotId || !startTime || !endTime || !date) {
       Alert.alert("Error", "Please fill in all fields");
       return;
     }
-    Alert.alert(
-      "Confirmation",
-      "Are you sure you want to confirm?",
-      [
-        {
-          text: "No",
-          onPress: () => console.log("Cancelled"),
-          style: "cancel",
-        },
-        {
-          text: "Yes",
-          onPress: () => router.push("pages/payment"),
-        },
-      ],
-      { cancelable: false },
-    );
+
+    try {
+      const auth = getAuth();
+      const userId = auth.currentUser?.uid; // Use this user ID for the reservation
+
+      // Check if the user is authenticated
+      if (!userId) {
+        Alert.alert("Error", "User not authenticated");
+        return;
+      }
+
+      // Fetch the slot data to check its status
+      const slotRef = doc(db, "slots", slotId);
+      const slotDoc = await getDoc(slotRef);
+
+      // If the slot doesn't exist or its status is reserved or occupied
+      if (!slotDoc.exists()) {
+        Alert.alert("Error", "Slot not found");
+        return;
+      }
+
+      const slotData = slotDoc.data();
+      if (slotData?.status === "reserved" || slotData?.status === "occupied") {
+        Alert.alert("Error", "This slot is not available for reservation.");
+        return;
+      }
+
+      // Reservation data
+      const reservationData = {
+        plateNumber,
+        slotId: Number(slotId),
+        startTime: startTime.toISOString(),
+        endTime: endTime.toISOString(),
+        date: date.toISOString(),
+      };
+
+      // Add reservation to Firestore
+      await addDoc(collection(db, "reservations"), reservationData);
+
+      // Update the slot to "reserved" and link it to the user
+      await updateDoc(slotRef, {
+        reservedBy: userId,
+        status: "reserved", // Update the slot's status to "reserved"
+      });
+
+      // Show success alert
+      Alert.alert("Success", "Your reservation has been made!");
+
+      // Redirect to the payment page
+      router.push("pages/payment");
+    } catch (error) {
+      console.error("Error making reservation:", error);
+      Alert.alert("Error", "There was an issue with your reservation.");
+    }
   };
-  const showDatePicker = () => {
-    setDatePickerVisibility(true);
-  };
-  const showStartTimePicker = () => {
-    setStartTimePickerVisibility(true);
-  };
-  const showEndTimePicker = () => {
-    setEndTimePickerVisibility(true);
-  };
-  const hideDatePicker = () => {
-    setDatePickerVisibility(false);
-  };
-  const hideStartTimePicker = () => {
-    setStartTimePickerVisibility(false);
-  };
-  const hideEndTimePicker = () => {
-    setEndTimePickerVisibility(false);
-  };
+
+  const showDatePicker = () => setDatePickerVisibility(true);
+  const showStartTimePicker = () => setStartTimePickerVisibility(true);
+  const showEndTimePicker = () => setEndTimePickerVisibility(true);
+  const hideDatePicker = () => setDatePickerVisibility(false);
+  const hideStartTimePicker = () => setStartTimePickerVisibility(false);
+  const hideEndTimePicker = () => setEndTimePickerVisibility(false);
+
   const handleDateConfirm = (selectedDate: Date) => {
     setDate(selectedDate);
     hideDatePicker();
   };
+
   const handleStartTimeConfirm = (selectedTime: Date) => {
     setStartTime(selectedTime);
     hideStartTimePicker();
   };
+
   const handleEndTimeConfirm = (selectedTime: Date) => {
     setEndTime(selectedTime);
     hideEndTimePicker();
   };
-  const formatDate = (date: Date) => {
-    return date.toLocaleDateString();
-  };
-  const formatTime = (time: Date) => {
-    return time.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-  };
+
+  const formatDate = (date: Date) => date.toLocaleDateString();
+  const formatTime = (time: Date) =>
+    time.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+
   return (
     <ImageBackground
       source={require("../../assets/parking2.jpg")}
@@ -126,6 +160,8 @@ const ParkingForm = () => {
         <TouchableOpacity style={styles.bookButton} onPress={handleBookNow}>
           <Text style={styles.bookButtonText}>Book Now</Text>
         </TouchableOpacity>
+
+        {/* Date, Start Time, and End Time pickers */}
         <DateTimePickerModal
           isVisible={isDatePickerVisible}
           mode="date"
@@ -148,6 +184,7 @@ const ParkingForm = () => {
     </ImageBackground>
   );
 };
+
 const styles = StyleSheet.create({
   backgroundImage: {
     flex: 1,
@@ -207,4 +244,5 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 });
+
 export default ParkingForm;

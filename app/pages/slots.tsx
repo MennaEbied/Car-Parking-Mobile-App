@@ -1,32 +1,45 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
   StyleSheet,
   ScrollView,
-  Pressable,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { router } from "expo-router";
+import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
+import { db } from "../../firebaseConfig"; // Adjust the path if needed
 
-const slots = [
-  { id: 1, status: "available" },
-  { id: 2, status: "available" },
-  { id: 3, status: "occupied" },
-  { id: 4, status: "available" },
-  { id: 5, status: "reserved" },
-  { id: 6, status: "occupied" },
-  { id: 7, status: "available" },
-  { id: 8, status: "available" },
-  { id: 9, status: "occupied" },
-  { id: 10, status: "reserved" },
-];
+interface Slot {
+  id: number;
+  status: "available" | "occupied" | "reserved";
+}
 
 const ParkingSlots: React.FC = () => {
+  const [slots, setSlots] = useState<Slot[]>([]);
+
+  useEffect(() => {
+    const q = query(collection(db, "slots"), orderBy("id"));
+
+    // Real-time listener to fetch data from Firestore
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const updatedSlots: Slot[] = snapshot.docs.map((doc) => ({
+        id: doc.data().id,
+        status: doc.data().status,
+      }));
+      setSlots(updatedSlots);
+    });
+
+    // Cleanup listener on unmount
+    return () => unsubscribe();
+  }, []);
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}> Find best parking slot </Text>
+
       <View style={styles.legendContainer}>
         <View style={[styles.legendItem, styles.available]} />
         <Text style={styles.legendText}>Available</Text>
@@ -35,6 +48,7 @@ const ParkingSlots: React.FC = () => {
         <View style={[styles.legendItem, styles.reserved]} />
         <Text style={styles.legendText}>Reserved</Text>
       </View>
+
       <ScrollView contentContainerStyle={styles.slotContainer}>
         {slots.map((slot) => (
           <View
@@ -49,6 +63,7 @@ const ParkingSlots: React.FC = () => {
             <Text style={styles.slotText}>SLOT-{slot.id}</Text>
           </View>
         ))}
+
         <View style={styles.buttons}>
           <TouchableOpacity
             style={{ marginLeft: 15 }}
@@ -65,6 +80,7 @@ const ParkingSlots: React.FC = () => {
             </View>
           </TouchableOpacity>
         </View>
+
         <TouchableOpacity
           style={{ marginLeft: 120 }}
           onPress={() => router.push("pages/bookings")}
@@ -79,7 +95,6 @@ const ParkingSlots: React.FC = () => {
             />
           </View>
         </TouchableOpacity>
-        <View />
       </ScrollView>
     </View>
   );
