@@ -11,7 +11,14 @@ import {
 import { router } from "expo-router";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { db } from "../../firebaseConfig"; // Adjust if necessary
-import { collection, addDoc, updateDoc, doc, getDoc } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  updateDoc,
+  doc,
+  getDoc,
+  collectionGroup,
+} from "firebase/firestore";
 import { getAuth } from "firebase/auth"; // To get the user ID
 
 const ParkingForm = () => {
@@ -34,7 +41,24 @@ const ParkingForm = () => {
 
     try {
       const auth = getAuth();
-      const userId = auth.currentUser?.uid; // Use this user ID for the reservation
+      const userId = auth.currentUser?.uid;
+      const user = auth.currentUser;
+
+      if (user) {
+        // Get the user's ID token
+        user
+          .getIdToken(true) // Pass `true` to force refresh the token
+          .then((idToken) => {
+            console.log("User's ID Token:", idToken);
+          })
+          .catch((error) => {
+            console.error("Error getting ID token:", error);
+          });
+      } else {
+        console.log("No user is signed in.");
+      }
+
+      // Use this user ID for the reservation
 
       // Check if the user is authenticated
       if (!userId) {
