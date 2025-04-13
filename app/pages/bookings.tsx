@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { useState } from "react";
 import {
   View,
@@ -10,14 +11,13 @@ import {
 } from "react-native";
 import { router } from "expo-router";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { db } from "../../firebaseConfig"; // Adjust if necessary
+import { db } from "../../firebaseConfig"; 
 import {
   collection,
   addDoc,
   updateDoc,
   doc,
   getDoc,
-  collectionGroup,
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth"; // To get the user ID
 
@@ -38,77 +38,92 @@ const ParkingForm = () => {
       Alert.alert("Error", "Please fill in all fields");
       return;
     }
-
-    try {
-      const auth = getAuth();
-      const userId = auth.currentUser?.uid;
-      const user = auth.currentUser;
-
-      if (user) {
-        // Get the user's ID token
-        user
-          .getIdToken(true) // Pass `true` to force refresh the token
-          .then((idToken) => {
-            console.log("User's ID Token:", idToken);
-          })
-          .catch((error) => {
-            console.error("Error getting ID token:", error);
-          });
-      } else {
-        console.log("No user is signed in.");
-      }
-
-      // Use this user ID for the reservation
-
-      // Check if the user is authenticated
-      if (!userId) {
-        Alert.alert("Error", "User not authenticated");
-        return;
-      }
-
-      // Fetch the slot data to check its status
-      const slotRef = doc(db, "slots", slotId);
-      const slotDoc = await getDoc(slotRef);
-
-      // If the slot doesn't exist or its status is reserved or occupied
-      if (!slotDoc.exists()) {
-        Alert.alert("Error", "Slot not found");
-        return;
-      }
-
-      const slotData = slotDoc.data();
-      if (slotData?.status === "reserved" || slotData?.status === "occupied") {
-        Alert.alert("Error", "This slot is not available for reservation.");
-        return;
-      }
-
-      // Reservation data
-      const reservationData = {
-        plateNumber,
-        slotId: Number(slotId),
-        startTime: startTime.toISOString(),
-        endTime: endTime.toISOString(),
-        date: date.toISOString(),
-      };
-
-      // Add reservation to Firestore
-      await addDoc(collection(db, "reservations"), reservationData);
-
-      // Update the slot to "reserved" and link it to the user
-      await updateDoc(slotRef, {
-        reservedBy: userId,
-        status: "reserved", // Update the slot's status to "reserved"
-      });
-
-      // Show success alert
-      Alert.alert("Success", "Your reservation has been made!");
-
-      // Redirect to the payment page
-      router.push("pages/payment");
-    } catch (error) {
-      console.error("Error making reservation:", error);
-      Alert.alert("Error", "There was an issue with your reservation.");
-    }
+  
+    // Show confirmation alert
+    Alert.alert(
+      "Confirm Booking",
+      "Are you sure you want to book?",
+      [
+        {
+          text: "No",
+          style: "cancel",
+        },
+        {
+          text: "Yes",
+          onPress: async () => {
+            try {
+              const auth = getAuth();
+              const userId = auth.currentUser?.uid;
+              const user = auth.currentUser;
+  
+              if (user) {
+                // Get the user's ID token
+                user
+                  .getIdToken(true)
+                  .then((idToken) => {
+                    console.log("User's ID Token:", idToken);
+                  })
+                  .catch((error) => {
+                    console.error("Error getting ID token:", error);
+                  });
+              } else {
+                console.log("No user is signed in.");
+              }
+  
+              // Check if the user is authenticated
+              if (!userId) {
+                Alert.alert("Error", "User not authenticated");
+                return;
+              }
+  
+              // Fetch the slot data to check its status
+              const slotRef = doc(db, "slots", slotId);
+              const slotDoc = await getDoc(slotRef);
+  
+              // If the slot doesn't exist or its status is reserved or occupied
+              if (!slotDoc.exists()) {
+                Alert.alert("Error", "Slot not found");
+                return;
+              }
+  
+              const slotData = slotDoc.data();
+              if (slotData?.status === "reserved" || slotData?.status === "occupied") {
+                Alert.alert("Error", "This slot is not available for reservation.");
+                return;
+              }
+  
+              // Reservation data
+              const reservationData = {
+                plateNumber,
+                slotId: Number(slotId),
+                startTime: startTime.toISOString(),
+                endTime: endTime.toISOString(),
+                date: date.toISOString(),
+              };
+  
+              // Add reservation to Firestore
+              await addDoc(collection(db, "reservations"), reservationData);
+  
+              // Update the slot to "reserved" and link it to the user
+              await updateDoc(slotRef, {
+                reservedBy: userId,
+                status: "reserved", // Update the slot's status to "reserved"
+              });
+  
+              // Show success alert
+              Alert.alert("Success", "Your reservation has been made!");
+  
+              // Redirect to the payment page
+              router.push("pages/payment");
+            } catch (error) {
+              console.error("Error making reservation:", error);
+              Alert.alert("Error", "There was an issue with your reservation.");
+            }
+          },
+        },
+      ],
+      { cancelable: false }
+    );
   };
 
   const showDatePicker = () => setDatePickerVisibility(true);
@@ -161,7 +176,7 @@ const ParkingForm = () => {
           value={slotId}
           placeholder="Enter Slot Id"
           returnKeyType="done"
-          keyboardType="default"
+          keyboardType="numeric"
         />
         <Text style={styles.label}>Start Time</Text>
         <TouchableOpacity
