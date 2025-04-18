@@ -20,6 +20,8 @@ import {
   getDoc,
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth"; // To get the user ID
+import * as Notifications from 'expo-notifications';
+
 
 const ParkingForm = () => {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -39,7 +41,6 @@ const ParkingForm = () => {
       return;
     }
   
-    // Show confirmation alert
     Alert.alert(
       "Confirm Booking",
       "Are you sure you want to book?",
@@ -54,33 +55,15 @@ const ParkingForm = () => {
             try {
               const auth = getAuth();
               const userId = auth.currentUser?.uid;
-              const user = auth.currentUser;
   
-              if (user) {
-                // Get the user's ID token
-                user
-                  .getIdToken(true)
-                  .then((idToken) => {
-                    console.log("User's ID Token:", idToken);
-                  })
-                  .catch((error) => {
-                    console.error("Error getting ID token:", error);
-                  });
-              } else {
-                console.log("No user is signed in.");
-              }
-  
-              // Check if the user is authenticated
               if (!userId) {
                 Alert.alert("Error", "User not authenticated");
                 return;
               }
   
-              // Fetch the slot data to check its status
               const slotRef = doc(db, "slots", slotId);
               const slotDoc = await getDoc(slotRef);
   
-              // If the slot doesn't exist or its status is reserved or occupied
               if (!slotDoc.exists()) {
                 Alert.alert("Error", "Slot not found");
                 return;
@@ -92,32 +75,96 @@ const ParkingForm = () => {
                 return;
               }
   
-              // Reservation data
+              // First reserve the slot
+              await updateDoc(slotRef, {
+                reservedBy: userId,
+                status: "reserved",
+              });
+  
+              // Then create the reservation
               const reservationData = {
                 plateNumber,
                 slotId: Number(slotId),
                 startTime: startTime.toISOString(),
                 endTime: endTime.toISOString(),
                 date: date.toISOString(),
+                userId,
               };
   
-              // Add reservation to Firestore
-              await addDoc(collection(db, "reservations"), reservationData);
+              const docRef = await addDoc(collection(db, "reservations"), reservationData);
+              const bookingId = docRef.id;
   
-              // Update the slot to "reserved" and link it to the user
-              await updateDoc(slotRef, {
-                reservedBy: userId,
-                status: "reserved", // Update the slot's status to "reserved"
-              });
+              // Now handle notifications
+              try {
+                const { status: existingStatus } = await Notifications.getPermissionsAsync();
+                let finalStatus = existingStatus;
+                
+                if (existingStatus !== 'granted') {
+                  const { status } = await Notifications.requestPermissionsAsync();
+                  finalStatus = status;
+                }
   
-              // Show success alert
+                if (finalStatus === 'granted') {
+                  // Immediate confirmation
+                  await Notifications.scheduleNotificationAsync({
+                    content: {
+                      title: "Booking Confirmed",
+                      body: `Your parking at slot ${slotId} has been booked`,
+                      data: { bookingId, type: 'booking' },
+                    },
+                    trigger: null,
+                  });
+  
+                  const endDateTime = new Date(endTime);
+                  const reminderTime = new Date(endDateTime.getTime() - 30 * 60 * 1000);
+  
+                  // 30-minute reminder
+                  await Notifications.scheduleNotificationAsync({
+                    content: {
+                      title: "Parking Expiring Soon",
+                      body: `Your parking at slot ${slotId} expires in 30 minutes`,
+                      data: { bookingId, type: 'reminder' },
+                    },
+                    trigger: { 
+                      type: 'date',
+                      date: reminderTime 
+                    },
+                  });
+  
+                  // Expiration notification
+                  await Notifications.scheduleNotificationAsync({
+                    content: {
+                      title: "Parking Expired",
+                      body: `Your parking at slot ${slotId} has expired`,
+                      data: { bookingId, type: 'reminder' },
+                    },
+                    trigger: { 
+                      type: 'date',
+                      date: endDateTime 
+                    },
+                  });
+                }
+              } catch (notificationError) {
+                console.log("Notification error - booking still successful:", notificationError);
+              }
+  
               Alert.alert("Success", "Your reservation has been made!");
-  
-              // Redirect to the payment page
               router.push("pages/payment");
+  
             } catch (error) {
               console.error("Error making reservation:", error);
-              Alert.alert("Error", "There was an issue with your reservation.");
+              
+              // If we failed after reserving the slot, release it
+              try {
+                await updateDoc(doc(db, "slots", slotId), {
+                  reservedBy: null,
+                  status: "available",
+                });
+              } catch (rollbackError) {
+                console.error("Failed to release slot:", rollbackError);
+              }
+              
+              Alert.alert("Error", "There was an issue with your reservation. Please try again.");
             }
           },
         },

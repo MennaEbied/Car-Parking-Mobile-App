@@ -54,6 +54,7 @@ const HomePage: React.FC = () => {
               size={28}
               color="white"
               style={{ marginRight: 10 }}
+              onPress={() => router.push('pages/notificationScreen')}
             />
           </TouchableOpacity>
         </View>
