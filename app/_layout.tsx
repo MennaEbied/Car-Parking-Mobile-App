@@ -70,6 +70,13 @@ export default function Layout() {
         }}
       />
       <Stack.Screen
+        name="pages/notificationScreen"
+        options={{
+          animation: "fade",
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
         name="pages/privacyPolicy"
         options={{
           animation: "fade",
