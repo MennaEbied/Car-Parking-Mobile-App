@@ -224,7 +224,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
-    paddingTop: 55,
+    paddingTop: 60,
   },
   name: {
     fontSize: 24,
@@ -249,13 +249,13 @@ const styles = StyleSheet.create({
     marginLeft: 15,
   },
   infoTitle: {
-    color: "#999",
-    fontSize: 14,
-  },
-  infoValue: {
     color: "#333",
     fontSize: 16,
-    marginTop: 5,
+  },
+  infoValue: {
+    color: "#999",
+    fontSize: 16,
+    marginTop: 2,
   },
   button: {
     flexDirection: "row",
@@ -270,7 +270,7 @@ const styles = StyleSheet.create({
     marginLeft: 15,
   },
   icon: {
-    width: 30,
+    width: 25,
   },
   arrow: {
     marginLeft: "auto",
