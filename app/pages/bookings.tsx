@@ -19,15 +19,6 @@ import {
   getDoc,
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth"; // To get the user ID
-import * as Notifications from "expo-notifications";
-
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: true,
-    shouldSetBadge: false,
-  }),
-});
 
 const ParkingForm = () => {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -107,58 +98,6 @@ const ParkingForm = () => {
                 reservationData
               );
               const bookingId = docRef.id;
-
-              // Handle notifications
-              try {
-                const { status: existingStatus } =
-                  await Notifications.getPermissionsAsync();
-                let finalStatus = existingStatus;
-
-                if (existingStatus !== "granted") {
-                  const { status } = await Notifications.requestPermissionsAsync();
-                  finalStatus = status;
-                }
-
-                if (finalStatus === "granted") {
-                  // Immediate confirmation notification
-                  await Notifications.scheduleNotificationAsync({
-                    content: {
-                      title: "Booking Confirmed",
-                      body: `Your parking at slot ${slotId} has been booked.`,
-                      data: { bookingId, type: "booking" },
-                    },
-                    trigger: null, // Show immediately
-                  });
-
-                  // Reminder notification (shown immediately)
-                  await Notifications.scheduleNotificationAsync({
-                    content: {
-                      title: "Parking Expiring Soon",
-                      body: `Your parking at slot ${slotId} expires in 30 minutes.`,
-                      data: { bookingId, type: "reminder" },
-                    },
-                    trigger: null, // Show immediately
-                  });
-
-                  // Expiration notification (shown immediately)
-                  await Notifications.scheduleNotificationAsync({
-                    content: {
-                      title: "Parking Expired",
-                      body: `Your parking at slot ${slotId} has expired.`,
-                      data: { bookingId, type: "expiration" },
-                    },
-
-                    trigger: null
-
-                  });
-                }
-              } catch (notificationError) {
-                console.log(
-                  "Notification error - booking still successful:",
-                  notificationError
-                );
-              }
-
               Alert.alert("Success", "Your reservation has been made!");
               router.push("pages/payment");
             } catch (error) {
