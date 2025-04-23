@@ -1,14 +1,10 @@
-/* eslint-disable prettier/prettier */
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView, View, Text, FlatList, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import * as Notifications from 'expo-notifications';
-import { useFocusEffect } from '@react-navigation/native';
-import { db } from '../../firebaseConfig';
-import { collection, query, where, onSnapshot, doc, updateDoc } from 'firebase/firestore';
-import { getAuth } from 'firebase/auth';
+import { db, auth } from '../../firebaseConfig';
+import { collection, query, where, onSnapshot } from 'firebase/firestore';
 import { router } from 'expo-router';
 
-// Configure notification handler
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
@@ -21,210 +17,128 @@ interface NotificationItem {
   id: string;
   title: string;
   message: string;
-  time: string;
+  timestamp: number;
   isRead: boolean;
   bookingId?: string;
-  type: 'booking' | 'reminder' | 'payment' | 'system';
-  timestamp?: number;
+  type: 'booking' | 'system';
 }
 
 const NotificationScreen = () => {
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
-  const [hasNotificationPermission, setHasNotificationPermission] = useState(false);
-  const auth = getAuth();
+  const [hasPermission, setHasPermission] = useState(false);
   const userId = auth.currentUser?.uid;
 
-  // Check notification permission
   useEffect(() => {
-    const checkNotificationPermission = async () => {
+    const checkPermission = async () => {
       const { status } = await Notifications.getPermissionsAsync();
-      setHasNotificationPermission(status === 'granted');
+      setHasPermission(status === 'granted');
     };
-    checkNotificationPermission();
+    checkPermission();
   }, []);
 
-  // Listen for booking updates and schedule notifications
   useEffect(() => {
     if (!userId) return;
 
-    const q = query(
-      collection(db, "reservations"),
-      where("userId", "==", userId)
-    );
-
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      querySnapshot.docChanges().forEach((change) => {
-        const booking = change.doc.data();
-        
-        // Handle new bookings
-        if (change.type === "added") {
-          addBookingNotification({
-            ...booking,
-            id: change.doc.id,
-            type: 'booking'
-          });
-          scheduleBookingNotifications(booking, change.doc.id);
-        }
-        
-        // Handle booking updates
-        if (change.type === "modified") {
-          addBookingNotification({
-            ...booking,
-            id: change.doc.id,
-            type: 'booking'
-          });
+    const q = query(collection(db, "reservations"), where("userId", "==", userId));
+    return onSnapshot(q, snapshot => {
+      snapshot.docChanges().forEach(({ type, doc }) => {
+        if (type === "added" || type === "modified") {
+          handleBookingUpdate(doc.data(), doc.id);
         }
       });
     });
-
-    return () => unsubscribe();
   }, [userId]);
 
-  // Schedule notifications for booking start/end times
-  // Modified scheduleBookingNotifications function
-  const scheduleBookingNotifications = async (booking: any, bookingId: string) => {
-    try {
-      const { status } = await Notifications.getPermissionsAsync();
-      if (status !== 'granted') return;
-
-      const now = new Date();
-      const endTime = new Date(booking.endTime);
-      
-      // Only schedule notifications for future events
-      if (endTime > now) {
-        // Immediate booking confirmation (no scheduling needed)
-        await Notifications.scheduleNotificationAsync({
-          content: {
-            title: "Booking Confirmed",
-            body: `You booked slot ${booking.slotId}`,
-            data: { bookingId, type: 'booking' },
-          },
-          trigger: null, // Send immediately
-        });
-        // Schedule expiration notification only if it's in the future
-        await Notifications.scheduleNotificationAsync({
-          content: {
-            title: "Parking Expired",
-            body: `Your parking at slot ${booking.slotId} has expired`,
-            data: { bookingId, type: 'reminder' },
-          },
-          trigger: { 
-            type: 'date',
-            date: endTime 
-          },
-        });
-        // Add to local notifications list
-        addBookingNotification({
-          ...booking,
-          id: bookingId,
-          type: 'booking'
-        });
-      }
-    } catch (error) {
-      console.log("Non-critical notification error:", error);
-      // Still add to local notifications even if scheduling fails
-      addBookingNotification({
-        ...booking,
-        id: bookingId,
-        type: 'booking'
-      });
-    }
-  };
-
-  // Add booking notification to the list
-  const addBookingNotification = (booking: any) => {
+  const handleBookingUpdate = (booking: any, bookingId: string) => {
     const now = new Date();
-    const bookingTime = new Date(booking.startTime);
-    const bookingEnd = new Date(booking.endTime);
-    const timeLeft = Math.floor((bookingEnd.getTime() - now.getTime()) / (1000 * 60));
+    const endTime = new Date(booking.endTime);
     
-    const timeString = bookingTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    const dateString = bookingTime.toLocaleDateString();
+    // Immediate confirmation notification
+    addNotification(createNotification(
+      bookingId,
+      'Booking Confirmed',
+      `You booked slot ${booking.slotId}`,
+      now.getTime(),
+      'booking'
+    ));
 
-    const notification: NotificationItem = {
-      id: `booking-${booking.id}`,
-      title: 'New Booking Confirmed',
-      message: `You booked slot ${booking.slotId} from ${timeString} on ${dateString}`,
-      time: 'Just now',
-      isRead: false,
-      bookingId: booking.id,
-      type: booking.type || 'booking',
-      timestamp: now.getTime()
-    };
-
-    setNotifications(prev => [notification, ...prev.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0))]);
+    // Create expiration notification entry
+    addNotification(createNotification(
+      bookingId,
+      'Parking Expired',
+      `Your parking at slot ${booking.slotId} has expired`,
+      endTime.getTime(),
+      'booking'
+    ));
   };
 
-  // Handle incoming push notifications
-  useEffect(() => {
-    const subscription = Notifications.addNotificationReceivedListener(handlePushNotification);
-    return () => subscription.remove();
-  }, []);
+  const createNotification = (
+    id: string,
+    title: string,
+    message: string,
+    timestamp: number,
+    type: 'booking' | 'system'
+  ): NotificationItem => ({
+    id: `${type}-${id}-${timestamp}`,
+    title,
+    message,
+    timestamp,
+    isRead: false,
+    bookingId: id,
+    type,
+  });
 
-  const handlePushNotification = (notification: Notifications.Notification) => {
-    const newNotification: NotificationItem = {
-      id: notification.request.identifier || Date.now().toString(),
-      title: notification.request.content.title || 'New Notification',
-      message: notification.request.content.body || '',
-      time: 'Just now',
-      isRead: false,
-      type: notification.request.content.data?.type || 'system',
-      bookingId: notification.request.content.data?.bookingId,
-      timestamp: Date.now()
-    };
-
-    setNotifications(prev => [newNotification, ...prev]);
+  const addNotification = (notification: NotificationItem) => {
+    setNotifications(prev => [
+      ...prev.filter(n => n.id !== notification.id),
+      notification,
+    ].sort((a, b) => b.timestamp - a.timestamp));
   };
 
-  // Handle notification press
-  const handleNotificationPress = async (item: NotificationItem) => {
-    // Mark as read
-    const updatedNotifications = notifications.map(n => 
-      n.id === item.id ? { ...n, isRead: true } : n
-    );
-    setNotifications(updatedNotifications);
+  const handlePress = async (item: NotificationItem) => {
+    setNotifications(prev => prev.map(n => n.id === item.id ? {...n, isRead: true} : n));
 
     if (item.type === 'booking' && item.bookingId) {
       router.push(`/booking/${item.bookingId}`);
-    } else if (item.type === 'system' && !hasNotificationPermission) {
+    } else if (!hasPermission) {
       const { status } = await Notifications.requestPermissionsAsync();
-      setHasNotificationPermission(status === 'granted');
-      if (status === 'granted') {
-        Alert.alert('Notifications Enabled', 'You will now receive updates about your bookings');
-      }
+      setHasPermission(status === 'granted');
+      if (status === 'granted') Alert.alert('Notifications Enabled');
     }
   };
 
-  // Format time display
-  const formatTime = (timestamp?: number) => {
-    if (!timestamp) return 'Just now';
-    const diff = Date.now() - timestamp;
-    const minutes = Math.floor(diff / (1000 * 60));
+  const formatTime = (timestamp: number) => {
+    const now = Date.now();
+    const diff = timestamp - now;
+    const absoluteDiff = Math.abs(diff);
+    const minutes = Math.floor(absoluteDiff / 60000);
+
+    if (diff > 0) { // Future time
+      return minutes < 60 ? `in ${minutes}m` : `in ${Math.floor(minutes/60)}h`;
+    }
     
-    if (minutes < 1) return 'Just now';
-    if (minutes < 60) return `${minutes} min ago`;
-    if (minutes < 1440) return `${Math.floor(minutes / 60)} hours ago`;
-    return `${Math.floor(minutes / 1440)} days ago`;
+    return minutes < 1 ? 'Just now' :
+      minutes < 60 ? `${minutes}m ago` :
+      minutes < 1440 ? `${Math.floor(minutes/60)}h ago` :
+      `${Math.floor(minutes/1440)}d ago`;
   };
 
-  const renderItem = ({ item }: { item: NotificationItem }) => (
+  const NotificationCard = ({ item }: { item: NotificationItem }) => (
     <TouchableOpacity 
-      style={[styles.notificationItem, item.isRead ? styles.readItem : styles.unreadItem]}
-      onPress={() => handleNotificationPress(item)}
+      style={[styles.card, item.isRead && styles.read]}
+      onPress={() => handlePress(item)}
     >
-      <View style={styles.contentContainer}>
-        <View style={styles.textContainer}>
-          <Text style={styles.title}>{item.title}</Text>
-          <Text style={styles.message}>{item.message}</Text>
-          {item.type === 'system' && (
-            <Text style={styles.notificationStatus}>
-              {hasNotificationPermission ? 'Notifications enabled' : 'Notifications disabled'}
-            </Text>
-          )}
-        </View>
-        <Text style={styles.time}>{formatTime(item.timestamp)}</Text>
+      <View style={styles.content}>
+        <Text style={styles.title}>{item.title}</Text>
+        <Text style={styles.message}>{item.message}</Text>
+        {item.type === 'system' && (
+          <Text style={styles.status}>
+            {hasPermission ? 'Notifications enabled' : 'Notifications disabled'}
+          </Text>
+        )}
       </View>
-      {!item.isRead && <View style={styles.unreadIndicator} />}
+      <Text style={styles.time}>{formatTime(item.timestamp)}</Text>
+      {!item.isRead && <View style={styles.dot} />}
     </TouchableOpacity>
   );
 
@@ -232,39 +146,27 @@ const NotificationScreen = () => {
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerText}>Notifications</Text>
-        {!hasNotificationPermission && (
-          <TouchableOpacity 
-            style={styles.enableButton}
-            onPress={() => handleNotificationPress({
-              id: 'enable-notifications',
-              title: 'Enable Notifications',
-              message: 'Tap to enable notifications',
-              time: '',
-              isRead: false,
-              type: 'system'
-            })}
-          >
-            <Text style={styles.enableButtonText}>Enable</Text>
+        {!hasPermission && (
+          <TouchableOpacity style={styles.button} onPress={() => handlePress({
+            id: 'enable', title: 'Enable', message: '', timestamp: 0, isRead: false, type: 'system'
+          })}>
+            <Text style={styles.buttonText}>Enable</Text>
           </TouchableOpacity>
         )}
       </View>
       
       <FlatList
-        data={notifications.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0))}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
+        data={notifications}
+        renderItem={NotificationCard}
+        keyExtractor={item => item.id}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
-        ListEmptyComponent={
-          <View style={styles.emptyContainer}>
-            <Text style={styles.emptyText}>No notifications yet</Text>
-          </View>
-        }
+        ListEmptyComponent={<Text style={styles.empty}>No notifications yet</Text>}
       />
     </SafeAreaView>
   );
 };
 
-
+// Reuse the same styles from previous simplified version
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -283,62 +185,46 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
   },
-  enableButton: {
+  button: {
     backgroundColor: '#4CAF50',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
+    padding: 8,
     borderRadius: 4,
   },
-  enableButtonText: {
+  buttonText: {
     color: '#fff',
     fontWeight: 'bold',
   },
-  notificationItem: {
+  card: {
     flexDirection: 'row',
     padding: 16,
-    backgroundColor: '#fff',
-  },
-  readItem: {
-    backgroundColor: '#fff',
-  },
-  unreadItem: {
     backgroundColor: '#f8f8f8',
   },
-  contentContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  read: {
+    backgroundColor: '#fff',
   },
-  textContainer: {
+  content: {
     flex: 1,
     marginRight: 8,
   },
   title: {
-    fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 4,
-    color: '#333',
   },
   message: {
-    fontSize: 14,
     color: '#666',
-    marginBottom: 4,
   },
-  notificationStatus: {
-    fontSize: 12,
+  status: {
     color: '#4CAF50',
     fontStyle: 'italic',
   },
   time: {
-    fontSize: 12,
     color: '#999',
-    alignSelf: 'flex-start',
   },
   separator: {
     height: 1,
     backgroundColor: '#eee',
   },
-  unreadIndicator: {
+  dot: {
     width: 8,
     height: 8,
     borderRadius: 4,
@@ -347,14 +233,9 @@ const styles = StyleSheet.create({
     right: 16,
     top: 20,
   },
-  emptyContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-  },
-  emptyText: {
-    fontSize: 16,
+  empty: {
+    textAlign: 'center',
+    marginTop: 20,
     color: '#999',
   },
 });
