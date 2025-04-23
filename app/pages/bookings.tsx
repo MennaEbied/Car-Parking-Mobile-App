@@ -147,7 +147,9 @@ const ParkingForm = () => {
                       body: `Your parking at slot ${slotId} has expired.`,
                       data: { bookingId, type: "expiration" },
                     },
+
                     trigger: null
+
                   });
                 }
               } catch (notificationError) {
