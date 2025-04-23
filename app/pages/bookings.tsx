@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { useState } from "react";
 import {
   View,
@@ -11,7 +10,7 @@ import {
 } from "react-native";
 import { router } from "expo-router";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { db } from "../../firebaseConfig"; 
+import { db } from "../../firebaseConfig";
 import {
   collection,
   addDoc,
@@ -20,8 +19,15 @@ import {
   getDoc,
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth"; // To get the user ID
-import * as Notifications from 'expo-notifications';
+import * as Notifications from "expo-notifications";
 
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+  }),
+});
 
 const ParkingForm = () => {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -40,7 +46,7 @@ const ParkingForm = () => {
       Alert.alert("Error", "Please fill in all fields");
       return;
     }
-  
+
     Alert.alert(
       "Confirm Booking",
       "Are you sure you want to book?",
@@ -55,33 +61,38 @@ const ParkingForm = () => {
             try {
               const auth = getAuth();
               const userId = auth.currentUser?.uid;
-  
               if (!userId) {
                 Alert.alert("Error", "User not authenticated");
                 return;
               }
-  
+
               const slotRef = doc(db, "slots", slotId);
               const slotDoc = await getDoc(slotRef);
-  
+
               if (!slotDoc.exists()) {
                 Alert.alert("Error", "Slot not found");
                 return;
               }
-  
+
               const slotData = slotDoc.data();
-              if (slotData?.status === "reserved" || slotData?.status === "occupied") {
-                Alert.alert("Error", "This slot is not available for reservation.");
+              if (
+                slotData?.status === "reserved" ||
+                slotData?.status === "occupied"
+              ) {
+                Alert.alert(
+                  "Error",
+                  "This slot is not available for reservation."
+                );
                 return;
               }
-  
-              // First reserve the slot
+
+              // Reserve the slot
               await updateDoc(slotRef, {
                 reservedBy: userId,
                 status: "reserved",
               });
-  
-              // Then create the reservation
+
+              // Create the reservation
               const reservationData = {
                 plateNumber,
                 slotId: Number(slotId),
@@ -90,71 +101,68 @@ const ParkingForm = () => {
                 date: date.toISOString(),
                 userId,
               };
-  
-              const docRef = await addDoc(collection(db, "reservations"), reservationData);
+
+              const docRef = await addDoc(
+                collection(db, "reservations"),
+                reservationData
+              );
               const bookingId = docRef.id;
-  
-              // Now handle notifications
+
+              // Handle notifications
               try {
-                const { status: existingStatus } = await Notifications.getPermissionsAsync();
+                const { status: existingStatus } =
+                  await Notifications.getPermissionsAsync();
                 let finalStatus = existingStatus;
-                
-                if (existingStatus !== 'granted') {
+
+                if (existingStatus !== "granted") {
                   const { status } = await Notifications.requestPermissionsAsync();
                   finalStatus = status;
                 }
-  
-                if (finalStatus === 'granted') {
-                  // Immediate confirmation
+
+                if (finalStatus === "granted") {
+                  // Immediate confirmation notification
                   await Notifications.scheduleNotificationAsync({
                     content: {
                       title: "Booking Confirmed",
-                      body: `Your parking at slot ${slotId} has been booked`,
-                      data: { bookingId, type: 'booking' },
+                      body: `Your parking at slot ${slotId} has been booked.`,
+                      data: { bookingId, type: "booking" },
                     },
-                    trigger: null,
+                    trigger: null, // Show immediately
                   });
-  
-                  const endDateTime = new Date(endTime);
-                  const reminderTime = new Date(endDateTime.getTime() - 30 * 60 * 1000);
-  
-                  // 30-minute reminder
+
+                  // Reminder notification (shown immediately)
                   await Notifications.scheduleNotificationAsync({
                     content: {
                       title: "Parking Expiring Soon",
-                      body: `Your parking at slot ${slotId} expires in 30 minutes`,
-                      data: { bookingId, type: 'reminder' },
+                      body: `Your parking at slot ${slotId} expires in 30 minutes.`,
+                      data: { bookingId, type: "reminder" },
                     },
-                    trigger: { 
-                      type: 'date',
-                      date: reminderTime 
-                    },
+                    trigger: null, // Show immediately
                   });
-  
-                  // Expiration notification
+
+                  // Expiration notification (shown immediately)
                   await Notifications.scheduleNotificationAsync({
                     content: {
                       title: "Parking Expired",
-                      body: `Your parking at slot ${slotId} has expired`,
-                      data: { bookingId, type: 'reminder' },
+                      body: `Your parking at slot ${slotId} has expired.`,
+                      data: { bookingId, type: "expiration" },
                     },
-                    trigger: { 
-                      type: 'date',
-                      date: endDateTime 
-                    },
+                    
                   });
                 }
               } catch (notificationError) {
-                console.log("Notification error - booking still successful:", notificationError);
+                console.log(
+                  "Notification error - booking still successful:",
+                  notificationError
+                );
               }
-  
+
               Alert.alert("Success", "Your reservation has been made!");
               router.push("pages/payment");
-  
             } catch (error) {
               console.error("Error making reservation:", error);
-              
-              // If we failed after reserving the slot, release it
+
+              // Rollback if reservation fails
               try {
                 await updateDoc(doc(db, "slots", slotId), {
                   reservedBy: null,
@@ -163,8 +171,11 @@ const ParkingForm = () => {
               } catch (rollbackError) {
                 console.error("Failed to release slot:", rollbackError);
               }
-              
-              Alert.alert("Error", "There was an issue with your reservation. Please try again.");
+
+              Alert.alert(
+                "Error",
+                "There was an issue with your reservation. Please try again."
+              );
             }
           },
         },
