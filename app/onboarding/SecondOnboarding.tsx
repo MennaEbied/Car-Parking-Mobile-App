@@ -5,14 +5,14 @@ const SecondOnboarding = () => {
   return (
     <View style={styles.container}>
       <Image
-        source={require("../../assets/onboarding1.jpeg")}
-        style={styles.img}
+        source={require("../../assets/onboarding4.jpeg")}
+        style={styles.imgage}
       />
       <Text style={styles.text}>
         Reserve your parking space in advance to ensure you don’t miss out
       </Text>
       <Pressable
-        onPress={() => router.push("onboarding/notification")}
+        onPress={() => router.push("authentication/SignUp")}
         style={styles.button}
       >
         <Text style={styles.next}> Next </Text>
@@ -26,27 +26,30 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffff",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingVertical: 110,
+    paddingVertical:90,
     paddingHorizontal: 40,
   },
-  img: {
-    width: 350,
-    height: 300,
+  imgage: {
+    width: 300,
+    height: 280,
+    marginTop:50
   },
   text: {
-    fontSize: 18,
+    fontSize:18,
     textAlign: "center",
+    color:"#001235",
+    marginBottom:100
   },
   button: {
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 12,
     paddingHorizontal: 95,
-    backgroundColor: "#7793ed",
-    borderRadius: 35,
+    backgroundColor: "#009ae9",
+    borderRadius:15,
   },
   next: {
-    fontSize: 20,
+    fontSize:20,
   },
 });
 export default SecondOnboarding;

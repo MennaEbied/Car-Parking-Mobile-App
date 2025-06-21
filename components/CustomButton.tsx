@@ -39,18 +39,18 @@ export const CustomButton: React.FC<CustomButtonProps> = ({
 
 const styles = StyleSheet.create({
   text: {
-    color: "#171616",
-    fontSize: 25,
+    color: "#002437",
+    fontSize: 22,
     textAlign: "center",
   },
   button: {
-    width: 245,
+    width: 270,
     height: 55,
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: 35,
-    backgroundColor: "#91B3F9",
-    marginTop: 15,
+    borderRadius: 20,
+    backgroundColor: "#009ae9",
+    marginTop: 35,
   },
   buttonPressed: {
     backgroundColor: "#C9DCFD",
