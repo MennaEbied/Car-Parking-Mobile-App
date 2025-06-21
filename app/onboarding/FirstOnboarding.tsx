@@ -1,5 +1,5 @@
 import { router } from "expo-router";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, Image } from "react-native";
 import { CustomButton } from "../../components/CustomButton";
 import { CustomImage } from "../../components/CustomImage";
 
@@ -7,7 +7,10 @@ export default function FirstOnboarding() {
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
-        <CustomImage source={require("../../assets/car.jpg")} />
+        <Image 
+        source={require("../../assets/onboarding6.jpg")}
+        style={styles.image}
+        ></Image>
         <Text style={styles.heading}>Discover what CarPark can do !</Text>
         <Text style={styles.tagline}>
           Help you avoid long searches and find a spot quickly
@@ -16,7 +19,7 @@ export default function FirstOnboarding() {
       <View style={styles.buttons}>
         <CustomButton
           title="Skip"
-          onPress={() => router.push("onboarding/notification")}
+          onPress={() => router.push("authentication/SignUp")}
           style={{
             backgroundColor: "#C9DCFD",
             flex: 1,
@@ -32,7 +35,7 @@ export default function FirstOnboarding() {
           title="Next"
           onPress={() => router.push("onboarding/SecondOnboarding")}
           style={{
-            backgroundColor: "#8EA5F0",
+            backgroundColor: "#009ae9",
             flex: 1,
             marginLeft: 10,
             justifyContent: "center",
@@ -58,22 +61,24 @@ const styles = StyleSheet.create({
   },
   heading: {
     fontWeight: "bold",
-    fontSize: 21,
+    fontSize: 22,
     textAlign: "center",
     flexWrap: "wrap",
     marginBottom: 35,
+    color:"#003551"
   },
   tagline: {
-    fontSize: 17,
+    fontSize: 18,
     textAlign: "center",
     flexWrap: "wrap",
+    color:"#001235"
     //marginHorizontal:10,
     //fontSize:20,
   },
   buttons: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 30,
+    marginBottom: 60,
     gap: 50,
   },
   imageContainer: {
@@ -81,4 +86,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 15,
   },
+  image:{
+   height:260,
+   width:330,
+   marginTop:100
+  }
 });

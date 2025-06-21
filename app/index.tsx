@@ -11,13 +11,21 @@ export default function SplashScreen() {
   };
   return (
     <View style={styles.container}>
-      <Text style={styles.heading}> Welcome</Text>
-      <Text style={styles.tagline}>Find Parking Spots Easily</Text>
       <CustomImage
-        source={require("../assets/Welcome.jpg")}
-        style={{ height: 350 }}
+        source={require("../assets/park3.jpg")}
+        style={{ height: 60 , width: 60 }}
       />
-      <CustomButton onPress={handlePress} title="Let's Go" />
+      <Text style={styles.heading1}>Welcome in Your</Text>
+      <View style={styles.heading}>
+      <Text style={styles.heading2}>Parking </Text>
+      <Text style={styles.heading3}>Space</Text>
+      </View>
+      <Text style={styles.tagline}>Easily book spots with real-time availability anytime,anywhere</Text>
+      <CustomImage
+        source={require("../assets/car9.png")}
+        style={{ height: 260 }}
+      />
+      <CustomButton onPress={handlePress} title="Get Started" />
       <StatusBar style="auto" />
     </View>
   );
@@ -31,14 +39,31 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   heading: {
-    fontSize: 35,
-    color: "#171616",
+    textAlign: "center",
+    flexDirection: "row",
+    marginBottom:15
+  },
+  heading1: {
+    textAlign: "center",
+    paddingTop:10,
+    fontSize:28,
+    color: "#003551",
     fontWeight: "bold",
-    paddingBottom: 10,
-    paddingRight: 20,
   },
-  tagline: {
-    fontSize: 19,
-    color: "#171616",
+  heading2: {
+    fontSize:28,
+    color:"#009ae9",
+    fontWeight: "bold",
   },
+  heading3: {
+    fontSize:28,
+    color: "#003551",
+    fontWeight: "bold",
+  },
+  tagline:{
+  fontSize:13,
+  textAlign: "center",
+  flexWrap: "wrap",
+  color: "#002437",
+  }
 });
