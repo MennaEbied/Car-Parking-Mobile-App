@@ -3,10 +3,13 @@ import {
   StyleSheet,
   View,
   Text,
-  Image,
   TextInput,
   Pressable,
   Alert,
+  SafeAreaView,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
 } from "react-native";
 import { router } from "expo-router";
 import { useState } from "react";
@@ -14,17 +17,38 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../firebaseConfig";
 import { storeUser } from "../../store/authPersistance";
 import Feather from "@expo/vector-icons/Feather";
-import AsyncStorage from "@react-native-async-storage/async-storage"; // Import AsyncStorage
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+
+const GoogleIcon = () => <Text style={styles.googleIcon}>G</Text>;
 
 const SignUp = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
+
+  // Error states
+  const [nameError, setNameError] = useState("");
+  const [emailError, setEmailError] = useState("");
   const [phoneNumberError, setPhoneNumberError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
+  const [termsError, setTermsError] = useState("");
+
+  const validateName = (name: string) => {
+    if (!name.trim()) {
+      setNameError("Full name is required.");
+      return false;
+    }
+    setNameError("");
+    return true;
+  };
 
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -36,6 +60,17 @@ const SignUp = () => {
     return true;
   };
 
+  const validatePhoneNumber = (number: string) => {
+    // Simple regex for an 11-digit phone number, as in the original code
+    const phoneRegex = /^\d{11}$/;
+    if (!phoneRegex.test(number)) {
+      setPhoneNumberError("Please enter a valid 11-digit phone number.");
+      return false;
+    }
+    setPhoneNumberError("");
+    return true;
+  };
+
   const validatePassword = (password: string) => {
     if (password.length < 6) {
       setPasswordError("Password must be at least 6 characters long.");
@@ -44,29 +79,43 @@ const SignUp = () => {
     setPasswordError("");
     return true;
   };
-  const validatePhoneNumber = (phoneNumber: string) => {
-    const phoneRegex = /^\d{11}$/; // Simple regex for 10-digit phone number
-    if (!phoneRegex.test(phoneNumber)) {
-      setPhoneNumberError("Please enter a valid 10-digit phone number.");
+
+  const validateConfirmPassword = (pass: string, confirmPass: string) => {
+    if (pass !== confirmPass) {
+      setConfirmPasswordError("Passwords do not match.");
       return false;
     }
-    setPhoneNumberError("");
+    setConfirmPasswordError("");
+    return true;
+  };
+
+  const validateTerms = (agreed: boolean) => {
+    if (!agreed) {
+      setTermsError("You must agree to the terms and conditions.");
+      return false;
+    }
+    setTermsError("");
     return true;
   };
 
   const handleSignUp = async () => {
-    if (!name || !email || !password || !phoneNumber) {
-      Alert.alert("Error", "Please fill in all fields");
-      return;
-    }
-
-    // Validate email and password
+    // Trigger all validations at once on submit
+    const isNameValid = validateName(name);
     const isEmailValid = validateEmail(email);
+    const isPhoneValid = validatePhoneNumber(phoneNumber);
     const isPasswordValid = validatePassword(password);
-    const isPhoneNumberValid = validatePhoneNumber(phoneNumber);
+    const doPasswordsMatch = validateConfirmPassword(password, confirmPassword);
+    const areTermsAgreed = validateTerms(agreedToTerms);
 
-    if (!isEmailValid || !isPasswordValid || !isPhoneNumberValid) {
-      return; // Stop if validation fails
+    if (
+      !isNameValid ||
+      !isEmailValid ||
+      !isPhoneValid ||
+      !isPasswordValid ||
+      !doPasswordsMatch ||
+      !areTermsAgreed
+    ) {
+      return; // Stop if any validation fails
     }
 
     try {
@@ -78,30 +127,16 @@ const SignUp = () => {
       const user = userCredential.user;
       console.log("User created:", user.email);
 
-      // Store user's name locally
+      // Store additional user info
       await AsyncStorage.setItem("userName", name);
       await AsyncStorage.setItem("userPhoneNumber", phoneNumber);
-
-      // Store user data if needed
       storeUser(user);
 
-      // Navigate to the home page after successful sign-up
-      router.push("app-pages/home");
-
-      // Clear form fields
-      setName("");
-      setEmail("");
-      setPassword("");
-      setPhoneNumber("");
+      router.push("app-pages/home"); // Navigate home
     } catch (error: any) {
       console.error("Sign-up error:", error);
-
-      // Handle "email already in use" error
       if (error.code === "auth/email-already-in-use") {
-        Alert.alert(
-          "Error",
-          "The email address is already in use. Please use a different email.",
-        );
+        setEmailError("This email address is already in use.");
       } else {
         Alert.alert("Error", "Failed to create an account. Please try again.");
       }
@@ -109,157 +144,311 @@ const SignUp = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Image style={styles.img} source={require("../../assets/signup1.jpg")} />
-      <Text style={styles.text1}>Create Account</Text>
-      <TextInput
-        placeholder="Name"
-        style={styles.input}
-        value={name}
-        onChangeText={setName}
-      />
-      <TextInput
-        placeholder="E-mail"
-        style={styles.input}
-        value={email}
-        onChangeText={(text) => {
-          setEmail(text);
-          validateEmail(text); // Validate email on change
-        }}
-        keyboardType="email-address"
-        returnKeyType="done"
-      />
-      {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
-      <TextInput
-        placeholder="Phone Number"
-        style={styles.input}
-        value={phoneNumber}
-        onChangeText={(text) => {
-          setPhoneNumber(text);
-          validatePhoneNumber(text); // Validate phone number on change
-        }}
-        keyboardType="phone-pad"
-        returnKeyType="done"
-      />
-      {phoneNumberError ? (
-        <Text style={styles.errorText}>{phoneNumberError}</Text>
-      ) : null}
-      <View style={styles.passwordContainer}>
-        <TextInput
-          placeholder="Password"
-          style={styles.passwordInput}
-          secureTextEntry={!showPassword}
-          value={password}
-          onChangeText={(text) => {
-            setPassword(text);
-            validatePassword(text); // Validate password on change
-          }}
-          returnKeyType="done"
-        />
-        <Pressable onPress={() => setShowPassword(!showPassword)}>
-          <Feather
-            name={showPassword ? "eye-off" : "eye"}
-            size={20}
-            color="grey"
-            style={styles.eyeIcon}
-          />
-        </Pressable>
-      </View>
-      {passwordError ? (
-        <Text style={styles.errorText}>{passwordError}</Text>
-      ) : null}
-      <Pressable style={styles.button} onPress={handleSignUp}>
-        <Text style={styles.text4}>Sign Up</Text>
-      </Pressable>
-      <View style={styles.text}>
-        <Text style={styles.text2}>Already have an account?</Text>
-        <Pressable onPress={() => router.push("authentication/SignIn")}>
-          <Text style={styles.text3}>Sign In</Text>
-        </Pressable>
-      </View>
-    </View>
+    <SafeAreaView style={styles.container}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
+      >
+        <ScrollView
+          contentContainerStyle={styles.scrollContainer}
+          showsVerticalScrollIndicator={false}
+        >
+          {/* Top Icon */}
+          <View style={styles.iconWrapper}>
+            <Feather name="user" size={24} color="#4285F4" />
+          </View>
+
+          {/* Welcome Text */}
+          <Text style={styles.title}>Create Account</Text>
+          <Text style={styles.subtitle}>
+            Join us today and get started in minutes
+          </Text>
+
+          {/* Form Inputs */}
+          <View style={styles.form}>
+            {/* Full Name */}
+            <Text style={styles.label}>Full Name</Text>
+            <View style={styles.inputContainer}>
+              <Feather name="user" size={20} color="grey" style={styles.icon} />
+              <TextInput
+                placeholder="Enter your full name"
+                style={styles.textInput}
+                value={name}
+                onChangeText={setName}
+                onBlur={() => validateName(name)}
+              />
+            </View>
+            {nameError ? (
+              <Text style={styles.errorText}>{nameError}</Text>
+            ) : null}
+
+            {/* Email Address */}
+            <Text style={styles.label}>Email Address</Text>
+            <View style={styles.inputContainer}>
+              <FontAwesome6
+                name="envelope"
+                size={20}
+                color="grey"
+                style={styles.icon}
+              />
+              <TextInput
+                placeholder="Enter your email"
+                style={styles.textInput}
+                value={email}
+                onChangeText={setEmail}
+                onBlur={() => validateEmail(email)}
+                keyboardType="email-address"
+              />
+            </View>
+            {emailError ? (
+              <Text style={styles.errorText}>{emailError}</Text>
+            ) : null}
+
+            {/* Phone Number */}
+            <Text style={styles.label}>Phone Number</Text>
+            <View style={styles.inputContainer}>
+              <Feather
+                name="phone"
+                size={20}
+                color="grey"
+                style={styles.icon}
+              />
+              <TextInput
+                placeholder="Enter your phone number"
+                style={styles.textInput}
+                value={phoneNumber}
+                onChangeText={setPhoneNumber}
+                onBlur={() => validatePhoneNumber(phoneNumber)}
+                keyboardType="phone-pad"
+                maxLength={11}
+              />
+            </View>
+            {phoneNumberError ? (
+              <Text style={styles.errorText}>{phoneNumberError}</Text>
+            ) : null}
+
+            {/* Password */}
+            <Text style={styles.label}>Password</Text>
+            <View style={styles.inputContainer}>
+              <Feather name="lock" size={20} color="grey" style={styles.icon} />
+              <TextInput
+                placeholder="Create a password"
+                style={styles.textInput}
+                secureTextEntry={!showPassword}
+                value={password}
+                onChangeText={setPassword}
+                onBlur={() => validatePassword(password)}
+              />
+              <Pressable onPress={() => setShowPassword(!showPassword)}>
+                <Feather
+                  name={showPassword ? "eye-off" : "eye"}
+                  size={20}
+                  color="grey"
+                />
+              </Pressable>
+            </View>
+            {passwordError ? (
+              <Text style={styles.errorText}>{passwordError}</Text>
+            ) : null}
+
+            {/* Confirm Password */}
+            <Text style={styles.label}>Confirm Password</Text>
+            <View style={styles.inputContainer}>
+              <Feather name="lock" size={20} color="grey" style={styles.icon} />
+              <TextInput
+                placeholder="Confirm your password"
+                style={styles.textInput}
+                secureTextEntry={!showConfirmPassword}
+                value={confirmPassword}
+                onChangeText={setConfirmPassword}
+                onBlur={() =>
+                  validateConfirmPassword(password, confirmPassword)
+                }
+              />
+              <Pressable
+                onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+              >
+                <Feather
+                  name={showConfirmPassword ? "eye-off" : "eye"}
+                  size={20}
+                  color="grey"
+                />
+              </Pressable>
+            </View>
+            {confirmPasswordError ? (
+              <Text style={styles.errorText}>{confirmPasswordError}</Text>
+            ) : null}
+
+            {/* Terms Agreement */}
+            <View style={styles.checkboxContainer}>
+              <Pressable
+                style={styles.checkboxBase}
+                onPress={() => setAgreedToTerms(!agreedToTerms)}
+              >
+                {agreedToTerms && (
+                  <Feather name="check" size={18} color="#FFFFFF" />
+                )}
+              </Pressable>
+              <Text style={styles.checkboxLabel}>
+                I agree to the{" "}
+                <Text style={styles.linkText}>Terms of Service</Text> and{" "}
+                <Text style={styles.linkText}>Privacy Policy</Text>
+              </Text>
+            </View>
+            {termsError ? (
+              <Text style={styles.errorText}>{termsError}</Text>
+            ) : null}
+          </View>
+
+          {/* Create Account Button */}
+          <Pressable style={styles.createAccountButton} onPress={handleSignUp}>
+            <Text style={styles.createAccountButtonText}>Create Account</Text>
+          </Pressable>
+
+          {/* Divider */}
+          <View style={styles.dividerContainer}>
+            <View style={styles.line} />
+            <Text style={styles.dividerText}>Or sign up with</Text>
+            <View style={styles.line} />
+          </View>
+
+          {/* Google Sign In Button */}
+          <Pressable style={styles.googleButton}>
+            <GoogleIcon />
+            <Text style={styles.googleButtonText}>Continue with Google</Text>
+          </Pressable>
+
+          {/* Sign In Navigation */}
+          <View style={styles.footer}>
+            <Text style={styles.footerText}>Already have an account? </Text>
+            <Pressable onPress={() => router.push("authentication/SignIn")}>
+              <Text style={[styles.footerText, styles.signInLink]}>
+                Sign in
+              </Text>
+            </Pressable>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "#ffff",
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingVertical: 110,
-    paddingHorizontal: 25,
-  },
-  img: {
-    width: 200,
-    height: 150,
-  },
-  text1: {
-    fontSize: 22,
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  input: {
-    backgroundColor: "#e9e9e9",
-    width: 300,
-    height: 50,
-    borderRadius: 30,
-    fontSize: 15,
-    paddingLeft: 20,
-    marginBottom: 15,
-    //marginBottom:-25,
-  },
-  passwordContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#e9e9e9",
-    borderRadius: 30,
-    width: 300,
-    height: 50,
-    marginBottom: 15,
-    paddingLeft: 20,
-  },
-  passwordInput: {
-    flex: 1,
-    fontSize: 15,
-  },
-  eyeIcon: {
-    marginRight: 10,
-  },
-  button: {
-    backgroundColor: "#6081ea",
-    borderRadius: 30,
-    alignItems: "center",
-    paddingHorizontal: 115,
-    paddingVertical: 10,
-    height: 50,
+  container: { flex: 1, backgroundColor: "#FFFFFF" },
+  scrollContainer: {
+    flexGrow: 1,
     justifyContent: "center",
-    marginBottom: 15,
+    alignItems: "center",
+    paddingHorizontal: 25,
+    paddingVertical: 40,
   },
-  text4: {
-    fontSize: 16,
-    textAlign: "center",
-    color: "#fff",
+  form: { width: "100%", marginTop: 20 },
+  iconWrapper: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: "#F3F4FF",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 20,
   },
-  text2: {
-    fontSize: 15,
-    textAlign: "center",
-  },
-  text3: {
-    fontSize: 16,
+  title: {
+    fontSize: 26,
     fontWeight: "bold",
-    textDecorationLine: "underline",
+    color: "#000000",
+    marginBottom: 8,
+  },
+  subtitle: { fontSize: 16, color: "grey", textAlign: "center" },
+  label: {
+    alignSelf: "flex-start",
     marginLeft: 5,
+    marginBottom: 5,
+    fontSize: 14,
+    color: "grey",
+    marginTop: 10,
   },
-  text: {
-    display: "flex",
+  inputContainer: {
     flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#FAFAFA",
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#E0E0E0",
+    paddingHorizontal: 15,
+    width: "100%",
+    height: 55,
   },
+  icon: { marginRight: 10 },
+  textInput: { flex: 1, fontSize: 16, color: "#000000" },
   errorText: {
     color: "red",
-    marginBottom: 10,
-    fontSize: 14,
+    alignSelf: "flex-start",
+    marginLeft: 5,
+    marginTop: 4,
+    fontSize: 12,
   },
+  checkboxContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: "100%",
+    marginTop: 20,
+  },
+  checkboxBase: {
+    width: 24,
+    height: 24,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 4,
+    borderWidth: 2,
+    borderColor: "#4285F4",
+    backgroundColor: "transparent",
+    marginRight: 12,
+  },
+  checkboxLabel: { fontSize: 14, color: "grey", flex: 1 },
+  linkText: { color: "#4285F4", textDecorationLine: "underline" },
+  createAccountButton: {
+    backgroundColor: "#4285F4",
+    borderRadius: 10,
+    width: "100%",
+    height: 55,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 20,
+  },
+  createAccountButtonText: {
+    color: "#FFFFFF",
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  dividerContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: "100%",
+    marginVertical: 30,
+  },
+  line: { flex: 1, height: 1, backgroundColor: "#E0E0E0" },
+  dividerText: { marginHorizontal: 10, color: "grey" },
+  googleButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#FFFFFF",
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#E0E0E0",
+    width: "100%",
+    height: 55,
+  },
+  googleIcon: {
+    marginRight: 12,
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#4285F4",
+  },
+  googleButtonText: { color: "#000000", fontSize: 16, fontWeight: "500" },
+  footer: { flexDirection: "row", justifyContent: "center", marginTop: 30 },
+  footerText: { fontSize: 14, color: "grey" },
+  signInLink: { color: "#4285F4", fontWeight: "bold" },
 });
 
 export default SignUp;

@@ -1,5 +1,4 @@
 import { Stack, Link } from "expo-router";
-import AntDesign from "@expo/vector-icons/AntDesign";
 import { Pressable } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
@@ -24,10 +23,6 @@ export default function Layout() {
       />
       <Stack.Screen
         name="authentication/SignUp"
-        options={{ headerShown: false, animation: "fade" }}
-      />
-      <Stack.Screen
-        name="onboarding/notification"
         options={{ headerShown: false, animation: "fade" }}
       />
       <Stack.Screen
@@ -64,13 +59,6 @@ export default function Layout() {
       />
       <Stack.Screen
         name="pages/done"
-        options={{
-          animation: "fade",
-          headerShown: false,
-        }}
-      />
-      <Stack.Screen
-        name="pages/notificationScreen"
         options={{
           animation: "fade",
           headerShown: false,
