@@ -1,9 +1,10 @@
+/* eslint-disable prettier/prettier */
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity,ScrollView,Animated
-} from 'react-native';
-import { Ionicons, MaterialCommunityIcons} from '@expo/vector-icons';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Animated } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { StatusBar } from "expo-status-bar"
 
 const Home: React.FC = () => {
   const [userName, setUserName] = useState("User");
@@ -11,9 +12,10 @@ const Home: React.FC = () => {
 
   // Parking spots data
   const parkingSpots = [
-    { id: '1', name: 'Our Public Parking', spots: 4, price: '90 LE/hr', 
+    { id: '1', name: 'Our Public Parking', spots: 4, price: '90 LE/hr',
       distance: '3 km from Zagazig University ', time: '15 min' },
   ];
+
   useEffect(() => {
     const fetchUserName = async () => {
       try {
@@ -34,30 +36,25 @@ const Home: React.FC = () => {
           <Text style={styles.greeting}>Hello, {userName}</Text>
           <Text style={styles.subtitle}>Find parking near you</Text>
         </View>
-        <TouchableOpacity style={styles.profileButton}>
+        <TouchableOpacity style={styles.profileButton} onPress={() => router.push('app-pages/profile')}>
           <Ionicons name="person-circle" size={36} color="#fff" />
         </TouchableOpacity>
       </View>
+
       {/* Bottom Parking Sheet */}
-      <Animated.View 
-        style={[
-          styles.sheetContainer,
-        ]}
-      >
-        <View  />
-        <Text style={styles.sectionTitle}>Parking Details</Text>
-        <View >
+      <Animated.View style={styles.sheetContainer}>
+        <ScrollView>
+          <Text style={styles.sectionTitle}>Parking Details</Text>
           {parkingSpots.map(spot => (
-            <TouchableOpacity 
-              key={spot.id} 
-              style={styles.parkingCard}
+            <TouchableOpacity
+              key={spot.id}
+              style={styles.parkingCard} 
             >
               <View style={styles.cardContent}>
                 <View style={styles.cardHeader}>
                   <Text style={styles.parkingName}>{spot.name}</Text>
                 </View>
-                
-                <View >
+                <View>
                   <View style={styles.detailItem}>
                     <Ionicons name="location" size={17} color="#777" />
                     <Text style={styles.detailText}>{spot.distance} • {spot.time}</Text>
@@ -68,28 +65,26 @@ const Home: React.FC = () => {
                   </View>
                 </View>
               </View>
-              
               <View style={styles.priceContainer}>
                 <Text style={styles.priceText}>{spot.price}</Text>
               </View>
             </TouchableOpacity>
           ))}
-        </View>
-        {/* Active Session Banner */}
+        </ScrollView>
         {activeSession && (
           <View style={styles.activeSession}>
-            <TouchableOpacity 
+            <TouchableOpacity
+              style={{width: '100%'}} 
               onPress={() => router.push("pages/slots")}
             >
-            <View >
               <View style={styles.sessionDetails}>
                 <Text style={styles.sessionTitle}>Book Now</Text>
               </View>
-            </View>
             </TouchableOpacity>
           </View>
         )}
       </Animated.View>
+      <StatusBar style="light"/>
     </View>
   );
 };
@@ -97,7 +92,7 @@ const Home: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0d5bdd',
+    backgroundColor: '#1A73E8',
   },
   header: {
     position: 'absolute',
@@ -108,6 +103,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
+    zIndex: 1, // Ensure header is on top
   },
   greeting: {
     fontSize: 24,
@@ -117,7 +113,7 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 18,
     color: '#e0e0ff',
-    marginTop:8
+    marginTop: 8
   },
   profileButton: {
     backgroundColor: 'rgba(255,255,255,0.2)',
@@ -133,26 +129,25 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
-    padding: 20,
-    paddingBottom: 40,
+    paddingTop: 20, 
+    paddingHorizontal: 20,
   },
   sectionTitle: {
     fontSize: 23,
     fontWeight: '700',
     color: '#1c2c4a',
     marginBottom: 15,
-    marginTop:18
   },
   parkingCard: {
     backgroundColor: '#f8f9fa',
     borderRadius: 18,
     padding: 15,
-    marginBottom: 100,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     borderWidth: 5,
     borderColor: '#eee',
+    marginBottom: 15, 
   },
   cardContent: {
     flex: 1,
@@ -179,7 +174,7 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
   priceContainer: {
-   marginBottom:60,
+    marginBottom: 60, 
     alignItems: 'center',
   },
   priceText: {
@@ -189,11 +184,11 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   activeSession: {
-    backgroundColor: '#0d5bdd',
+    backgroundColor: '#1A73E8',
     borderRadius: 15,
     padding: 18,
-    marginTop: 30,
-    alignItems: 'center',
+    margin: 20,
+    marginTop: 'auto', 
   },
   sessionDetails: {
     alignItems: 'center',
@@ -204,4 +199,5 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
 });
+
 export default Home;
