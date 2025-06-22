@@ -10,7 +10,7 @@ export default function FirstOnboarding() {
       {/* Main content container */}
       <View style={styles.contentContainer}>
         <Image
-          source={require("../../assets/onboarding6.jpg")}
+          source={require("../../assets/onboarding1.jpg")}
           style={styles.image}
         />
         <Text style={styles.heading}>Discover what CarPark can do!</Text>
@@ -47,7 +47,7 @@ export default function FirstOnboarding() {
             title="Next"
             onPress={() => router.push("onboarding/SecondOnboarding")}
             style={{
-              backgroundColor: "#009ae9",
+              backgroundColor: "#4285F4",
               flex: 1,
               marginLeft: 10,
               justifyContent: "center",
@@ -81,9 +81,9 @@ const styles = StyleSheet.create({
   },
   image: {
     height: 260,
-    width: 330,
+    width: 360,
     resizeMode: 'contain', 
-    marginBottom: 50,
+    marginBottom: 20,
   },
   heading: {
     fontWeight: "bold",
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
   tagline: {
     fontSize: 18,
     textAlign: "center",
-    color: "#5A6A75", 
+    color: "#001235", 
     paddingHorizontal: 10,
   },
   progressContainer: {
@@ -120,5 +120,6 @@ const styles = StyleSheet.create({
   buttons: {
     flexDirection: "row",
     justifyContent: "space-between",
+    paddingBottom:40,
   },
 });

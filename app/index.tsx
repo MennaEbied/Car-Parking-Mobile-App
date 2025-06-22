@@ -67,5 +67,6 @@ const styles = StyleSheet.create({
   flexWrap: "wrap",
   color: "#002437",
   fontWeight:"500",
+  padding:4
   }
 });
