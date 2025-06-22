@@ -4,7 +4,7 @@ import Feather from "@expo/vector-icons/Feather";
 export default function Layout() {
   return (
     <Tabs
-      screenOptions={{ tabBarActiveTintColor: "#1B1B1B", headerShown: false }}
+      screenOptions={{ tabBarActiveTintColor: "#1A73E8", headerShown: false }}
     >
       <Tabs.Screen
         name="home"

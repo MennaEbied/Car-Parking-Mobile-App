@@ -42,13 +42,8 @@ export default function Layout() {
         options={{
           animation: "fade",
           title: "",
-          headerLeft: () => (
-            <Link href="pages/slots" asChild>
-              <Pressable hitSlop={20} style={{ marginRight: 10 }}>
-                <MaterialIcons name="arrow-back" size={24} color="black" />
-              </Pressable>
-            </Link>
-          ),
+          headerShown: false,
+          
         }}
       />
       <Stack.Screen
