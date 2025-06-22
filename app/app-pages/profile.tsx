@@ -9,16 +9,32 @@ import {
   Image,
   Alert,
   TextInput,
+  SafeAreaView,
+  Pressable,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import * as ImagePicker from "expo-image-picker";
 import { StatusBar } from "expo-status-bar";
 import { router } from "expo-router";
-import AsyncStorage from "@react-native-async-storage/async-storage"; // Import AsyncStorage
-import { auth } from "../../firebaseConfig"; // Import Firebase auth
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { auth } from "../../firebaseConfig";
 import { reauthenticateWithCredential, EmailAuthProvider, updatePassword } from "firebase/auth";
 
+// A modern color palette for a clean look
+const COLORS = {
+  primary: "#1A73E8", // A confident blue
+  white: "#FFFFFF",
+  background: "#F4F6F8", // A very light grey for the background
+  card: "#FFFFFF",
+  text: "#212529",
+  textSecondary: "#6C757D",
+  iconContainer: "#E9ECEF",
+  danger: "#DC3545",
+  dangerLight: "#F8D7DA",
+};
+
 const ProfileScreen = () => {
+  // --- All your existing state and logic remains unchanged ---
   const [imageUri, setImageUri] = useState<string>();
   const [currentPassword, setCurrentPassword] = useState<string>("");
   const [newPassword, setNewPassword] = useState<string>("");
@@ -28,57 +44,26 @@ const ProfileScreen = () => {
     name: "",
     email: "",
     phoneNumber: "",
-    password: "********", // Password is masked by default
   });
 
-  // Fetch user data from AsyncStorage and Firebase on component mount
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        // Fetch name from AsyncStorage
         const name = await AsyncStorage.getItem("userName");
         const phoneNumber = await AsyncStorage.getItem("userPhoneNumber");
-        // Fetch email from Firebase auth
         const email = auth.currentUser?.email || "";
 
         setUserData({
-          name: name || "User", // Default to "User" if name is not found
+          name: name || "User",
           email: email,
           phoneNumber: phoneNumber || "Not provided",
-          password: "********", // Password is masked
         });
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
     };
-
     fetchUserData();
   }, []);
-
-  const profileSections = [
-    { title: "Name", value: userData.name, icon: "person" },
-    { title: "Email", value: userData.email, icon: "email" },
-    { title: "Phone Number", value: userData.phoneNumber, icon: "phone" },
-    { title: "Password", value: userData.password, icon: "lock" }, // Removed phone number
-  ];
-
-  const actionButtons = [
-    {
-      title: "Privacy Policy",
-      icon: "policy",
-      onPress: () => {
-        router.push("pages/privacyPolicy");
-      },
-    },
-    {
-      title: "Log Out",
-      icon: "logout",
-      color: "red",
-      onPress: () => {
-        router.push("authentication/SignIn");
-      },
-    },
-  ];
 
   const handleChooseImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -92,7 +77,7 @@ const ProfileScreen = () => {
     }
   };
 
-  const handleChangePassword = async() => {
+  const handleChangePassword = async () => {
     if (newPassword !== confirmPassword) {
       Alert.alert("Error", "New password and confirm password do not match.");
       return;
@@ -102,16 +87,10 @@ const ProfileScreen = () => {
       Alert.alert("Error", "No user is currently signed in.");
       return;
     }
-
-    if (!user || !user.email) {
-      Alert.alert("Error", "No user is currently signed in.");
-      return;
-    }
     try {
       const credential = EmailAuthProvider.credential(user.email, currentPassword);
       await reauthenticateWithCredential(user, credential);
       await updatePassword(user, newPassword);
-
       Alert.alert("Success", "Password changed successfully!");
       setCurrentPassword("");
       setNewPassword("");
@@ -122,190 +101,215 @@ const ProfileScreen = () => {
       Alert.alert("Error", "Failed to change password. Please check your current password and try again.");
     }
   };
+  // --- End of existing state and logic ---
 
   return (
-    <ScrollView style={styles.container}>
-      <TouchableOpacity onPress={handleChooseImage} hitSlop={20}>
-        <Image
-          source={
-            imageUri ? { uri: imageUri } : require("../../assets/image.png")
-          }
-          style={styles.image}
-        />
-      </TouchableOpacity>
-      <View style={styles.section}>
-        {profileSections.map((item, index) => (
-          <View key={index} style={styles.infoItem}>
-            <Icon name={item.icon} size={24} color="#666" style={styles.icon} />
-            <View style={styles.infoText}>
-              <Text style={styles.infoTitle}>{item.title}</Text>
-              <Text style={styles.infoValue}>{item.value}</Text>
-            </View>
-          </View>
-        ))}
-      </View>
-      <View style={styles.section}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => setShowChangePassword(!showChangePassword)}
-        >
-          <Icon name="vpn-key" size={24} color="#666" style={styles.icon} />
-          <Text style={styles.buttonText}>Change Password</Text>
-          <Icon
-            name="chevron-right"
-            size={24}
-            color="#999"
-            style={styles.arrow}
+    <SafeAreaView style={styles.container}>
+      <StatusBar style="light" />
+
+      {/* Hero Header */}
+      <View style={styles.header}>
+        <TouchableOpacity style={styles.avatarContainer} onPress={handleChooseImage}>
+          <Image
+            source={imageUri ? { uri: imageUri } : require("../../assets/image.png")}
+            style={styles.avatar}
           />
-        </TouchableOpacity>
-        {showChangePassword && (
-          <View style={styles.changePasswordSection}>
-            <TextInput
-              style={styles.input}
-              placeholder="Current Password"
-              value={currentPassword}
-              onChangeText={setCurrentPassword}
-              secureTextEntry
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="New Password"
-              value={newPassword}
-              onChangeText={setNewPassword}
-              secureTextEntry
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Confirm New Password"
-              value={confirmPassword}
-              onChangeText={setConfirmPassword}
-              secureTextEntry
-            />
-            <TouchableOpacity
-              style={styles.changePasswordButton}
-              onPress={handleChangePassword}
-            >
-              <Text style={styles.changePasswordButtonText}>
-                Change Password
-              </Text>
-            </TouchableOpacity>
+          <View style={styles.editIconContainer}>
+            <Icon name="edit" size={16} color={COLORS.primary} />
           </View>
-        )}
-        {actionButtons.map((item, index) => (
-          <TouchableOpacity
-            key={index}
-            style={styles.button}
-            onPress={item.onPress}
-          >
-            <Icon
-              name={item.icon}
-              size={24}
-              color={item.color || "#666"}
-              style={styles.icon}
-            />
-            <Text style={[styles.buttonText, { color: item.color || "#333" }]}>
-              {item.title}
-            </Text>
-            <Icon
-              name="chevron-right"
-              size={24}
-              color="#999"
-              style={styles.arrow}
-            />
-          </TouchableOpacity>
-        ))}
-        <StatusBar style="dark" />
+        </TouchableOpacity>
+        <Text style={styles.userName}>{userData.name}</Text>
+        <Text style={styles.userEmail}>{userData.email}</Text>
       </View>
-    </ScrollView>
+
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        {/* Account Info Card */}
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>Account Information</Text>
+          <View style={styles.cardRow}>
+            <View style={styles.rowLeft}>
+              <View style={styles.rowIconContainer}><Icon name="phone" size={20} color={COLORS.primary} /></View>
+              <Text style={styles.rowTitle}>Phone Number</Text>
+            </View>
+            <Text style={styles.rowValue}>{userData.phoneNumber}</Text>
+          </View>
+          <View style={[styles.cardRow, { borderBottomWidth: 0 }]}>
+            <View style={styles.rowLeft}>
+              <View style={styles.rowIconContainer}><Icon name="lock" size={20} color={COLORS.primary} /></View>
+              <Text style={styles.rowTitle}>Password</Text>
+            </View>
+            <Text style={styles.rowValue}>********</Text>
+          </View>
+        </View>
+
+        {/* Settings & Actions Card */}
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>Settings & Actions</Text>
+          <TouchableOpacity style={styles.cardRow} onPress={() => setShowChangePassword(!showChangePassword)}>
+            <View style={styles.rowLeft}>
+              <View style={styles.rowIconContainer}><Icon name="vpn-key" size={20} color={COLORS.primary} /></View>
+              <Text style={styles.rowTitle}>Change Password</Text>
+            </View>
+            <Icon name="chevron-right" size={24} color={COLORS.textSecondary} />
+          </TouchableOpacity>
+
+          {/* Collapsible Change Password Form */}
+          {showChangePassword && (
+            <View style={styles.changePasswordSection}>
+              <TextInput style={styles.input} placeholder="Current Password" value={currentPassword} onChangeText={setCurrentPassword} secureTextEntry />
+              <TextInput style={styles.input} placeholder="New Password" value={newPassword} onChangeText={setNewPassword} secureTextEntry />
+              <TextInput style={styles.input} placeholder="Confirm New Password" value={confirmPassword} onChangeText={setConfirmPassword} secureTextEntry />
+              <TouchableOpacity style={styles.changePasswordButton} onPress={handleChangePassword}>
+                <Text style={styles.changePasswordButtonText}>Save New Password</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+
+          <TouchableOpacity style={[styles.cardRow, { borderBottomWidth: 0 }]} onPress={() => router.push("pages/privacyPolicy")}>
+            <View style={styles.rowLeft}>
+              <View style={styles.rowIconContainer}><Icon name="policy" size={20} color={COLORS.primary} /></View>
+              <Text style={styles.rowTitle}>Privacy Policy</Text>
+            </View>
+            <Icon name="chevron-right" size={24} color={COLORS.textSecondary} />
+          </TouchableOpacity>
+        </View>
+
+        {/* Logout Button */}
+        <Pressable style={styles.logoutButton} onPress={() => router.push("authentication/SignIn")}>
+          <Text style={styles.logoutButtonText}>Log Out</Text>
+        </Pressable>
+<StatusBar style="auto"/>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
-    paddingTop: 60,
+    backgroundColor: COLORS.background,
   },
-  name: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginTop: 10,
-    color: "#333",
+  header: {
+    backgroundColor: COLORS.primary,
+    padding: 30,
+    paddingTop: 50,
+    alignItems: 'center',
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
   },
-  section: {
-    backgroundColor: "#f5f5f5",
-    marginVertical: 10,
-    paddingHorizontal: 15,
-  },
-  infoItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 15,
-    borderBottomWidth: 2,
-    borderBottomColor: "#eee",
-  },
-  infoText: {
-    flex: 1,
-    marginLeft: 15,
-  },
-  infoTitle: {
-    color: "#333",
-    fontSize: 16,
-  },
-  infoValue: {
-    color: "#999",
-    fontSize: 16,
-    marginTop: 2,
-  },
-  button: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 15,
-    borderBottomWidth: 2,
-    borderBottomColor: "#eee",
-  },
-  buttonText: {
-    flex: 1,
-    fontSize: 16,
-    marginLeft: 15,
-  },
-  icon: {
-    width: 25,
-  },
-  arrow: {
-    marginLeft: "auto",
-  },
-  image: {
-    height: 100,
-    width: 100,
-    borderRadius: 50,
+  avatarContainer: {
+    position: 'relative',
     marginBottom: 10,
-    borderColor: "gray",
-    borderWidth: 0.5,
-    alignSelf: "center",
+  },
+  avatar: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    borderWidth: 3,
+    borderColor: COLORS.white,
+  },
+  editIconContainer: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    backgroundColor: COLORS.white,
+    borderRadius: 15,
+    padding: 5,
+  },
+  userName: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: COLORS.white,
+  },
+  userEmail: {
+    fontSize: 16,
+    color: COLORS.white,
+    opacity: 0.8,
+  },
+  scrollContent: {
+    padding: 20,
+  },
+  card: {
+    backgroundColor: COLORS.card,
+    borderRadius: 16,
+    padding: 20,
+    marginBottom: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 10,
+    elevation: 3,
+  },
+  cardTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: COLORS.text,
+    marginBottom: 15,
+  },
+  cardRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.background,
+  },
+  rowLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  rowIconContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: COLORS.iconContainer,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 15,
+  },
+  rowTitle: {
+    fontSize: 16,
+    color: COLORS.text,
+  },
+  rowValue: {
+    fontSize: 16,
+    color: COLORS.textSecondary,
   },
   changePasswordSection: {
-    marginTop: 10,
-    paddingHorizontal: 10,
+    paddingTop: 15,
+    paddingBottom: 5,
   },
   input: {
-    height: 40,
-    borderColor: "#ccc",
-    borderWidth: 1,
-    borderRadius: 20,
-    paddingHorizontal: 10,
+    backgroundColor: COLORS.background,
+    height: 50,
+    borderRadius: 10,
+    paddingHorizontal: 15,
     marginBottom: 10,
+    fontSize: 16,
   },
   changePasswordButton: {
-    backgroundColor: "#007bff",
-    padding: 10,
-    borderRadius: 20,
-    alignItems: "center",
+    backgroundColor: COLORS.primary,
+    padding: 15,
+    borderRadius: 10,
+    alignItems: 'center',
     marginTop: 10,
   },
   changePasswordButtonText: {
-    color: "#fff",
+    color: COLORS.white,
     fontSize: 16,
+    fontWeight: 'bold',
+  },
+  logoutButton: {
+    backgroundColor: COLORS.dangerLight,
+    borderRadius: 16,
+    padding: 18,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  logoutButtonText: {
+    color: COLORS.danger,
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 
