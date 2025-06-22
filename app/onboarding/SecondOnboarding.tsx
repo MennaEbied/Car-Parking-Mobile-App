@@ -35,19 +35,20 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffff",
     alignItems: "center",
     justifyContent: "space-around", // Changed for better vertical spacing
-    paddingVertical: 40, // Reduced vertical padding slightly
+    paddingVertical: 70, // Reduced vertical padding slightly
     paddingHorizontal: 40,
   },
   image: {
     width: 300,
     height: 280,
-    marginTop: 20, // Adjusted margin
+    marginTop: 25, 
   },
   text: {
     fontSize: 18,
     textAlign: "center",
     color: "#001235",
-    lineHeight: 25, // Added for better readability
+    lineHeight: 23, 
+    marginBottom:40
   },
   // --- New Styles for Progress Indicator ---
   progressContainer: {
@@ -62,15 +63,14 @@ const styles = StyleSheet.create({
     marginHorizontal: 8,
   },
   activeDot: {
-    backgroundColor: "#009ae9", // Active dot color, matches the button
+    backgroundColor: "#009ae9", 
   },
-  // --- End of New Styles ---
   button: {
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 12,
     width: "100%", // Changed for responsiveness
-    backgroundColor: "#009ae9",
+    backgroundColor: "#4285F4",
     borderRadius: 15,
   },
   next: {

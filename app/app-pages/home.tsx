@@ -97,7 +97,7 @@ const Home: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0a0f24',
+    backgroundColor: '#0d5bdd',
   },
   header: {
     position: 'absolute',
@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   activeSession: {
-    backgroundColor: '#1c2c4a',
+    backgroundColor: '#0d5bdd',
     borderRadius: 15,
     padding: 18,
     marginTop: 30,

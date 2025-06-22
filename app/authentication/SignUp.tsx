@@ -278,28 +278,7 @@ const SignUp = () => {
             {confirmPasswordError ? (
               <Text style={styles.errorText}>{confirmPasswordError}</Text>
             ) : null}
-
-            {/* Terms Agreement */}
-            <View style={styles.checkboxContainer}>
-              <Pressable
-                style={styles.checkboxBase}
-                onPress={() => setAgreedToTerms(!agreedToTerms)}
-              >
-                {agreedToTerms && (
-                  <Feather name="check" size={18} color="#FFFFFF" />
-                )}
-              </Pressable>
-              <Text style={styles.checkboxLabel}>
-                I agree to the{" "}
-                <Text style={styles.linkText}>Terms of Service</Text> and{" "}
-                <Text style={styles.linkText}>Privacy Policy</Text>
-              </Text>
-            </View>
-            {termsError ? (
-              <Text style={styles.errorText}>{termsError}</Text>
-            ) : null}
           </View>
-
           {/* Create Account Button */}
           <Pressable style={styles.createAccountButton} onPress={handleSignUp}>
             <Text style={styles.createAccountButtonText}>Create Account</Text>
@@ -404,8 +383,6 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     marginRight: 12,
   },
-  checkboxLabel: { fontSize: 14, color: "grey", flex: 1 },
-  linkText: { color: "#4285F4", textDecorationLine: "underline" },
   createAccountButton: {
     backgroundColor: "#4285F4",
     borderRadius: 10,
