@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Stack, Link } from "expo-router";
 import { Pressable } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
@@ -68,14 +69,7 @@ export default function Layout() {
         name="pages/privacyPolicy"
         options={{
           animation: "fade",
-          title: "",
-          headerLeft: () => (
-            <Link href="app-pages/profile" asChild>
-              <Pressable hitSlop={20} style={{ marginRight: 10 }}>
-                <MaterialIcons name="arrow-back" size={24} color="black" />
-              </Pressable>
-            </Link>
-          ),
+          headerShown:false
         }}
       />
     </Stack>
