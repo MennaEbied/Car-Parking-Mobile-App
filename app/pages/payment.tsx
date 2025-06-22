@@ -11,13 +11,6 @@ import { router } from "expo-router";
 import * as Notifications from "expo-notifications";
 
 // Set up notification handler
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: true,
-    shouldSetBadge: false,
-  }),
-});
 
 const PaymentScreen = () => {
   const [cardNumber, setCardNumber] = useState("");
