@@ -1,21 +1,13 @@
-/* eslint-disable react-native/no-unused-styles */
-/* eslint-disable prettier/prettier */
-import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  ImageBackground,
-  TouchableOpacity,
-} from "react-native";
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, ImageBackground, TouchableOpacity,FlatList
+} from 'react-native';
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { router } from "expo-router";
-import { StatusBar } from "expo-status-bar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Ionicons } from '@expo/vector-icons';
 
-const HomePage: React.FC = () => {
-  const [userName, setUserName] = useState("User"); // State to store the user's name
-
+const Home: React.FC = () => {
+   const [userName, setUserName] = useState("User"); // State to store the user's name
   // Fetch the user's name from AsyncStorage when the component mounts
   useEffect(() => {
     const fetchUserName = async () => {
@@ -29,41 +21,50 @@ const HomePage: React.FC = () => {
       }
     };
     fetchUserName();
-  }, []);
+    }, []);
+  const [searchQuery] = useState('');
+  // Mock parking data
+  const parkingData = [
+    { id: '1', name: 'Our Car Parking', spots: 10 , price: '90 LE/hr' },
+   
+  ];
 
   return (
-    <ImageBackground
-      source={require("../../assets/home.jpeg")}
+    <ImageBackground 
+      source={require("../../assets/background0.jpg")}
       style={styles.background}
-      resizeMode="cover"
-    >
-      <View style={styles.header}>
-        <View style={styles.heading}>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <FontAwesome6
-              name="cloud-sun"
-              size={19}
-              color="white"
-              style={{ marginRight: 10 }}
-            />
-            <Text style={{ color: "white" }}>Sunny 39°C</Text>
-          </View>
-          <TouchableOpacity>
-            <FontAwesome6
-              name="bell"
-              size={28}
-              color="white"
-              style={{ marginRight: 10 }}
-            />
-          </TouchableOpacity>
+      blurRadius={0}>
+        <View >
+          <View style={styles.header}>
+        <Text style={styles.greeting}>Hello,</Text>
+          <Text style={styles.name}>{userName}!</Text>
         </View>
-        <Text style={styles.greeting}>Hello, {userName}!</Text>
         <Text style={styles.subtitle}>Find your perfect parking spot</Text>
-        <Text style={{ fontWeight: "500", fontSize: 16, color: "white" }}>
-          Today's price: 15.99$
-        </Text>
       </View>
-      <TouchableOpacity
+  
+        <View style={styles.listContainer}>
+          <FlatList
+            data={parkingData}
+            keyExtractor={item => item.id}
+            renderItem={({ item }) => (
+              <TouchableOpacity style={styles.parkingItem}>
+                <View style={styles.itemLeft}>
+                  <Ionicons name="car-sport" size={28} color="#00382f" />
+                </View>
+                <View style={styles.itemCenter}>
+                  <Text style={styles.itemName}>{item.name}</Text>
+                  <Text style={styles.itemDetails}>
+                   {item.spots} spots available
+                  </Text>
+                </View>
+                <View style={styles.itemRight}>
+                  <Text style={styles.itemPrice}>{item.price}</Text>
+                </View>
+              </TouchableOpacity>
+              
+            )}
+          />
+           <TouchableOpacity
         style={{ marginLeft: 180 }}
         onPress={() => router.push("pages/slots")}
       >
@@ -72,55 +73,87 @@ const HomePage: React.FC = () => {
           <FontAwesome6
             name="angles-right"
             size={20}
-            color="white"
-            style={{ marginRight: 10 }}
+            color="#00003d"
+            style={{ marginRight: 10 ,  marginBottom:20}}
           />
         </View>
       </TouchableOpacity>
-      <StatusBar style="light" />
+        </View>
     </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  header: {
-    padding: 30,
-    marginBottom: 380,
-  },
-  greeting: {
-    fontSize: 22,
-    fontWeight: "600",
-    marginBottom: 10,
-    marginTop: 25,
-    color: "white",
-  },
-  subtitle: {
-    fontSize: 18,
-    marginBottom: 5,
-    fontWeight: "500",
-    color: "white",
-  },
   background: {
     flex: 1,
-    justifyContent: "center",
+    resizeMode: 'cover',
+    justifyContent: "space-between",
     alignItems: "center",
+  },
+  listContainer: {
+    flex: 1,
+    paddingTop: 20,
+    paddingHorizontal: 20,
+  },
+  parkingItem: {
+    flexDirection: 'row',
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: 15,
+    padding: 15,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: "#003551",
+  },
+  itemLeft: {
+    marginRight: 15,
+  },
+  itemCenter: {
+    flex: 1,
+  },
+  itemName: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#00003d',
+    marginBottom: 5,
+  },
+  itemDetails: {
+    fontSize: 14,
+    color: '#00003d',
+    opacity: 0.8,
+  },
+  itemRight: {},
+  itemPrice: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: "#b30000",
+  },
+  header:{
+    flexDirection: 'row',
+    marginBottom: 10,
+    marginTop: 110,
+  },
+  greeting: {
+    fontSize: 25,
+    fontWeight: "600",
+    color: "#00003d",
+  },
+  name:{
+   fontSize: 25,
+   fontWeight: "600",
+   color: "#6a0400"
+  },
+  subtitle: {
+    fontSize: 19,
+    marginBottom: 5,
+    fontWeight: "500",
+    color: "#00003d",
   },
   buttontext: {
-    color: "white",
+    color: "#00003d",
     fontSize: 20,
-    marginRight: 5,
+    marginRight:5,
     fontWeight: "700",
-  },
-  heading: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
+    marginBottom:20
   },
 });
-
-export default HomePage;
+export default Home;
