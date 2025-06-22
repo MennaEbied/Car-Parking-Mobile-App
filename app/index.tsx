@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import { CustomButton } from "../components/CustomButton";
@@ -25,7 +26,7 @@ export default function SplashScreen() {
         source={require("../assets/car9.png")}
         style={{ height: 260 }}
       />
-      <CustomButton onPress={handlePress} title="Get Started" />
+      <CustomButton onPress={handlePress} title="Get Started" textStyle={{color:"#ffff",fontSize:20, fontWeight:"500"}} />
       <StatusBar style="auto" />
     </View>
   );
@@ -61,9 +62,10 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   tagline:{
-  fontSize:13,
+  fontSize:15,
   textAlign: "center",
   flexWrap: "wrap",
   color: "#002437",
+  fontWeight:"500",
   }
 });
