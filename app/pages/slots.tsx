@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  Alert,
+import {View,Text,StyleSheet,TouchableOpacity,Alert,
 } from "react-native";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { router } from "expo-router";
@@ -19,27 +13,25 @@ interface Slot {
 
 const ParkingSlots: React.FC = () => {
   const [slots, setSlots] = useState<Slot[]>([]);
-
   useEffect(() => {
     const q = query(collection(db, "slots"), orderBy("id"));
-
-    // Real-time listener to fetch data from Firestore
     const unsubscribe = onSnapshot(q, (snapshot) => {
-      const updatedSlots: Slot[] = snapshot.docs.map((doc) => ({
-        id: doc.data().id,
-        status: doc.data().status,
-      }));
+      const updatedSlots: Slot[] = snapshot.docs
+        .map((doc) => ({
+          id: doc.data().id,
+          status: doc.data().status,
+        }))
+        // Filter to get only first 4 slots
+        .filter((slot) => slot.id <= 4);
+      
       setSlots(updatedSlots);
     });
-
-    // Cleanup listener on unmount
     return () => unsubscribe();
   }, []);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}> Find best parking slot </Text>
-
+      <Text style={styles.title}>Select a Parking Slot</Text>
       <View style={styles.legendContainer}>
         <View style={[styles.legendItem, styles.available]} />
         <Text style={styles.legendText}>Available</Text>
@@ -49,9 +41,10 @@ const ParkingSlots: React.FC = () => {
         <Text style={styles.legendText}>Reserved</Text>
       </View>
 
-      <ScrollView contentContainerStyle={styles.slotContainer}>
+      {/* 2x2 grid container */}
+      <View style={styles.gridContainer}>
         {slots.map((slot) => (
-          <View
+          <TouchableOpacity
             key={slot.id}
             style={[
               styles.slot,
@@ -59,28 +52,29 @@ const ParkingSlots: React.FC = () => {
               slot.status === "occupied" && styles.occupied,
               slot.status === "reserved" && styles.reserved,
             ]}
+            onPress={() => slot.status === "available" && 
+              Alert.alert("Slot Selected", `You've selected Slot ${slot.id}`)}
           >
             <Text style={styles.slotText}>SLOT-{slot.id}</Text>
-          </View>
-        ))}
-
-        <View style={styles.buttons}>
-          <TouchableOpacity
-            style={{ marginLeft: 15 }}
-            onPress={() => router.push("app-pages/home")}
-          >
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <FontAwesome6
-                name="angles-left"
-                size={18}
-                color="black"
-                style={styles.icon}
-              />
-              <Text style={styles.buttontext}>Back</Text>
-            </View>
           </TouchableOpacity>
-        </View>
-
+        ))}
+      </View>
+      <View style={styles.buttons}>
+        <TouchableOpacity
+          style={{ marginLeft: 15 }}
+          onPress={() => router.push("app-pages/home")}
+        >
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <FontAwesome6
+              name="angles-left"
+              size={18}
+              color="#1c2c4a"
+              style={styles.icon}
+            />
+            <Text style={styles.buttontext}>Back</Text>
+          </View>
+        </TouchableOpacity>
+        
         <TouchableOpacity
           style={{ marginLeft: 120 }}
           onPress={() => router.push("pages/bookings")}
@@ -90,12 +84,12 @@ const ParkingSlots: React.FC = () => {
             <FontAwesome6
               name="angles-right"
               size={18}
-              color="black"
+              color="#1c2c4a"
               style={styles.icon}
             />
           </View>
         </TouchableOpacity>
-      </ScrollView>
+      </View>
     </View>
   );
 };
@@ -105,25 +99,28 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#ffffff",
+    backgroundColor: "#eef3fd",
   },
   title: {
-    fontSize: 20,
+    textAlign:"center",
+    fontSize: 21,
     fontWeight: "bold",
     marginBottom: 30,
-    marginTop: 60,
+    marginTop: 10,
+    color:"#1c2c4a"
   },
   legendContainer: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 30,
+    marginBottom: 20,
   },
   legendItem: {
     width: 15,
     height: 15,
     borderRadius: 10,
-    marginRight: 2,
+    marginRight:2,
+     
   },
   available: {
     backgroundColor: "#717171",
@@ -135,42 +132,51 @@ const styles = StyleSheet.create({
     backgroundColor: "#fad000",
   },
   legendText: {
-    fontSize: 15,
+    fontSize: 16,
     marginRight: 15,
+    color:"#1c2c4a"
   },
-  slotContainer: {
+  gridContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
-    alignItems: "center",
-    justifyContent: "space-between",
+    justifyContent: "center",
+    maxWidth: 500,
   },
   slot: {
-    width: "45%",
-    height: 90,
-    borderRadius: 5,
+    width: "90%",
+    height: 100,
+    borderRadius:10,
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 15,
-    marginHorizontal: 7,
+    margin: 6,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    elevation: 15,
   },
   slotText: {
-    fontSize: 18,
+    fontSize: 22,
     fontWeight: "bold",
     color: "#fff",
+    textShadowColor: "rgba(0,0,0,0.3)",
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
   },
   buttons: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "space-between",
     marginTop: 30,
+    width: "100%",
   },
   buttontext: {
-    color: "black",
     fontSize: 18,
-    marginRight: 5,
+    marginRight:5,
+    color:"#1c2c4a"
   },
   icon: {
-    marginRight: 10,
+    marginRight: 8,
   },
 });
 

@@ -1,159 +1,207 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ImageBackground, TouchableOpacity,FlatList
+import { View, Text, StyleSheet, TouchableOpacity,ScrollView,Animated
 } from 'react-native';
-import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+import { Ionicons, MaterialCommunityIcons} from '@expo/vector-icons';
 import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Ionicons } from '@expo/vector-icons';
 
 const Home: React.FC = () => {
-   const [userName, setUserName] = useState("User"); // State to store the user's name
-  // Fetch the user's name from AsyncStorage when the component mounts
+  const [userName, setUserName] = useState("User");
+  const [activeSession] = useState(true);
+
+  // Parking spots data
+  const parkingSpots = [
+    { id: '1', name: 'Our Public Parking', spots: 4, price: '90 LE/hr', 
+      distance: '3 km from Zagazig University ', time: '15 min' },
+  ];
   useEffect(() => {
     const fetchUserName = async () => {
       try {
         const name = await AsyncStorage.getItem("userName");
-        if (name) {
-          setUserName(name); // Set the user's name if it exists
-        }
+        if (name) setUserName(name);
       } catch (error) {
         console.error("Failed to fetch user name:", error);
       }
     };
     fetchUserName();
-    }, []);
-  const [searchQuery] = useState('');
-  // Mock parking data
-  const parkingData = [
-    { id: '1', name: 'Our Car Parking', spots: 10 , price: '90 LE/hr' },
-   
-  ];
+  }, []);
 
   return (
-    <ImageBackground 
-      source={require("../../assets/background0.jpg")}
-      style={styles.background}
-      blurRadius={0}>
-        <View >
-          <View style={styles.header}>
-        <Text style={styles.greeting}>Hello,</Text>
-          <Text style={styles.name}>{userName}!</Text>
+    <View style={styles.container}>
+      {/* Header Overlay */}
+      <View style={styles.header}>
+        <View>
+          <Text style={styles.greeting}>Hello, {userName}</Text>
+          <Text style={styles.subtitle}>Find parking near you</Text>
         </View>
-        <Text style={styles.subtitle}>Find your perfect parking spot</Text>
+        <TouchableOpacity style={styles.profileButton}>
+          <Ionicons name="person-circle" size={36} color="#fff" />
+        </TouchableOpacity>
       </View>
-  
-        <View style={styles.listContainer}>
-          <FlatList
-            data={parkingData}
-            keyExtractor={item => item.id}
-            renderItem={({ item }) => (
-              <TouchableOpacity style={styles.parkingItem}>
-                <View style={styles.itemLeft}>
-                  <Ionicons name="car-sport" size={28} color="#00382f" />
-                </View>
-                <View style={styles.itemCenter}>
-                  <Text style={styles.itemName}>{item.name}</Text>
-                  <Text style={styles.itemDetails}>
-                   {item.spots} spots available
-                  </Text>
-                </View>
-                <View style={styles.itemRight}>
-                  <Text style={styles.itemPrice}>{item.price}</Text>
-                </View>
-              </TouchableOpacity>
-              
-            )}
-          />
-           <TouchableOpacity
-        style={{ marginLeft: 180 }}
-        onPress={() => router.push("pages/slots")}
+      {/* Bottom Parking Sheet */}
+      <Animated.View 
+        style={[
+          styles.sheetContainer,
+        ]}
       >
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <Text style={styles.buttontext}>Book Now</Text>
-          <FontAwesome6
-            name="angles-right"
-            size={20}
-            color="#00003d"
-            style={{ marginRight: 10 ,  marginBottom:20}}
-          />
+        <View  />
+        <Text style={styles.sectionTitle}>Parking Details</Text>
+        <View >
+          {parkingSpots.map(spot => (
+            <TouchableOpacity 
+              key={spot.id} 
+              style={styles.parkingCard}
+            >
+              <View style={styles.cardContent}>
+                <View style={styles.cardHeader}>
+                  <Text style={styles.parkingName}>{spot.name}</Text>
+                </View>
+                
+                <View >
+                  <View style={styles.detailItem}>
+                    <Ionicons name="location" size={17} color="#777" />
+                    <Text style={styles.detailText}>{spot.distance} • {spot.time}</Text>
+                  </View>
+                  <View style={styles.detailItem}>
+                    <Ionicons name="car" size={17} color="#777" />
+                    <Text style={styles.detailText}>{spot.spots} spots</Text>
+                  </View>
+                </View>
+              </View>
+              
+              <View style={styles.priceContainer}>
+                <Text style={styles.priceText}>{spot.price}</Text>
+              </View>
+            </TouchableOpacity>
+          ))}
         </View>
-      </TouchableOpacity>
-        </View>
-    </ImageBackground>
+        {/* Active Session Banner */}
+        {activeSession && (
+          <View style={styles.activeSession}>
+            <TouchableOpacity 
+              onPress={() => router.push("pages/slots")}
+            >
+            <View >
+              <View style={styles.sessionDetails}>
+                <Text style={styles.sessionTitle}>Book Now</Text>
+              </View>
+            </View>
+            </TouchableOpacity>
+          </View>
+        )}
+      </Animated.View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  background: {
+  container: {
     flex: 1,
-    resizeMode: 'cover',
-    justifyContent: "space-between",
-    alignItems: "center",
+    backgroundColor: '#0a0f24',
   },
-  listContainer: {
-    flex: 1,
-    paddingTop: 20,
+  header: {
+    position: 'absolute',
+    top: 75,
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     paddingHorizontal: 20,
   },
-  parkingItem: {
-    flexDirection: 'row',
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    borderRadius: 15,
-    padding: 15,
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: "#003551",
-  },
-  itemLeft: {
-    marginRight: 15,
-  },
-  itemCenter: {
-    flex: 1,
-  },
-  itemName: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#00003d',
-    marginBottom: 5,
-  },
-  itemDetails: {
-    fontSize: 14,
-    color: '#00003d',
-    opacity: 0.8,
-  },
-  itemRight: {},
-  itemPrice: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: "#b30000",
-  },
-  header:{
-    flexDirection: 'row',
-    marginBottom: 10,
-    marginTop: 110,
-  },
   greeting: {
-    fontSize: 25,
-    fontWeight: "600",
-    color: "#00003d",
-  },
-  name:{
-   fontSize: 25,
-   fontWeight: "600",
-   color: "#6a0400"
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#fff',
   },
   subtitle: {
-    fontSize: 19,
-    marginBottom: 5,
-    fontWeight: "500",
-    color: "#00003d",
+    fontSize: 18,
+    color: '#e0e0ff',
+    marginTop:8
   },
-  buttontext: {
-    color: "#00003d",
-    fontSize: 20,
-    marginRight:5,
-    fontWeight: "700",
-    marginBottom:20
+  profileButton: {
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    borderRadius: 20,
+    padding: 5,
+  },
+  sheetContainer: {
+    position: 'absolute',
+    height: '70%',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: '#fff',
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    padding: 20,
+    paddingBottom: 40,
+  },
+  sectionTitle: {
+    fontSize: 23,
+    fontWeight: '700',
+    color: '#1c2c4a',
+    marginBottom: 15,
+    marginTop:18
+  },
+  parkingCard: {
+    backgroundColor: '#f8f9fa',
+    borderRadius: 18,
+    padding: 15,
+    marginBottom: 100,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderWidth: 5,
+    borderColor: '#eee',
+  },
+  cardContent: {
+    flex: 1,
+  },
+  cardHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 15,
+  },
+  parkingName: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#1c2c4a',
+    marginLeft: 5,
+  },
+  detailItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 10,
+  },
+  detailText: {
+    fontSize: 14,
+    color: '#777',
+    marginLeft: 5,
+  },
+  priceContainer: {
+   marginBottom:60,
+    alignItems: 'center',
+  },
+  priceText: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#8b0000',
+    marginRight: 10,
+  },
+  activeSession: {
+    backgroundColor: '#1c2c4a',
+    borderRadius: 15,
+    padding: 18,
+    marginTop: 30,
+    alignItems: 'center',
+  },
+  sessionDetails: {
+    alignItems: 'center',
+  },
+  sessionTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#fff',
   },
 });
 export default Home;
