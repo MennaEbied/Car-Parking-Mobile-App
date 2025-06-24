@@ -89,14 +89,6 @@ const SignUp = () => {
     return true;
   };
 
-  const validateTerms = (agreed: boolean) => {
-    if (!agreed) {
-      setTermsError("You must agree to the terms and conditions.");
-      return false;
-    }
-    setTermsError("");
-    return true;
-  };
 
   const handleSignUp = async () => {
     // Trigger all validations at once on submit
@@ -105,15 +97,13 @@ const SignUp = () => {
     const isPhoneValid = validatePhoneNumber(phoneNumber);
     const isPasswordValid = validatePassword(password);
     const doPasswordsMatch = validateConfirmPassword(password, confirmPassword);
-    const areTermsAgreed = validateTerms(agreedToTerms);
 
     if (
       !isNameValid ||
       !isEmailValid ||
       !isPhoneValid ||
       !isPasswordValid ||
-      !doPasswordsMatch ||
-      !areTermsAgreed
+      !doPasswordsMatch 
     ) {
       return; // Stop if any validation fails
     }
