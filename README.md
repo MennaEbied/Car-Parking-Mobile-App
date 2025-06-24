@@ -1,63 +1,92 @@
 # Car Parking Mobile App 🚗
- A mobile application built with React Native, Expo, and Firebase for managing car parking slots and user authentication.
- 
-## Features ✨
+A mobile application built with React Native, Expo, and Firebase for managing car parking slots and user authentication.
 
-User Authentication:
+## ✨ Features
+User Authentication
 
 Sign up, log in, and log out using Firebase Authentication.
 
-Email/password Sign-In support.
+Secure email and password sign-in support.
 
-Parking Slot Management:
+Parking Slot Management
 
-View available parking slots.
+View a list of available parking slots.
 
-Reserve a parking slot.
+Reserve a specific parking slot for a chosen time.
 
-Real-Time Updates:
+Real-Time Updates
 
-Firebase for real-time updates on parking slot availability.
+Leverages Firebase to provide real-time updates on parking slot availability.
 
-## Technologies Used 🛠️
+## 🛠️ Technologies Used
+Category
 
-Frontend:
+Technology
 
-React Native
+Frontend
 
-Expo
+React Native & Expo
 
-Backend:
-Firebase Authentication
+Backend
 
-Styling:
+Firebase Authentication & Firestore
+
+Styling
+
 React Native Stylesheet or Styled Components
 
-## Prerequisites 📋
-Before running the project, ensure you have the following installed:
+🚀 Getting Started
+Follow these instructions to get a copy of the project up and running on your local machine.
 
- Node.js (v16 or higher)
- 
- Expo 
- 
-Firebase Account (for authentication and Firestore)
+Prerequisites 📋
+Before you begin, ensure you have the following installed:
 
-## Setup Instructions 🚀
+Node.js (v16 or higher is recommended)
 
-```git clone https://github.com/MennaEbied/Car-Parking-Mobile-App.git```
+Expo CLI
 
-```cd Car-Parking-Mobile-App```
+A free Firebase account
 
-```npm install```
+Setup Instructions
+Clone the repository:
 
-Go to the Firebase Console.
+git clone https://github.com/MennaEbied/Car-Parking-Mobile-App.git
+cd Car-Parking-Mobile-App
 
-Create a new project.
+Install project dependencies:
 
-Enable Authentication (Email/Password Sign-In).
+npm install
 
-Add a web app to your Firebase project and copy the Firebase configuration.
+Configure Firebase:
 
-### Start the Development Server
+Go to the Firebase Console and create a new project.
 
-```npx expo start```
+In your new project, navigate to Project Settings > General.
+
+Register a new "Web app" and copy the firebaseConfig object.
+
+Create a new file named firebaseConfig.ts in the root of your project and paste your configuration into it. The file should look like this:
+
+// firebaseConfig.ts
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
+
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_AUTH_DOMAIN",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_STORAGE_BUCKET",
+  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+  appId: "YOUR_APP_ID"
+};
+
+const app = initializeApp(firebaseConfig);
+export const auth = getAuth(app);
+export const db = getFirestore(app);
+
+Start the development server:
+
+npx expo start
+
+Scan the QR code with the Expo Go app on your phone to run the application.
