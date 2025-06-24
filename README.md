@@ -35,13 +35,15 @@ Before you begin, ensure you have the following installed:
 1. **Clone the repository:**
 
 ```git clone https://github.com/MennaEbied/Car-Parking-Mobile-App.git```
+
 ```cd Car-Parking-Mobile-App```
 
 
 2. **Install project dependencies:**
+   
 ```npm install```
 
-3. **Configure Firebase:**
+4. **Configure Firebase:**
 
 - **Go to the Firebase Console and create a new project.**
 - **In your new project, navigate to Project Settings > General.**
