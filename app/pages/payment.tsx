@@ -91,7 +91,7 @@ const PaymentScreen = () => {
         <ScrollView contentContainerStyle={styles.scrollContent}>
           <View style={styles.overlay}>
             <Text style={styles.title}>Confirm Payment</Text>
-            <Text style={styles.amount}>Total Amount: $15.99</Text>
+            <Text style={styles.amount}>Total Amount: 90 LE</Text>
 
             {error ? <Text style={styles.errorText}>{error}</Text> : null}
 
