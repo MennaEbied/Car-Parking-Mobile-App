@@ -1,6 +1,13 @@
 /* eslint-disable prettier/prettier */
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Animated } from 'react-native';
+import { 
+  View, 
+  Text, 
+  StyleSheet, 
+  TouchableOpacity, 
+  Animated, 
+  Image 
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -12,8 +19,14 @@ const Home: React.FC = () => {
 
   // Parking spots data
   const parkingSpots = [
-    { id: '1', name: 'Our Public Parking', spots: 4, price: '90 LE/hr',
-      distance: '3 km from Zagazig University ', time: '15 min' },
+    { 
+      id: '1', 
+      name: 'Our Public Parking', 
+      spots: 4, 
+      price: '90 LE/hr',
+      distance: '3 km from Zagazig University ', 
+      time: '15 min' 
+    },
   ];
 
   useEffect(() => {
@@ -36,14 +49,27 @@ const Home: React.FC = () => {
           <Text style={styles.greeting}>Hello, {userName}</Text>
           <Text style={styles.subtitle}>Find parking near you</Text>
         </View>
-        <TouchableOpacity style={styles.profileButton} onPress={() => router.push('app-pages/profile')}>
-          <Ionicons name="person-circle" size={36} color="#fff" />
-        </TouchableOpacity>
+        <View style={styles.headerIcons}>
+          {/* Add History Icon Here */}
+          <TouchableOpacity 
+            style={styles.iconButton}
+            onPress={() => router.push('app-pages/history')}
+          >
+            <Ionicons name="time" size={30} color="#fff" />
+          </TouchableOpacity>
+          
+          <TouchableOpacity 
+            style={styles.iconButton}
+            onPress={() => router.push('app-pages/profile')}
+          >
+            <Ionicons name="person-circle" size={30} color="#fff" />
+          </TouchableOpacity>
+        </View>
       </View>
 
       {/* Bottom Parking Sheet */}
       <Animated.View style={styles.sheetContainer}>
-        <ScrollView>
+        <View>
           <Text style={styles.sectionTitle}>Parking Details</Text>
           {parkingSpots.map(spot => (
             <TouchableOpacity
@@ -67,17 +93,23 @@ const Home: React.FC = () => {
               </View>
               <View style={styles.priceContainer}>
                 <Text style={styles.priceText}>{spot.price}</Text>
-              </View>
+              </View> 
             </TouchableOpacity>
-          ))}
-        </ScrollView>
+          ))} 
+          <View style={styles.cardImg}>
+          <Image
+            source={require("../../assets/car1.jpg")} 
+            style={styles.parkingImage}
+          />
+          </View>
+        </View>
         {activeSession && (
           <View style={styles.activeSession}>
             <TouchableOpacity
               style={{width: '100%'}} 
               onPress={() => router.push("pages/slots")}
             >
-              <View style={styles.sessionDetails}>
+              <View style={styles.sessionDetails}>    
                 <Text style={styles.sessionTitle}>Book Now</Text>
               </View>
             </TouchableOpacity>
@@ -115,10 +147,17 @@ const styles = StyleSheet.create({
     color: '#e0e0ff',
     marginTop: 8
   },
-  profileButton: {
-    backgroundColor: 'rgba(255,255,255,0.2)',
-    borderRadius: 20,
-    padding: 5,
+  headerIcons: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 15, 
+  },
+  iconButton: {
+    backgroundColor: 'rgba(238, 235, 242, 0.8)',
+    borderRadius: 15,
+    padding: 4,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   sheetContainer: {
     position: 'absolute',
@@ -183,10 +222,18 @@ const styles = StyleSheet.create({
     color: '#8b0000',
     marginRight: 10,
   },
+  parkingImage: {
+    width: '90%',
+    height: 120,
+  },
+  cardImg:{
+    alignItems: 'center',
+    paddingTop:30
+  },
   activeSession: {
     backgroundColor: '#1A73E8',
     borderRadius: 15,
-    padding: 18,
+    padding: 14,
     margin: 20,
     marginTop: 'auto', 
   },

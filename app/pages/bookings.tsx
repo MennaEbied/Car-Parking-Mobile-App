@@ -38,14 +38,39 @@ const ParkingForm = () => {
   const [plateNumber, setPlateNumber] = useState("");
   const [slotId, setSlotId] = useState("");
 
+  // Calculate duration in hours 
+  const calculateDurationHours = () => {
+    const startDateTime = new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+      startTime.getHours(),
+      startTime.getMinutes()
+    );
+    
+    const endDateTime = new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+      endTime.getHours(),
+      endTime.getMinutes()
+    );
+    
+    // Calculate difference in milliseconds
+    const durationMs = endDateTime.getTime() - startDateTime.getTime();
+    // Convert to hours and round up
+    return Math.ceil(durationMs / (1000 * 60 * 60));
+  };
+
   const handleBookNow = async () => {
     if (!plateNumber || !slotId || !startTime || !endTime || !date) {
       Alert.alert("Error", "Please fill in all fields");
       return;
-    }
+    }  
+
     Alert.alert(
       "Confirm Booking",
-      "Are you sure you want to book?",
+      `Reserve parking for ${hours} hour${hours !== 1 ? 's' : ''} Total cost: ${hours} LE`,
       [
         { text: "No", style: "cancel" },
         {
@@ -58,29 +83,55 @@ const ParkingForm = () => {
                 Alert.alert("Error", "User not authenticated");
                 return;
               }
+              
+              // Create combined datetime objects for Firestore
+              const startDateTime = new Date(
+                date.getFullYear(),
+                date.getMonth(),
+                date.getDate(),
+                startTime.getHours(),
+                startTime.getMinutes()
+              );
+              
+              const endDateTime = new Date(
+                date.getFullYear(),
+                date.getMonth(),
+                date.getDate(),
+                endTime.getHours(),
+                endTime.getMinutes()
+              );
+              
               const slotRef = doc(db, "slots", slotId);
               const slotDoc = await getDoc(slotRef);
               if (!slotDoc.exists()) {
                 Alert.alert("Error", "Slot not found");
                 return;
               }
+              
               const slotData = slotDoc.data();
               if (slotData?.status === "reserved" || slotData?.status === "occupied") {
                 Alert.alert("Error", "This slot is not available for reservation.");
                 return;
               }
+              
               await updateDoc(slotRef, { reservedBy: userId, status: "reserved" });
+              
               const reservationData = {
                 plateNumber,
                 slotId: Number(slotId),
-                startTime: startTime.toISOString(),
-                endTime: endTime.toISOString(),
-                date: date.toISOString(),
+                startTime: startDateTime.toISOString(),
+                endTime: endDateTime.toISOString(),
                 userId,
+                hours, // Store duration for reference
               };
+              
               await addDoc(collection(db, "reservations"), reservationData);
-              Alert.alert("Success", "Your reservation has been made!");
-              router.push("pages/payment");
+              
+              // Navigate to payment with duration hours
+              router.push({
+                pathname: "pages/payment",
+                params: { hours }
+              });
             } catch (error) {
               console.error("Error making reservation:", error);
               try {
@@ -108,7 +159,10 @@ const ParkingForm = () => {
   const handleEndTimeConfirm = (selectedTime: Date) => { setEndTime(selectedTime); hideEndTimePicker(); };
   const formatDate = (date: Date) => date.toLocaleDateString();
   const formatTime = (time: Date) => time.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-
+  
+  // Calculate duration and cost
+  const hours = calculateDurationHours();
+  const cost = 90*hours; 
 
   return (
     <ImageBackground
@@ -131,13 +185,26 @@ const ParkingForm = () => {
             <Text style={styles.label}>Plate number</Text>
             <View style={styles.inputContainer}>
               <Icon name="car-info" size={20} color={COLORS.textSecondary} style={styles.icon} />
-              <TextInput style={styles.input} onChangeText={setPlateNumber} value={plateNumber} placeholder="Enter your plate number" placeholderTextColor={COLORS.textSecondary} />
+              <TextInput 
+                style={styles.input} 
+                onChangeText={setPlateNumber} 
+                value={plateNumber} 
+                placeholder="Enter your plate number" 
+                placeholderTextColor={COLORS.textSecondary} 
+              />
             </View>
 
             <Text style={styles.label}>Slot ID</Text>
             <View style={styles.inputContainer}>
               <Icon name="numeric" size={20} color={COLORS.textSecondary} style={styles.icon} />
-              <TextInput style={styles.input} onChangeText={setSlotId} value={slotId} placeholder="Enter Slot ID" placeholderTextColor={COLORS.textSecondary} keyboardType="numeric" />
+              <TextInput 
+                style={styles.input} 
+                onChangeText={setSlotId} 
+                value={slotId} 
+                placeholder="Enter Slot ID" 
+                placeholderTextColor={COLORS.textSecondary} 
+                keyboardType="numeric" 
+              />
             </View>
 
             <View style={styles.timeRow}>
@@ -162,6 +229,13 @@ const ParkingForm = () => {
               <Icon name="calendar" size={20} color={COLORS.textSecondary} style={styles.icon} />
               <Text style={styles.pickerText}>{formatDate(date)}</Text>
             </TouchableOpacity>
+            
+            {/* Cost Summary */}
+            <View style={styles.summaryContainer}>
+              <Text style={styles.summaryText}>
+                Total cost: {cost} LE
+              </Text>
+            </View>
 
             <TouchableOpacity style={styles.bookButton} onPress={handleBookNow}>
               <Text style={styles.bookButtonText}>Book Now</Text>
@@ -186,7 +260,7 @@ const styles = StyleSheet.create({
   },
   backButton: {
     position: 'absolute',
-    top: 50,
+    top: 40,
     left: 20,
     zIndex: 1, 
     backgroundColor: 'rgba(0,0,0,0.5)',
@@ -207,14 +281,14 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: 'bold',
     textAlign: "center",
-    marginBottom: 25,
+    marginBottom: 22,
     color: COLORS.text,
   },
   label: {
     fontSize: 14,
     color: COLORS.textSecondary,
     fontWeight: "500",
-    marginBottom: 8,
+    marginBottom: 5,
     marginLeft: 5,
   },
   inputContainer: {
@@ -225,11 +299,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: COLORS.border,
     paddingHorizontal: 15,
-    height: 55,
-    marginBottom: 15,
+    height: 50,
+    marginBottom: 10,
   },
   icon: {
-    marginRight: 10,
+    marginRight: 5,
   },
   input: {
     flex: 1,
@@ -248,12 +322,25 @@ const styles = StyleSheet.create({
     flex: 1,
     marginHorizontal: 5,
   },
+  summaryContainer: {
+    backgroundColor: 'rgba(26, 115, 232, 0.1)',
+    borderRadius: 10,
+    padding: 10,
+    marginTop: 5,
+    marginBottom: 5,
+  },
+  summaryText: {
+    fontSize: 16,
+    color: COLORS.text,
+    textAlign: 'center',
+    marginBottom: 5,
+  },
   bookButton: {
     backgroundColor: COLORS.primary,
-    padding: 18,
+    padding: 15,
     borderRadius: 12,
     alignItems: 'center',
-    marginTop: 20,
+    marginTop: 18,
   },
   bookButtonText: {
     fontSize: 18,
