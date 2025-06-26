@@ -91,7 +91,6 @@ const PaymentScreen = () => {
         <ScrollView contentContainerStyle={styles.scrollContent}>
           <View style={styles.overlay}>
             <Text style={styles.title}>Confirm Payment</Text>
-            <Text style={styles.amount}>Total Amount: 90 LE</Text>
 
             {error ? <Text style={styles.errorText}>{error}</Text> : null}
 
@@ -229,12 +228,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 10,
     color: COLORS.text,
-  },
-  amount: {
-    fontSize: 18,
-    textAlign: "center",
-    color: COLORS.textSecondary,
-    marginBottom: 25,
   },
   errorText: {
     color: COLORS.danger,
