@@ -93,9 +93,9 @@ const PaymentScreen = () => {
             <Text style={styles.title}>Confirm Payment</Text>
 
             {error ? <Text style={styles.errorText}>{error}</Text> : null}
-
+              <Text style={styles.label}>Cardholder Name</Text>
             <Input
-              placeholder="Cardholder Name"
+              placeholder="Enter your Cardholder Name"
               value={cardholderName}
               onChangeText={setCardholderName}
               leftIcon={
@@ -107,9 +107,9 @@ const PaymentScreen = () => {
               placeholderTextColor={COLORS.textSecondary}
               returnKeyType="done"
             />
-
+             <Text style={styles.label}>Card Number</Text>
             <Input
-              placeholder="Card Number"
+              placeholder="Enter your Card Number"
               value={cardNumber}
               onChangeText={(text) => setCardNumber(text.replace(/\D/g, ""))}
               leftIcon={
@@ -127,7 +127,10 @@ const PaymentScreen = () => {
               placeholderTextColor={COLORS.textSecondary}
               returnKeyType="done"
             />
-
+            <View style={styles.txtrow}>
+             <Text style={styles.label}>MM/YY</Text>
+             <Text style={styles.labe2}>CVC</Text>
+             </View>
             <View style={styles.row}>
               <Input
                 placeholder="MM/YY"
@@ -136,7 +139,7 @@ const PaymentScreen = () => {
                 leftIcon={
                   <Icon
                     name="calendar-month"
-                    size={20}
+                    size={19}
                     color={COLORS.textSecondary}
                   />
                 }
@@ -156,7 +159,7 @@ const PaymentScreen = () => {
                 value={cvc}
                 onChangeText={(text) => setCvc(text.replace(/\D/g, ""))}
                 leftIcon={
-                  <Icon name="lock" size={20} color={COLORS.textSecondary} />
+                  <Icon name="lock" size={19} color={COLORS.textSecondary} />
                 }
                 keyboardType="numeric"
                 maxLength={4}
@@ -188,6 +191,12 @@ const PaymentScreen = () => {
                 ) : undefined
               }
             />
+            <View style={styles.securityInfo}>
+              <Icon name="shield-check" size={16} color={COLORS.textSecondary} />
+              <Text style={styles.securityText}>
+                Your payment is securely processed
+              </Text>
+            </View>
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -215,15 +224,15 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     justifyContent: "center",
-    padding: 20,
+    padding: 18,
   },
   overlay: {
     backgroundColor: "rgba(255, 255, 255, 0.95)",
-    padding: 25,
+    padding: 20,
     borderRadius: 20,
   },
   title: {
-    fontSize: 28,
+    fontSize: 25,
     fontWeight: "bold",
     textAlign: "center",
     marginBottom: 10,
@@ -237,35 +246,63 @@ const styles = StyleSheet.create({
   },
   inputOuterContainer: {
     paddingHorizontal: 0,
-    marginBottom: 15,
   },
   inputInnerContainer: {
     backgroundColor: COLORS.inputBackground,
     borderRadius: 12,
     borderWidth: 1,
     borderColor: COLORS.border,
-    paddingHorizontal: 15,
-    height: 55,
+    paddingHorizontal: 8,
+    height: 50,
     borderBottomWidth: 1,
   },
   inputText: {
-    fontSize: 16,
+    fontSize: 14,
     color: COLORS.text,
+  },
+  label: {
+    fontSize: 14,
+    color: COLORS.textSecondary,
+    fontWeight: "500",
+    marginBottom: 7,
+    marginLeft: 5,
+  },
+  labe2: {
+    fontSize: 14,
+    color: COLORS.textSecondary,
+    fontWeight: "500",
+    marginBottom: 7,
+    marginRight:90
   },
   // --- End Input Styles ---
   row: {
     flexDirection: "row",
     justifyContent: "space-between",
   },
+  txtrow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
   payButton: {
     backgroundColor: COLORS.primary,
-    paddingVertical: 18,
+    paddingVertical: 10,
     borderRadius: 12,
   },
   payButtonText: {
     fontSize: 18,
     color: COLORS.white,
     fontWeight: "bold",
+  },
+  securityInfo: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  securityText: {
+    marginLeft: 5,
+    color: COLORS.textSecondary,
+    fontSize: 13,
   },
 });
 
