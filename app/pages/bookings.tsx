@@ -70,7 +70,7 @@ const ParkingForm = () => {
 
     Alert.alert(
       "Confirm Booking",
-      `Reserve parking for ${hours} hour${hours !== 1 ? 's' : ''} Total cost: ${hours} LE`,
+      `Reserve parking for ${hours} hour${hours !== 1 ? 's' : ''} Total cost: ${cost} LE`,
       [
         { text: "No", style: "cancel" },
         {
