@@ -24,7 +24,7 @@ export default function SplashScreen() {
       <Text style={styles.tagline}>Easily book spots with real-time availability anytime,anywhere</Text>
       <CustomImage
         source={require("../assets/car9.png")}
-        style={{ height: 260 }}
+        style={{ height: 240 }}
       />
       <CustomButton onPress={handlePress} title="Get Started" textStyle={{color:"#ffff",fontSize:20, fontWeight:"500"}} />
       <StatusBar style="auto" />

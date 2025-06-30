@@ -126,31 +126,33 @@ const styles = StyleSheet.create({
   },
   backButton: {
     padding: 5,
+    marginTop:25
   },
   headerTitle: {
     fontSize: 20,
     fontWeight: 'bold',
     color: COLORS.white,
+    marginTop:25
   },
   headerSpacer: {
-    width: 34, // Balances the width of the back button icon + padding
+    width: 130, // Balances the width of the back button icon + padding
   },
   contentContainer: {
-    paddingVertical: 20,
-    paddingHorizontal: 25,
+    paddingVertical: 15,
+    paddingHorizontal: 20,
   },
   sectionTitle: {
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: "bold",
     color: COLORS.text,
-    marginTop: 20,
-    marginBottom: 10,
+    marginTop: 15,
+    marginBottom: 8,
   },
   paragraph: {
     fontSize: 16,
     color: COLORS.textSecondary,
     lineHeight: 26,
-    marginBottom: 15,
+    marginBottom: 10,
   },
   bulletPointContainer: {
     flexDirection: 'row',

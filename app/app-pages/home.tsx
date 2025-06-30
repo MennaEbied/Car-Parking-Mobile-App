@@ -46,8 +46,8 @@ const Home: React.FC = () => {
       {/* Header Overlay */}
       <View style={styles.header}>
         <View>
-          <Text style={styles.greeting}>Hello, {userName}</Text>
-          <Text style={styles.subtitle}>Find parking near you</Text>
+          <Text style={styles.greeting}>Hello,{userName}</Text>
+          <Text style={styles.subtitle}>Find your parking slot</Text>
         </View>
         <View style={styles.headerIcons}>
           {/* Add History Icon Here */}
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
   },
   header: {
     position: 'absolute',
-    top: 75,
+    top: 80,
     left: 0,
     right: 0,
     flexDirection: 'row',
@@ -143,9 +143,9 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   subtitle: {
-    fontSize: 18,
+    fontSize: 17,
     color: '#e0e0ff',
-    marginTop: 8
+    marginTop: 6
   },
   headerIcons: {
     flexDirection: 'row',
@@ -155,24 +155,24 @@ const styles = StyleSheet.create({
   iconButton: {
     backgroundColor: 'rgba(238, 235, 242, 0.8)',
     borderRadius: 15,
-    padding: 4,
+    padding: 5,
     justifyContent: 'center',
     alignItems: 'center',
   },
   sheetContainer: {
     position: 'absolute',
-    height: '70%',
+    height: '72%',
     bottom: 0,
     left: 0,
     right: 0,
     backgroundColor: '#fff',
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
-    paddingTop: 20, 
+    paddingTop: 22, 
     paddingHorizontal: 20,
   },
   sectionTitle: {
-    fontSize: 23,
+    fontSize: 22,
     fontWeight: '700',
     color: '#1c2c4a',
     marginBottom: 15,
@@ -194,13 +194,12 @@ const styles = StyleSheet.create({
   cardHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 15,
+    marginBottom: 12,
   },
   parkingName: {
-    fontSize: 18,
+    fontSize: 17,
     fontWeight: '600',
     color: '#1c2c4a',
-    marginLeft: 5,
   },
   detailItem: {
     flexDirection: 'row',
@@ -212,19 +211,18 @@ const styles = StyleSheet.create({
     color: '#777',
     marginLeft: 5,
   },
-  priceContainer: {
-    marginBottom: 60, 
+  priceContainer: { 
     alignItems: 'center',
   },
   priceText: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '700',
     color: '#8b0000',
     marginRight: 10,
   },
   parkingImage: {
     width: '90%',
-    height: 120,
+    height: 170,
   },
   cardImg:{
     alignItems: 'center',
@@ -233,8 +231,8 @@ const styles = StyleSheet.create({
   activeSession: {
     backgroundColor: '#1A73E8',
     borderRadius: 15,
-    padding: 14,
-    margin: 20,
+    padding: 13,
+    margin: 22,
     marginTop: 'auto', 
   },
   sessionDetails: {

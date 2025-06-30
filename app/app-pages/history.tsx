@@ -113,7 +113,7 @@ const BookingHistory = () => {
       </View>
       <View style={styles.detailRow}>
         <Ionicons name="time" size={16} color={COLORS.textSecondary} style={styles.icon}/>
-        <Text style={styles.detailText}>To: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {formatDateTime(item.endTime)}</Text>
+        <Text style={styles.detailText}>To:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{formatDateTime(item.endTime)}</Text>
       </View>
       <View style={styles.detailRow}>
         <Ionicons name="pricetag-outline" size={16} color={COLORS.textSecondary} style={styles.icon}/>
@@ -196,6 +196,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     color: COLORS.text,
+    marginTop:25
   },
   listContent: {
     padding: 20,

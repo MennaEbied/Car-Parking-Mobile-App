@@ -35,7 +35,7 @@ export default function FirstOnboarding() {
             style={{
               backgroundColor: "#EFEFEF", 
               flex: 1,
-              marginRight: 10,
+              marginRight: 30,
               justifyContent: "center",
             }}
             textStyle={{ color: "#000", fontSize: 18 }}
@@ -49,7 +49,7 @@ export default function FirstOnboarding() {
             style={{
               backgroundColor: "#4285F4",
               flex: 1,
-              marginLeft: 10,
+              marginLeft: 30,
               justifyContent: "center",
               alignItems: "center",
             }}
@@ -77,19 +77,18 @@ const styles = StyleSheet.create({
   },
   footer: {
     paddingHorizontal: 20,
-    paddingBottom: 40, 
+    paddingBottom: 50, 
   },
   image: {
-    height: 260,
+    height: 270,
     width: 360,
     resizeMode: 'contain', 
-    marginBottom: 20,
   },
   heading: {
     fontWeight: "bold",
     fontSize: 24, 
     textAlign: "center",
-    marginBottom: 15,
+    marginBottom: 20,
     color: "#003551",
   },
   tagline: {
@@ -102,7 +101,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 30, 
+    marginBottom: 10, 
   },
   dot: {
     height: 10,
@@ -113,13 +112,13 @@ const styles = StyleSheet.create({
   },
   activeDot: {
     backgroundColor: "#009ae9", 
-    width: 12, 
-    height: 12,
+    width: 11, 
+    height: 11,
     borderRadius: 6,
   },
   buttons: {
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingBottom:40,
+    paddingBottom:45,
   },
 });

@@ -278,7 +278,7 @@ const styles = StyleSheet.create({
     borderRadius: 20, 
   },
   header: {
-    fontSize: 28,
+    fontSize: 24,
     fontWeight: 'bold',
     textAlign: "center",
     marginBottom: 22,
@@ -325,7 +325,7 @@ const styles = StyleSheet.create({
   summaryContainer: {
     backgroundColor: 'rgba(26, 115, 232, 0.1)',
     borderRadius: 10,
-    padding: 10,
+    padding: 8,
     marginTop: 5,
     marginBottom: 5,
   },
