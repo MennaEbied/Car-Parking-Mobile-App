@@ -1,7 +1,8 @@
+/* eslint-disable prettier/prettier */
 import { Tabs } from "expo-router";
 import Entypo from "@expo/vector-icons/Entypo";
 import Feather from "@expo/vector-icons/Feather";
-import FontAwesome from '@expo/vector-icons/FontAwesome';
+
 export default function Layout() {
   return (
     <Tabs
