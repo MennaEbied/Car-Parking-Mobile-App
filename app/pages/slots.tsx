@@ -103,10 +103,10 @@ const styles = StyleSheet.create({
   },
   title: {
     textAlign:"center",
-    fontSize: 21,
+    fontSize: 22,
     fontWeight: "bold",
     marginBottom: 30,
-    marginTop: 10,
+    marginTop: 8,
     color:"#1c2c4a"
   },
   legendContainer: {
@@ -140,15 +140,15 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "center",
-    maxWidth: 500,
+    maxWidth: 400,
   },
   slot: {
     width: "90%",
-    height: 100,
+    height: 90,
     borderRadius:10,
     justifyContent: "center",
     alignItems: "center",
-    margin: 6,
+    margin: 7,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,

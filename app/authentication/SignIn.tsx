@@ -94,7 +94,7 @@ export default function SignIn() {
           <View style={styles.inputContainer}>
             <FontAwesome6
               name="envelope"
-              size={20}
+              size={18}
               color="grey"
               style={styles.icon}
             />
@@ -118,7 +118,7 @@ export default function SignIn() {
           {/* Password Input */}
           <Text style={styles.label}>Password</Text>
           <View style={styles.inputContainer}>
-            <Feather name="lock" size={20} color="grey" style={styles.icon} />
+            <Feather name="lock" size={18} color="grey" style={styles.icon} />
             <TextInput
               placeholder="Enter your password"
               style={styles.textInput}
@@ -198,22 +198,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: 25,
   },
   iconWrapper: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+    width: 65,
+    height: 65,
+    borderRadius: 35,
     backgroundColor: "#F3F4FF",
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 20,
+    marginBottom: 15,
   },
   title: {
-    fontSize: 26,
+    fontSize: 24,
     fontWeight: "bold",
     color: "#000000",
-    marginBottom: 8,
+    marginBottom: 6,
   },
   subtitle: {
-    fontSize: 16,
+    fontSize: 14,
     color: "grey",
     marginBottom: 30,
     textAlign: "center",
@@ -233,12 +233,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#E0E0E0",
     paddingHorizontal: 15,
-    marginBottom: 5, // Reduced margin
+    marginBottom: 6, // Reduced margin
     width: "100%",
-    height: 55,
+    height: 53,
   },
-  icon: { marginRight: 10 },
-  textInput: { flex: 1, fontSize: 16, color: "#000000" },
+  icon: { marginRight: 6 },
+  textInput: { flex: 1, fontSize: 15, color: "#000000" },
   errorText: {
     color: "red",
     alignSelf: "flex-start",
@@ -250,10 +250,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#4285F4",
     borderRadius: 10,
     width: "100%",
-    height: 55,
+    height: 53,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 20,
+    marginTop: 30,
   },
   signInButtonText: { color: "#FFFFFF", fontSize: 18, fontWeight: "bold" },
   buttonPressed: { opacity: 0.8 },
@@ -261,7 +261,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     width: "100%",
-    marginVertical: 30,
+    marginVertical: 20,
   },
   line: { flex: 1, height: 1, backgroundColor: "#E0E0E0" },
   dividerText: { marginHorizontal: 10, color: "grey" },
@@ -274,11 +274,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#E0E0E0",
     width: "100%",
-    height: 55,
+    height: 53,
   },
   googleIcon: {
-    marginRight: 12,
-    fontSize: 20,
+    marginRight: 10,
+    fontSize: 19,
     fontWeight: "bold",
     color: "#4285F4",
   },

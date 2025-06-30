@@ -40,7 +40,7 @@ const SuccessScreen = () => {
         
         <Text style={styles.title}>Booking Confirmed!</Text>
         <Text style={styles.subtitle}>
-          Congratulations, you have successfully booked the parking slot.
+          Congratulations,you have successfully booked the parking slot.
         </Text>
       </View>
 
@@ -61,58 +61,58 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: COLORS.background,
     flex: 1,
+     paddingVertical:50
   },
   content: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    paddingHorizontal: 30,
+    paddingHorizontal: 20,
   },
   iconContainer: {
-    width: 150,
-    height: 150,
+    width: 130,
+    height: 130,
     borderRadius: 75,
     backgroundColor: COLORS.primary, 
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 30,
+    marginBottom: 35,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 4,
     },
     shadowOpacity: 0.1,
-    shadowRadius: 10,
+    shadowRadius: 15,
     elevation: 8,
   },
   title: {
-    fontSize: 28,
+    fontSize: 24,
     fontWeight: "bold",
     textAlign: "center",
     color: COLORS.text,
-    marginBottom: 15,
+    marginBottom: 16,
   },
   subtitle: {
     fontSize: 16,
     textAlign: "center",
     color: COLORS.textSecondary,
-    lineHeight: 24,
+    lineHeight: 23,
   },
   buttonContainer: {
-    padding: 20,
+    padding: 30,
     paddingBottom: 30,
   },
   button: {
     backgroundColor: COLORS.primary,
-    borderRadius: 16,
-    paddingVertical: 18,
+    borderRadius: 15,
+    paddingVertical: 15,
     alignItems: 'center',
     justifyContent: 'center',
   },
   buttonText: {
     fontSize: 18,
     color: COLORS.white,
-    fontWeight: '600',
   },
 });
 

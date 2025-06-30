@@ -232,10 +232,10 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   title: {
-    fontSize: 25,
+    fontSize: 24,
     fontWeight: "bold",
     textAlign: "center",
-    marginBottom: 10,
+    marginBottom: 20,
     color: COLORS.text,
   },
   errorText: {
@@ -264,14 +264,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: COLORS.textSecondary,
     fontWeight: "500",
-    marginBottom: 7,
+    marginBottom: 6,
     marginLeft: 5,
   },
   labe2: {
     fontSize: 14,
     color: COLORS.textSecondary,
     fontWeight: "500",
-    marginBottom: 7,
+    marginBottom: 6,
     marginRight:90
   },
   // --- End Input Styles ---
@@ -285,7 +285,7 @@ const styles = StyleSheet.create({
   },
   payButton: {
     backgroundColor: COLORS.primary,
-    paddingVertical: 10,
+    paddingVertical: 13,
     borderRadius: 12,
   },
   payButtonText: {
