@@ -1,0 +1,9 @@
+{
+    "name": "parking-app-cron-job",
+    "version": "1.0.0",
+    "description": "Scheduled job to clean up expired reservations.",
+    "main": "cleanup-script.js",
+    "dependencies": {
+      "firebase-admin": "^12.0.0"
+    }
+  }

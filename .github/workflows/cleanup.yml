@@ -1,0 +1,37 @@
+# .github/workflows/cleanup.yml
+
+name: Scheduled Reservation Cleanup
+
+on:
+  schedule:
+    # This runs the job every 15 minutes.
+    - cron: '*/15 * * * *'
+  # This also allows you to run the job manually from the GitHub Actions tab.
+  workflow_dispatch:
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out your repository code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Step 2: Set up Node.js environment
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      # Step 3: Install dependencies FOR THE SCRIPT ONLY
+      # We change into the script's directory and run npm install there.
+      - name: Install Script Dependencies
+        run: cd server-cron && npm install
+
+      # Step 4: Run the cleanup script
+      # We run the script from within its own directory.
+      - name: Run Firebase Cleanup Script
+        run: cd server-cron && node ./cleanup-script.js
+        env:
+          FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}
