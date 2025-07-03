@@ -155,13 +155,13 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   available: {
-    backgroundColor: "#28a745",
+    backgroundColor: "#717171",
   },
   occupied: {
-    backgroundColor: "#dc3545",
+    backgroundColor: "#0031c1",
   },
   reserved: {
-    backgroundColor: "#ffc107",
+    backgroundColor: "#fad000",
   },
   legendText: {
     fontSize: 16,
