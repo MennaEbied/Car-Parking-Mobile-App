@@ -18,9 +18,10 @@ import {
 } from "firebase/firestore";
 import { db } from "../../firebaseConfig"; // Adjust the path if needed
 
+// The status is now simplified to only two states.
 interface Slot {
   id: number;
-  status: "available" | "occupied" | "reserved";
+  status: "available" | "occupied";
 }
 
 const ParkingSlots: React.FC = () => {
@@ -66,7 +67,8 @@ const ParkingSlots: React.FC = () => {
         params: { slotId: slot.id },
       });
     } else {
-      Alert.alert("Slot Unavailable", `This slot is currently ${slot.status}.`);
+      // The alert message is simplified.
+      Alert.alert("Slot Unavailable", `This slot is currently occupied.`);
     }
   };
 
@@ -82,13 +84,12 @@ const ParkingSlots: React.FC = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Select a Parking Slot</Text>
+      {/* The legend no longer shows "Reserved". */}
       <View style={styles.legendContainer}>
         <View style={[styles.legendItem, styles.available]} />
         <Text style={styles.legendText}>Available</Text>
         <View style={[styles.legendItem, styles.occupied]} />
         <Text style={styles.legendText}>Occupied</Text>
-        <View style={[styles.legendItem, styles.reserved]} />
-        <Text style={styles.legendText}>Reserved</Text>
       </View>
 
       <View style={styles.gridContainer}>
@@ -99,7 +100,6 @@ const ParkingSlots: React.FC = () => {
               styles.slot,
               slot.status === "available" && styles.available,
               slot.status === "occupied" && styles.occupied,
-              slot.status === "reserved" && styles.reserved,
             ]}
             onPress={() => handleSlotPress(slot)}
             disabled={slot.status !== "available"}
@@ -160,9 +160,7 @@ const styles = StyleSheet.create({
   occupied: {
     backgroundColor: "#0031c1",
   },
-  reserved: {
-    backgroundColor: "#fad000",
-  },
+  // The 'reserved' style has been removed.
   legendText: {
     fontSize: 16,
     marginRight: 15,

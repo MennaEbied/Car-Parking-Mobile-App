@@ -138,14 +138,15 @@ const ParkingForm = () => {
               if (slotData?.status !== "available") {
                 Alert.alert(
                   "Slot Unavailable",
-                  "This slot is currently reserved or occupied.",
+                  "This slot is currently occupied.",
                 );
                 return;
               }
 
+              // **CHANGE: Set the status to "occupied" instead of "reserved"**
               await updateDoc(slotRef, {
                 reservedBy: userId,
-                status: "reserved",
+                status: "occupied",
               });
 
               const reservationData = {
@@ -157,7 +158,7 @@ const ParkingForm = () => {
                 hours,
                 cost,
                 createdAt: serverTimestamp(),
-                status: "active", // Mark the new reservation as active
+                status: "active",
               };
 
               await addDoc(collection(db, "reservations"), reservationData);

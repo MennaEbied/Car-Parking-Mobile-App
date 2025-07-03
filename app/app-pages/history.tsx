@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, Alert, SafeAreaView, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { db, auth } from '../../firebaseConfig'; 
-import { collection, query, where, getDocs, orderBy } from 'firebase/firestore';
+import { collection, query, where, orderBy, onSnapshot } from 'firebase/firestore'; // Import onSnapshot
 import { StatusBar } from 'expo-status-bar';
 
 // Consistent color palette
@@ -21,7 +21,6 @@ const COLORS = {
 };
 
 // Define the structure of a booking document from Firestore
-// **FIX: Added the 'status' field to the type definition**
 type Booking = {
   id: string; // The document ID from Firestore
   plateNumber: string;
@@ -46,53 +45,54 @@ const BookingHistory = () => {
 
   // Fetch booking history from Firestore for the current user
   useEffect(() => {
-    const fetchBookings = async () => {
-      const currentUser = auth.currentUser;
-      if (!currentUser) {
-        Alert.alert("Error", "You must be logged in to view your history.");
-        setLoading(false);
-        return;
-      }
+    const currentUser = auth.currentUser;
+    if (!currentUser) {
+      Alert.alert("Error", "You must be logged in to view your history.");
+      setLoading(false);
+      return;
+    }
 
-      try {
-        // **IMPROVEMENT: Query and order by creation time directly in Firestore**
-        const q = query(
-          collection(db, "reservations"), 
-          where("userId", "==", currentUser.uid),
-          orderBy("createdAt", "desc") // Order by most recent first
-        );
-        const querySnapshot = await getDocs(q);
-        
-        const allBookings: Booking[] = [];
-        querySnapshot.forEach((doc) => {
-          allBookings.push({ id: doc.id, ...doc.data() } as Booking);
-        });
+    // **CHANGE: Use onSnapshot for real-time updates**
+    const q = query(
+      collection(db, "reservations"), 
+      where("userId", "==", currentUser.uid),
+      orderBy("createdAt", "desc")
+    );
 
-        // **FIX: Separate bookings based on the 'status' field, not the time**
-        const active: Booking[] = [];
-        const completed: Booking[] = [];
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      console.log("Booking history updated from Firestore.");
+      const allBookings: Booking[] = [];
+      querySnapshot.forEach((doc) => {
+        allBookings.push({ id: doc.id, ...doc.data() } as Booking);
+      });
 
-        allBookings.forEach(booking => {
-          if (booking.status === 'active') {
-            active.push(booking);
-          } else {
-            completed.push(booking);
-          }
-        });
-        
-        setActiveBookings(active);
-        setCompletedBookings(completed);
+      const active: Booking[] = [];
+      const completed: Booking[] = [];
 
-      } catch (error) {
-        console.error('Failed to load bookings from Firestore:', error);
-        Alert.alert('Error', 'Failed to load booking history.');
-      } finally {
+      allBookings.forEach(booking => {
+        if (booking.status === 'active') {
+          active.push(booking);
+        } else {
+          completed.push(booking);
+        }
+      });
+      
+      setActiveBookings(active);
+      setCompletedBookings(completed);
+      
+      if (loading) {
         setLoading(false);
       }
-    };
+    }, (error) => {
+      // This will catch errors, including the need for an index
+      console.error('Failed to load bookings from Firestore:', error);
+      Alert.alert('Error', 'Failed to load booking history. Check console for details.');
+      setLoading(false);
+    });
 
-    fetchBookings();
-  }, []);
+    // Clean up the listener when the component unmounts
+    return () => unsubscribe();
+  }, [loading]); // The dependency array now includes 'loading'
 
   // Render each booking item card
   const renderBookingItem = ({ item, isActive }: { item: Booking, isActive: boolean }) => (
