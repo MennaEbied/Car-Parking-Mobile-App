@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, Alert, SafeAreaView, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { db, auth } from '../../firebaseConfig'; 
-import { collection, query, where, getDocs } from 'firebase/firestore';
+import { collection, query, where, getDocs, orderBy } from 'firebase/firestore';
 import { StatusBar } from 'expo-status-bar';
 
 // Consistent color palette
@@ -21,12 +21,14 @@ const COLORS = {
 };
 
 // Define the structure of a booking document from Firestore
+// **FIX: Added the 'status' field to the type definition**
 type Booking = {
   id: string; // The document ID from Firestore
   plateNumber: string;
   slotId: number;
   startTime: string; 
-  endTime: string;   
+  endTime: string;
+  status: 'active' | 'completed';
 };
 
 // A helper function to format dates and times nicely
@@ -38,8 +40,8 @@ const formatDateTime = (isoString: string) => {
 };
 
 const BookingHistory = () => {
-  const [currentBookings, setCurrentBookings] = useState<Booking[]>([]);
-  const [previousBookings, setPreviousBookings] = useState<Booking[]>([]);
+  const [activeBookings, setActiveBookings] = useState<Booking[]>([]);
+  const [completedBookings, setCompletedBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Fetch booking history from Firestore for the current user
@@ -53,7 +55,12 @@ const BookingHistory = () => {
       }
 
       try {
-        const q = query(collection(db, "reservations"), where("userId", "==", currentUser.uid));
+        // **IMPROVEMENT: Query and order by creation time directly in Firestore**
+        const q = query(
+          collection(db, "reservations"), 
+          where("userId", "==", currentUser.uid),
+          orderBy("createdAt", "desc") // Order by most recent first
+        );
         const querySnapshot = await getDocs(q);
         
         const allBookings: Booking[] = [];
@@ -61,25 +68,20 @@ const BookingHistory = () => {
           allBookings.push({ id: doc.id, ...doc.data() } as Booking);
         });
 
-        // Separate bookings into current and previous
-        const now = new Date();
-        const current: Booking[] = [];
-        const previous: Booking[] = [];
+        // **FIX: Separate bookings based on the 'status' field, not the time**
+        const active: Booking[] = [];
+        const completed: Booking[] = [];
 
         allBookings.forEach(booking => {
-          if (new Date(booking.endTime) > now) {
-            current.push(booking);
+          if (booking.status === 'active') {
+            active.push(booking);
           } else {
-            previous.push(booking);
+            completed.push(booking);
           }
         });
-
-        // Sort bookings by start time, most recent first
-        current.sort((a, b) => new Date(b.startTime).getTime() - new Date(a.startTime).getTime());
-        previous.sort((a, b) => new Date(b.startTime).getTime() - new Date(a.startTime).getTime());
         
-        setCurrentBookings(current);
-        setPreviousBookings(previous);
+        setActiveBookings(active);
+        setCompletedBookings(completed);
 
       } catch (error) {
         console.error('Failed to load bookings from Firestore:', error);
@@ -93,16 +95,16 @@ const BookingHistory = () => {
   }, []);
 
   // Render each booking item card
-  const renderBookingItem = ({ item, isCurrent }: { item: Booking, isCurrent: boolean }) => (
+  const renderBookingItem = ({ item, isActive }: { item: Booking, isActive: boolean }) => (
     <View style={styles.bookingCard}>
       <View style={styles.cardHeader}>
         <View style={styles.headerLeft}>
           <Ionicons name="car-sport" size={24} color={COLORS.primary} style={styles.icon}/>
           <Text style={styles.slotText}>Slot {item.slotId}</Text>
         </View>
-        <View style={[styles.statusBadge, isCurrent ? styles.statusActive : styles.statusCompleted]}>
-          <Text style={[styles.statusText, isCurrent ? {color: COLORS.active} : {color: COLORS.completed}]}>
-            {isCurrent ? 'Active' : 'Completed'}
+        <View style={[styles.statusBadge, isActive ? styles.statusActive : styles.statusCompleted]}>
+          <Text style={[styles.statusText, isActive ? {color: COLORS.active} : {color: COLORS.completed}]}>
+            {isActive ? 'Active' : 'Completed'}
           </Text>
         </View>
       </View>
@@ -113,7 +115,7 @@ const BookingHistory = () => {
       </View>
       <View style={styles.detailRow}>
         <Ionicons name="time" size={16} color={COLORS.textSecondary} style={styles.icon}/>
-        <Text style={styles.detailText}>To:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{formatDateTime(item.endTime)}</Text>
+        <Text style={styles.detailText}>To:      {formatDateTime(item.endTime)}</Text>
       </View>
       <View style={styles.detailRow}>
         <Ionicons name="pricetag-outline" size={16} color={COLORS.textSecondary} style={styles.icon}/>
@@ -132,7 +134,7 @@ const BookingHistory = () => {
   }
 
   // Render "No bookings yet" message
-  if (currentBookings.length === 0 && previousBookings.length === 0) {
+  if (activeBookings.length === 0 && completedBookings.length === 0) {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.header}>
@@ -156,19 +158,19 @@ const BookingHistory = () => {
       </View>
 
       <FlatList
-        data={[...currentBookings, ...previousBookings]}
+        data={[...activeBookings, ...completedBookings]}
         keyExtractor={item => item.id}
         contentContainerStyle={styles.listContent}
         renderItem={({ item, index }) => {
-          const isCurrent = index < currentBookings.length;
-          const showCurrentHeader = isCurrent && index === 0;
-          const showPreviousHeader = !isCurrent && index === currentBookings.length;
+          const isActive = item.status === 'active';
+          const showActiveHeader = isActive && index === 0;
+          const showCompletedHeader = !isActive && index === activeBookings.length;
 
           return (
             <View>
-              {showCurrentHeader && <Text style={styles.sectionTitle}>Current Bookings</Text>}
-              {showPreviousHeader && <Text style={styles.sectionTitle}>Previous Bookings</Text>}
-              {renderBookingItem({ item, isCurrent })}
+              {showActiveHeader && <Text style={styles.sectionTitle}>Active Bookings</Text>}
+              {showCompletedHeader && <Text style={styles.sectionTitle}>Completed Bookings</Text>}
+              {renderBookingItem({ item, isActive })}
             </View>
           );
         }}
