@@ -266,7 +266,7 @@ const ParkingForm = () => {
                 style={styles.input}
                 onChangeText={setPlateNumber}
                 value={plateNumber}
-                placeholder="e.g., ABC-123"
+                placeholder="ABC 1234"
                 placeholderTextColor={COLORS.textSecondary}
               />
             </View>
@@ -318,8 +318,8 @@ const ParkingForm = () => {
               </View>
             </View>
 
-            <View style={styles.summaryContainer(displayHours <= 0)}>
-              <Text style={styles.summaryText(displayHours <= 0)}>
+            <View style={styles.summaryContainer} >
+              <Text style={styles.summaryText}>
                 {displayHours > 0
                   ? `Total cost: ${displayCost} LE for ${displayHours} hour(s)`
                   : "End time must be after start time"}
@@ -365,7 +365,7 @@ const styles = StyleSheet.create({
     zIndex: 1,
     backgroundColor: "rgba(0,0,0,0.5)",
     borderRadius: 20,
-    padding: 8,
+    padding: 6,
   },
   scrollContent: { flexGrow: 1, justifyContent: "center", padding: 20 },
   overlay: {
@@ -374,10 +374,10 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   header: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: "bold",
     textAlign: "center",
-    marginBottom: 22,
+    marginBottom: 20,
     color: COLORS.text,
   },
   label: {
@@ -396,7 +396,7 @@ const styles = StyleSheet.create({
     borderColor: COLORS.border,
     paddingHorizontal: 15,
     height: 50,
-    marginBottom: 12,
+    marginBottom: 10,
   },
   icon: { marginRight: 10 },
   input: { flex: 1, fontSize: 16, color: COLORS.text },
@@ -406,28 +406,28 @@ const styles = StyleSheet.create({
   pickerText: { fontSize: 16, color: COLORS.text },
   timeRow: { flexDirection: "row", justifyContent: "space-between" },
   timeContainer: { flex: 1, marginHorizontal: 2 },
-  summaryContainer: (isError: boolean) => ({
-    backgroundColor: isError
+  summaryContainer: {
+    backgroundColor: Error()
       ? "rgba(220, 53, 69, 0.1)"
       : "rgba(26, 115, 232, 0.1)",
     borderRadius: 10,
-    paddingVertical: 12,
+    paddingVertical: 10,
     paddingHorizontal: 15,
     marginTop: 10,
     marginBottom: 15,
-  }),
-  summaryText: (isError: boolean) => ({
-    fontSize: 16,
+  },
+  summaryText: {
+    fontSize: 15,
     fontWeight: "500",
-    color: isError ? COLORS.danger : COLORS.primary,
+    color: Error() ? COLORS.danger : COLORS.primary,
     textAlign: "center",
-  }),
+  },
   bookButton: {
     backgroundColor: COLORS.primary,
     padding: 15,
     borderRadius: 12,
     alignItems: "center",
-    marginTop: 10,
+    marginTop: 8,
   },
   bookButtonText: { fontSize: 18, color: COLORS.white, fontWeight: "bold" },
 });
