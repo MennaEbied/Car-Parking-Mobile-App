@@ -17,6 +17,8 @@
     "@react-native-community/datetimepicker": "8.3.0",
     "@react-native-firebase/app": "^21.11.0",
     "@react-native-firebase/auth": "^21.11.0",
+    "ajv": "^8.17.1",
+    "ajv-keywords": "^5.1.0",
     "expo": "^53.0.8",
     "expo-constants": "~17.1.6",
     "expo-device": "~7.1.4",
@@ -51,6 +53,5 @@
     "prettier": "^3.4.2",
     "typescript": "^5.3.3"
   },
-  
   "private": true
 }
