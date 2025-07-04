@@ -83,6 +83,13 @@ const ParkingSlots: React.FC = () => {
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity
+          style={styles.navButton}
+          onPress={() => router.back()}
+        >
+          <FontAwesome6 name="angles-left" size={18} color="#1c2c4a" style={styles.icon} />
+          <Text style={styles.buttontext}>Back</Text>
+        </TouchableOpacity>
       <Text style={styles.title}>Select a Parking Slot</Text>
       {/* The legend no longer shows "Reserved". */}
       <View style={styles.legendContainer}>
@@ -108,15 +115,6 @@ const ParkingSlots: React.FC = () => {
           </TouchableOpacity>
         ))}
       </View>
-      <View style={styles.buttons}>
-        <TouchableOpacity
-          style={styles.navButton}
-          onPress={() => router.back()}
-        >
-          <FontAwesome6 name="angles-left" size={18} color="#1c2c4a" style={styles.icon} />
-          <Text style={styles.buttontext}>Back</Text>
-        </TouchableOpacity>
-      </View>
     </View>
   );
 };
@@ -127,7 +125,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#eef3fd",
-    padding: 20,
+    padding: 10,
   },
   loadingText: {
     marginTop: 10,
@@ -136,7 +134,7 @@ const styles = StyleSheet.create({
   },
   title: {
     textAlign: "center",
-    fontSize: 24,
+    fontSize: 23,
     fontWeight: "bold",
     marginBottom: 20,
     color: "#1c2c4a",
@@ -171,6 +169,7 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     justifyContent: "center",
     width: '100%',
+    marginBottom:70
   },
   slot: {
     width: "80%",
@@ -204,7 +203,8 @@ const styles = StyleSheet.create({
   navButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 10,
+    paddingRight:250, 
+    marginBottom:20
   },
   buttontext: {
     fontSize: 18,

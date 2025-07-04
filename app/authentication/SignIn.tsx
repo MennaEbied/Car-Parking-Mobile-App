@@ -18,8 +18,6 @@ import { auth } from "../../firebaseConfig";
 import { storeUser } from "../../store/authPersistance";
 
 
-const GoogleIcon = () => <Text style={styles.googleIcon}>G</Text>;
-
 export default function SignIn() {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -154,25 +152,6 @@ export default function SignIn() {
           >
             <Text style={styles.signInButtonText}>Sign In</Text>
           </Pressable>
-
-          {/* Divider */}
-          <View style={styles.dividerContainer}>
-            <View style={styles.line} />
-            <Text style={styles.dividerText}>Or continue with</Text>
-            <View style={styles.line} />
-          </View>
-
-          {/* Google Sign In Button */}
-          <Pressable
-            style={({ pressed }) => [
-              styles.googleButton,
-              pressed && styles.buttonPressed,
-            ]}
-          >
-            <GoogleIcon />
-            <Text style={styles.googleButtonText}>Continue with Google</Text>
-          </Pressable>
-
           {/* Sign Up Navigation */}
           <View style={styles.footer}>
             <Text style={styles.footerText}>Don't have an account? </Text>
@@ -207,21 +186,21 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   title: {
-    fontSize: 24,
+    fontSize: 23,
     fontWeight: "bold",
     color: "#000000",
-    marginBottom: 6,
+    marginBottom: 5,
   },
   subtitle: {
     fontSize: 14,
     color: "grey",
-    marginBottom: 30,
+    marginBottom: 35,
     textAlign: "center",
   },
   label: {
     alignSelf: "flex-start",
     marginLeft: 5,
-    marginBottom: 5,
+    marginBottom: 10,
     fontSize: 14,
     color: "grey",
   },
@@ -233,7 +212,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#E0E0E0",
     paddingHorizontal: 15,
-    marginBottom: 6, // Reduced margin
+    marginBottom: 10, // Reduced margin
     width: "100%",
     height: 53,
   },
@@ -253,36 +232,10 @@ const styles = StyleSheet.create({
     height: 53,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 30,
+    marginTop: 20,
   },
   signInButtonText: { color: "#FFFFFF", fontSize: 18, fontWeight: "bold" },
   buttonPressed: { opacity: 0.8 },
-  dividerContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    width: "100%",
-    marginVertical: 20,
-  },
-  line: { flex: 1, height: 1, backgroundColor: "#E0E0E0" },
-  dividerText: { marginHorizontal: 10, color: "grey" },
-  googleButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#FFFFFF",
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: "#E0E0E0",
-    width: "100%",
-    height: 53,
-  },
-  googleIcon: {
-    marginRight: 10,
-    fontSize: 19,
-    fontWeight: "bold",
-    color: "#4285F4",
-  },
-  googleButtonText: { color: "#000000", fontSize: 16, fontWeight: "500" },
   footer: { flexDirection: "row", justifyContent: "center", marginTop: 30 },
   footerText: { fontSize: 14, color: "grey" },
   signUpLink: { color: "#4285F4", fontWeight: "bold" },

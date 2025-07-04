@@ -21,8 +21,6 @@ import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
-const GoogleIcon = () => <Text style={styles.googleIcon}>G</Text>;
-
 const SignUp = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -273,20 +271,6 @@ const SignUp = () => {
           <Pressable style={styles.createAccountButton} onPress={handleSignUp}>
             <Text style={styles.createAccountButtonText}>Create Account</Text>
           </Pressable>
-
-          {/* Divider */}
-          <View style={styles.dividerContainer}>
-            <View style={styles.line} />
-            <Text style={styles.dividerText}>Or sign up with</Text>
-            <View style={styles.line} />
-          </View>
-
-          {/* Google Sign In Button */}
-          <Pressable style={styles.googleButton}>
-            <GoogleIcon />
-            <Text style={styles.googleButtonText}>Continue with Google</Text>
-          </Pressable>
-
           {/* Sign In Navigation */}
           <View style={styles.footer}>
             <Text style={styles.footerText}>Already have an account? </Text>
@@ -309,25 +293,25 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 25,
-    paddingVertical: 40,
+    paddingVertical: 30,
   },
   form: { width: "100%", marginTop: 15 },
   iconWrapper: {
-    width: 65,
-    height: 65,
+    width: 60,
+    height: 60,
     borderRadius: 35,
     backgroundColor: "#F3F4FF",
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 15,
+    marginBottom: 10,
   },
   title: {
-    fontSize: 24,
+    fontSize: 23,
     fontWeight: "bold",
     color: "#000000",
-    marginBottom: 6,
+    marginBottom: 5,
   },
-  subtitle: { fontSize: 15, color: "grey", textAlign: "center" },
+  subtitle: { fontSize: 13, color: "grey", textAlign: "center" },
   label: {
     alignSelf: "flex-start",
     marginLeft: 5,
@@ -366,43 +350,17 @@ const styles = StyleSheet.create({
     backgroundColor: "#4285F4",
     borderRadius: 10,
     width: "100%",
-    height: 53,
+    height: 52,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 25,
+    marginTop: 22,
   },
   createAccountButtonText: {
     color: "#FFFFFF",
     fontSize: 18,
     fontWeight: "bold",
   },
-  dividerContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    width: "100%",
-    marginVertical: 15,
-  },
-  line: { flex: 1, height: 1, backgroundColor: "#E0E0E0" },
-  dividerText: { marginHorizontal: 10, color: "grey" },
-  googleButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#FFFFFF",
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: "#E0E0E0",
-    width: "100%",
-    height: 53,
-  },
-  googleIcon: {
-    marginRight: 12,
-    fontSize: 19,
-    fontWeight: "bold",
-    color: "#4285F4",
-  },
-  googleButtonText: { color: "#000000", fontSize: 16, fontWeight: "500" },
-  footer: { flexDirection: "row", justifyContent: "center", marginTop: 30 },
+  footer: { flexDirection: "row", justifyContent: "center", marginTop: 25 },
   footerText: { fontSize: 14, color: "grey" },
   signInLink: { color: "#4285F4", fontWeight: "bold" },
 });
