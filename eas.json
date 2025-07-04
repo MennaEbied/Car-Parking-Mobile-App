@@ -15,9 +15,6 @@
       "autoIncrement": true,
       "android": {
         "buildType": "app-bundle"
-      },
-      "npm": {
-        "install": "npm install --legacy-peer-deps"
       }
     }
   },
