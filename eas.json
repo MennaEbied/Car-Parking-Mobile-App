@@ -12,7 +12,13 @@
       "distribution": "internal"
     },
     "production": {
-      "autoIncrement": true
+      "autoIncrement": true,
+      "android": {
+        "buildType": "aab"
+      },
+      "npm": {
+        "install": "npm install --legacy-peer-deps"
+      }
     }
   },
   "submit": {
